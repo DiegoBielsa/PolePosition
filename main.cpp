@@ -9,6 +9,7 @@ int height = 768;
 int roadW = 2000;
 int segL = 200;    // segment length
 float camD = 0.84; // camera depth
+float draw_distance = 300;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -63,7 +64,7 @@ struct Line {
 };
 
 int main() {
-  RenderWindow app(VideoMode(width, height), "Outrun Racing!");
+  RenderWindow app(VideoMode(width, height), "Pole Position");
   app.setFramerateLimit(60);
 
   Texture t[50];
@@ -87,7 +88,7 @@ int main() {
   sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
   sBackground.setPosition(-2000, 0);
 
-  std::vector<Line> lines;
+  std::vector<Line> lines; // esto es el mapa
 
   for (int i = 0; i < 1600; i++) {
     Line line;
@@ -173,7 +174,7 @@ int main() {
     float x = 0, dx = 0;
 
     ///////draw road////////
-    for (int n = startPos; n < startPos + 300; n++) {
+    for (int n = startPos; n < startPos + draw_distance; n++) {
       Line &l = lines[n % N];
       l.project(playerX * roadW - x, camH,
                 startPos * segL - (n >= N ? N * segL : 0));
@@ -197,7 +198,7 @@ int main() {
     }
 
     ////////draw objects////////
-    for (int n = startPos + 300; n > startPos; n--)
+    for (int n = startPos + draw_distance; n > startPos; n--)
       lines[n % N].drawSprite(app);
 
     app.draw(car);
