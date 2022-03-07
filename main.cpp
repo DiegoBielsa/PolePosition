@@ -69,9 +69,11 @@ int main() {
   Texture t[50];
   Sprite object[50];
   Texture ca;
-  ca.loadFromFile("images/car.png");
+  ca.loadFromFile("sprites/coches/tile300.png");
   Sprite car(ca);
-  car.setTextureRect(IntRect(0, 0, 5000, 411));
+  car.setTextureRect(IntRect(0, 0, 56, 50));
+  car.setPosition(500,600);
+  car.setScale(3,3);
   for (int i = 1; i <= 7; i++) {
     t[i].loadFromFile("images/" + std::to_string(i) + ".png");
     t[i].setSmooth(true);
@@ -198,7 +200,7 @@ int main() {
     for (int n = startPos + 300; n > startPos; n--)
       lines[n % N].drawSprite(app);
 
-    //app.draw(car);
+    app.draw(car);
 
     app.display();
   }
