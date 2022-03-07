@@ -63,6 +63,61 @@ struct Line {
   }
 };
 
+
+/*------------------------------- FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
+void manageKeys(float &playerX, int &speed, int &H){
+  if (Keyboard::isKeyPressed(Keyboard::Right))
+    playerX += 0.1;
+  if (Keyboard::isKeyPressed(Keyboard::Left))
+    playerX -= 0.1;
+  if (Keyboard::isKeyPressed(Keyboard::Up))
+    speed = 200;
+  if (Keyboard::isKeyPressed(Keyboard::Down))
+    speed = -200;
+  if (Keyboard::isKeyPressed(Keyboard::Tab))
+    speed *= 3;
+  if (Keyboard::isKeyPressed(Keyboard::W))
+    H += 100;
+  if (Keyboard::isKeyPressed(Keyboard::S))
+    H -= 100;
+}
+
+void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line>& lines, int& N, float& x, float& dx, int& maxy, int& camH){
+  ///////draw road////////
+  for (int n = startPos; n < startPos + draw_distance; n++) {
+    Line &l = lines[n % N];
+    l.project(playerX * roadW - x, camH,
+              startPos * segL - (n >= N ? N * segL : 0));
+    x += dx;
+    dx += l.curve;
+
+    l.clip = maxy;
+    if (l.Y >= maxy)
+      continue;
+    maxy = l.Y;
+
+    Color grass = (n / 3) % 2 ? Color(16, 200, 16) : Color(0, 154, 0);
+    Color rumble = (n / 3) % 2 ? Color(255, 255, 255) : Color(0, 0, 0);
+    Color road = (n / 3) % 2 ? Color(107, 107, 107) : Color(105, 105, 105);
+
+    Line p = lines[(n - 1) % N]; // previous line
+
+    drawQuad(app, grass, 0, p.Y, width, 0, l.Y, width);
+    drawQuad(app, rumble, p.X, p.Y, p.W * 1.2, l.X, l.Y, l.W * 1.2);
+    drawQuad(app, road, p.X, p.Y, p.W, l.X, l.Y, l.W);
+  } 
+}
+
+void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, Sprite &car){
+  ////////draw objects////////
+  for (int n = startPos + draw_distance; n > startPos; n--)
+    lines[n % N].drawSprite(app);
+
+  app.draw(car);
+}
+
+/*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
+
 int main() {
   RenderWindow app(VideoMode(width, height), "Pole Position");
   app.setFramerateLimit(60);
@@ -73,7 +128,7 @@ int main() {
   ca.loadFromFile("sprites/coches/tile300.png");
   Sprite car(ca);
   car.setTextureRect(IntRect(0, 0, 56, 50));
-  car.setPosition(500,600);
+  car.setPosition(width/2,600);
   car.setScale(3,3);
   for (int i = 1; i <= 7; i++) {
     t[i].loadFromFile("images/" + std::to_string(i) + ".png");
@@ -88,7 +143,7 @@ int main() {
   sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
   sBackground.setPosition(-2000, 0);
 
-  std::vector<Line> lines; // esto es el mapa
+  std::vector<Line> lines; // esto es el mapa, 2d es un vector pero nuestro 3d deberia se matriz?¿
 
   for (int i = 0; i < 1600; i++) {
     Line line;
@@ -140,20 +195,9 @@ int main() {
 
     int speed = 0;
 
-    if (Keyboard::isKeyPressed(Keyboard::Right))
-      playerX += 0.1;
-    if (Keyboard::isKeyPressed(Keyboard::Left))
-      playerX -= 0.1;
-    if (Keyboard::isKeyPressed(Keyboard::Up))
-      speed = 200;
-    if (Keyboard::isKeyPressed(Keyboard::Down))
-      speed = -200;
-    if (Keyboard::isKeyPressed(Keyboard::Tab))
-      speed *= 3;
-    if (Keyboard::isKeyPressed(Keyboard::W))
-      H += 100;
-    if (Keyboard::isKeyPressed(Keyboard::S))
-      H -= 100;
+    manageKeys(playerX, speed, H);
+
+    
 
     pos += speed;
     while (pos >= N * segL)
@@ -173,35 +217,8 @@ int main() {
     int maxy = height;
     float x = 0, dx = 0;
 
-    ///////draw road////////
-    for (int n = startPos; n < startPos + draw_distance; n++) {
-      Line &l = lines[n % N];
-      l.project(playerX * roadW - x, camH,
-                startPos * segL - (n >= N ? N * segL : 0));
-      x += dx;
-      dx += l.curve;
-
-      l.clip = maxy;
-      if (l.Y >= maxy)
-        continue;
-      maxy = l.Y;
-
-      Color grass = (n / 3) % 2 ? Color(16, 200, 16) : Color(0, 154, 0);
-      Color rumble = (n / 3) % 2 ? Color(255, 255, 255) : Color(0, 0, 0);
-      Color road = (n / 3) % 2 ? Color(107, 107, 107) : Color(105, 105, 105);
-
-      Line p = lines[(n - 1) % N]; // previous line
-
-      drawQuad(app, grass, 0, p.Y, width, 0, l.Y, width);
-      drawQuad(app, rumble, p.X, p.Y, p.W * 1.2, l.X, l.Y, l.W * 1.2);
-      drawQuad(app, road, p.X, p.Y, p.W, l.X, l.Y, l.W);
-    }
-
-    ////////draw objects////////
-    for (int n = startPos + draw_distance; n > startPos; n--)
-      lines[n % N].drawSprite(app);
-
-    app.draw(car);
+    drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
+    drawObjects(app, startPos, lines, N, car);
 
     app.display();
   }
