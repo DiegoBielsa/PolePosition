@@ -4,9 +4,9 @@ Desarrollo del videojuego pole position 2 para la asignatura de videojuegos de l
 # Compilacion
 Descargar librería sfml
 
-g++ -c main.cpp -I ../../SFML-2.5.1/include/
+g++ -c main.cpp -I <ruta_carpeta>/SFML-2.5.1/include/
 
-g++ main.o -o sfml-app -L../../SFML-2.5.1/lib -lsfml-graphics -lsfml-window -lsfml-system
+g++ main.o -o sfml-app -L<ruta_carpeta>/SFML-2.5.1/lib -lsfml-graphics -lsfml-window -lsfml-system
 
 ./sfml-app 
 
