@@ -92,13 +92,13 @@ void manageKeys(float &playerX, int &speed, int &H){
  * 
  * @param app       Pantalla en sí
  * @param startPos  Posición en la que se encuentra el coche dentro de la carretera  
- * @param playerX 
+ * @param playerX   Posición del jugador respecto al eje X
  * @param lines     Representación de la carretera
- * @param N 
- * @param x 
- * @param dx 
- * @param maxy 
- * @param camH 
+ * @param N         Número de lines (componenetes que representan el mapa)
+ * @param x         anterior dx
+ * @param dx        pronunciación de la curva
+ * @param maxy      
+ * @param camH      Altura de la cámara
  */
 void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line>& lines, int& N, float& x, float& dx, int& maxy, int& camH){
   ///////draw road////////
@@ -109,8 +109,11 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
     l.project(playerX * roadW - x, camH,
               startPos * segL - (n >= N ? N * segL : 0));
 
+   
     x += dx;
     dx += l.curve;
+    
+
 
     // establece dónde esta el Y más alto de la carretera
     l.clip = maxy;
@@ -131,6 +134,7 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
     drawQuad(app, rumble, p.X, p.Y, p.W * 1.2, l.X, l.Y, l.W * 1.2);
     drawQuad(app, road, p.X, p.Y, p.W, l.X, l.Y, l.W);
   } 
+
 }
 
 void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, Sprite &car){
@@ -234,6 +238,17 @@ int main() {
     app.draw(sBackground);
     int startPos = pos / segL;
     int camH = lines[startPos].y + H;
+    if (speed != 0){
+      if ((((playerX - off_road_allowed) * roadW) < (roadW)) && ((playerX + off_road_allowed) * roadW) > (-roadW)
+        && !Keyboard::isKeyPressed(Keyboard::Right) && !Keyboard::isKeyPressed(Keyboard::Left)){
+        if(lines[startPos].curve > 0){
+          playerX -= 0.02;
+        }
+        if(lines[startPos].curve < 0){
+          playerX += 0.02;
+        }
+      }
+    }
     if (speed > 0)
       sBackground.move(-lines[startPos].curve * 2, 0);
     if (speed < 0)
