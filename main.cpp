@@ -9,7 +9,10 @@ int height = 768;
 int roadW = 2000;
 int segL = 200;    // segment length
 float camD = 0.84; // camera depth
-float draw_distance = 300;
+float draw_distance = 300; // empiezan a aparecer en pantalla en el 8
+int car_width = 56;
+int car_height = 50;
+float off_road_allowed = 0.6;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -30,6 +33,7 @@ struct Line {
 
   Line() { spriteX = curve = x = y = z = 0; }
 
+  // decide las screen cord dependiendo de dónde está la cámara
   void project(int camX, int camY, int camZ) {
     scale = camD / (z - camZ);
     X = (1 + scale * (x - camX)) * width / 2;
@@ -66,9 +70,10 @@ struct Line {
 
 /*------------------------------- FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 void manageKeys(float &playerX, int &speed, int &H){
-  if (Keyboard::isKeyPressed(Keyboard::Right))
+
+  if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX - off_road_allowed) * roadW) < (roadW))
     playerX += 0.1;
-  if (Keyboard::isKeyPressed(Keyboard::Left))
+  if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX + off_road_allowed) * roadW) > (-roadW))
     playerX -= 0.1;
   if (Keyboard::isKeyPressed(Keyboard::Up))
     speed = 200;
@@ -82,26 +87,46 @@ void manageKeys(float &playerX, int &speed, int &H){
     H -= 100;
 }
 
+/**
+ * @brief 
+ * 
+ * @param app       Pantalla en sí
+ * @param startPos  Posición en la que se encuentra el coche dentro de la carretera  
+ * @param playerX 
+ * @param lines     Representación de la carretera
+ * @param N 
+ * @param x 
+ * @param dx 
+ * @param maxy 
+ * @param camH 
+ */
 void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line>& lines, int& N, float& x, float& dx, int& maxy, int& camH){
   ///////draw road////////
   for (int n = startPos; n < startPos + draw_distance; n++) {
     Line &l = lines[n % N];
+
+    // decidimos donde está la cámara y las coor de la pantalla que va a sacar
     l.project(playerX * roadW - x, camH,
               startPos * segL - (n >= N ? N * segL : 0));
+
     x += dx;
     dx += l.curve;
 
+    // establece dónde esta el Y más alto de la carretera
     l.clip = maxy;
     if (l.Y >= maxy)
       continue;
     maxy = l.Y;
 
+    // elige el color y da esa sensación de lineas
     Color grass = (n / 3) % 2 ? Color(16, 200, 16) : Color(0, 154, 0);
     Color rumble = (n / 3) % 2 ? Color(255, 255, 255) : Color(0, 0, 0);
     Color road = (n / 3) % 2 ? Color(107, 107, 107) : Color(105, 105, 105);
 
+    // pilla la anterior que es la que ha modificado en la iteración anterior para diujar lo que hay puesto
     Line p = lines[(n - 1) % N]; // previous line
 
+    // dibuja las lineas
     drawQuad(app, grass, 0, p.Y, width, 0, l.Y, width);
     drawQuad(app, rumble, p.X, p.Y, p.W * 1.2, l.X, l.Y, l.W * 1.2);
     drawQuad(app, road, p.X, p.Y, p.W, l.X, l.Y, l.W);
@@ -127,8 +152,8 @@ int main() {
   Texture ca;
   ca.loadFromFile("sprites/coches/tile300.png");
   Sprite car(ca);
-  car.setTextureRect(IntRect(0, 0, 56, 50));
-  car.setPosition(width/2,600);
+  car.setTextureRect(IntRect(0, 0, car_width, car_height));
+  car.setPosition(width/2-car_width*1.5,600);
   car.setScale(3,3);
   for (int i = 1; i <= 7; i++) {
     t[i].loadFromFile("images/" + std::to_string(i) + ".png");
@@ -143,7 +168,7 @@ int main() {
   sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
   sBackground.setPosition(-2000, 0);
 
-  std::vector<Line> lines; // esto es el mapa, 2d es un vector pero nuestro 3d deberia se matriz?¿
+  std::vector<Line> lines; // esto es el mapa, 
 
   for (int i = 0; i < 1600; i++) {
     Line line;
