@@ -12,7 +12,9 @@ float camD = 0.84; // camera depth
 float draw_distance = 300; // empiezan a aparecer en pantalla en el 8
 int car_width = 56;
 int car_height = 50;
-float off_road_allowed = 0.6;
+float off_road_allowed = 300;
+float turn_power = 0.1;
+float draft_power = 0.02;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -71,10 +73,10 @@ struct Line {
 /*------------------------------- FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 void manageKeys(float &playerX, int &speed, int &H){
 
-  if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX - off_road_allowed) * roadW) < (roadW))
-    playerX += 0.1;
-  if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX + off_road_allowed) * roadW) > (-roadW))
-    playerX -= 0.1;
+  if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX * roadW) < (roadW + off_road_allowed)) && (((playerX + turn_power) * roadW) < (roadW + off_road_allowed)))
+    playerX += turn_power;
+  if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed)))
+    playerX -= turn_power;
   if (Keyboard::isKeyPressed(Keyboard::Up))
     speed = 200;
   if (Keyboard::isKeyPressed(Keyboard::Down))
@@ -239,13 +241,13 @@ int main() {
     int startPos = pos / segL;
     int camH = lines[startPos].y + H;
     if (speed != 0){
-      if ((((playerX - off_road_allowed) * roadW) < (roadW)) && ((playerX + off_road_allowed) * roadW) > (-roadW)
+      if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))
         && !Keyboard::isKeyPressed(Keyboard::Right) && !Keyboard::isKeyPressed(Keyboard::Left)){
-        if(lines[startPos].curve > 0){
-          playerX -= 0.02;
+        if(lines[startPos].curve > 0 && (((playerX - draft_power) * roadW) > (-roadW-off_road_allowed))){
+          playerX -= draft_power;
         }
-        if(lines[startPos].curve < 0){
-          playerX += 0.02;
+        if(lines[startPos].curve < 0 && (((playerX + draft_power) * roadW) < (roadW + off_road_allowed))){
+          playerX += draft_power;
         }
       }
     }
