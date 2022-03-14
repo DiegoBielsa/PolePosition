@@ -1,4 +1,4 @@
-ruta = /home/oscargo/Escritorio/SFML-2.5.1/include/
+ruta = /home/diego/SFML-2.5.1/include/
 CC = g++
 CFLAGS = -Wall -g
 
