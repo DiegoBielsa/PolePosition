@@ -1,6 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <string.h>
 
 using namespace sf;
 
@@ -12,7 +15,7 @@ float camD = 0.84; // camera depth
 float draw_distance = 300; // empiezan a aparecer en pantalla en el 8
 int car_width = 56;
 int car_height = 50;
-float off_road_allowed = 300;
+float off_road_allowed = 700;
 float turn_power = 0.1;
 float draft_power = 0.02;
 
@@ -69,6 +72,23 @@ struct Line {
   }
 };
 
+void setConfig(){
+  std::string file = "config/config.conf";
+  std::ifstream f(file);
+  std::string line;
+
+  if(!f.is_open()){
+    std::cout << "Error al abrir el fichero de configuracion " << file << std::endl;
+  }
+
+  while(std::getline(f, line)){
+    std::cout << line << std::endl;
+  }
+
+  f.close();
+
+}
+
 
 /*------------------------------- FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 void manageKeys(float &playerX, int &speed, int &H){
@@ -87,6 +107,37 @@ void manageKeys(float &playerX, int &speed, int &H){
     H += 100;
   if (Keyboard::isKeyPressed(Keyboard::S))
     H -= 100;
+}
+
+void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vector<Line>& lines, float &playerX , int &maxy, float& x, float& dx, int& speed, int N, int H, Sprite sBackground){
+  pos += speed;
+  while (pos >= N * segL)
+    pos -= N * segL;
+  while (pos < 0)
+    pos += N * segL;
+
+  app.clear(Color(105, 205, 4));
+  app.draw(sBackground);
+  startPos = pos / segL;
+  camH = lines[startPos].y + H;
+  if (speed != 0){
+    if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))
+      && !Keyboard::isKeyPressed(Keyboard::Right) && !Keyboard::isKeyPressed(Keyboard::Left)){
+      if(lines[startPos].curve > 0 && (((playerX - draft_power) * roadW) > (-roadW-off_road_allowed))){
+        playerX -= draft_power;
+      }
+      if(lines[startPos].curve < 0 && (((playerX + draft_power) * roadW) < (roadW + off_road_allowed))){
+        playerX += draft_power;
+      }
+    }
+  }
+  if (speed > 0)
+    sBackground.move(-lines[startPos].curve * 2, 0);
+  if (speed < 0)
+    sBackground.move(lines[startPos].curve * 2, 0);
+
+  maxy = height;
+  x = 0, dx = 0;
 }
 
 /**
@@ -147,9 +198,12 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   app.draw(car);
 }
 
+
+
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
 int main() {
+  setConfig();
   RenderWindow app(VideoMode(width, height), "Pole Position");
   app.setFramerateLimit(60);
 
@@ -225,40 +279,10 @@ int main() {
     }
 
     int speed = 0;
-
     manageKeys(playerX, speed, H);
-
-    
-
-    pos += speed;
-    while (pos >= N * segL)
-      pos -= N * segL;
-    while (pos < 0)
-      pos += N * segL;
-
-    app.clear(Color(105, 205, 4));
-    app.draw(sBackground);
-    int startPos = pos / segL;
-    int camH = lines[startPos].y + H;
-    if (speed != 0){
-      if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))
-        && !Keyboard::isKeyPressed(Keyboard::Right) && !Keyboard::isKeyPressed(Keyboard::Left)){
-        if(lines[startPos].curve > 0 && (((playerX - draft_power) * roadW) > (-roadW-off_road_allowed))){
-          playerX -= draft_power;
-        }
-        if(lines[startPos].curve < 0 && (((playerX + draft_power) * roadW) < (roadW + off_road_allowed))){
-          playerX += draft_power;
-        }
-      }
-    }
-    if (speed > 0)
-      sBackground.move(-lines[startPos].curve * 2, 0);
-    if (speed < 0)
-      sBackground.move(lines[startPos].curve * 2, 0);
-
-    int maxy = height;
-    float x = 0, dx = 0;
-
+    int startPos, camH, maxy;
+    float x, dx;
+    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
 
