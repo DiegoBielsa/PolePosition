@@ -1,8 +1,19 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include <iostream>
+#include "RectangularBoundaryCollision.hpp"
+#include <fstream>
+#include <string>
+#include <sstream>
 
 using namespace sf;
+using namespace std;
+
+#define charco 0
+#define spriteColisión 1
 
 int width = 1024;
 int height = 768;
@@ -12,9 +23,17 @@ float camD = 0.84; // camera depth
 float draw_distance = 300; // empiezan a aparecer en pantalla en el 8
 int car_width = 56;
 int car_height = 50;
-float off_road_allowed = 300;
+float off_road_allowed = 700;
+float road_limit = 700;
 float turn_power = 0.1;
 float draft_power = 0.02;
+int speed = 0;
+bool marchaBaja = true;
+bool pressed = false;
+int maxSpeed = 600;
+bool enHierba = false;
+int NumCircuitos = 5;
+bool gameOver = false;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -31,7 +50,9 @@ struct Line {
   float x, y, z; // 3d center of line
   float X, Y, W; // screen coord
   float curve, spriteX, clip, scale;
+  FloatRect localBounds;
   Sprite sprite;
+  int sprite_type;
 
   Line() { spriteX = curve = x = y = z = 0; }
 
@@ -65,6 +86,10 @@ struct Line {
     s.setTextureRect(IntRect(0, 0, w, h - h * clipH / destH));
     s.setScale(destW / w, destH / h);
     s.setPosition(destX, destY);
+    
+    localBounds = s.getGlobalBounds();
+    
+    //std::cout<<destX<<destY<<std::endl;
     app.draw(s);
   }
 };
@@ -72,21 +97,68 @@ struct Line {
 
 /*------------------------------- FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 void manageKeys(float &playerX, int &speed, int &H){
-
+  if (Keyboard::isKeyPressed(Keyboard::Tab)){
+    marchaBaja=!marchaBaja;
+    std::cout<<"pressed"<<std::endl;
+  }
+  if(((playerX * roadW) > (roadW + road_limit)) || ((playerX * roadW) < (-roadW-road_limit)) || (((playerX + turn_power) * roadW) > (roadW + road_limit)) || (((playerX - turn_power) * roadW) < (-roadW-road_limit)))
+  {
+    enHierba = true;
+  }else{
+    enHierba = false;
+  }
   if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX * roadW) < (roadW + off_road_allowed)) && (((playerX + turn_power) * roadW) < (roadW + off_road_allowed)))
-    playerX += turn_power;
+    if(speed>0){
+      playerX += turn_power * ((float(speed)/maxSpeed));
+    }
   if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed)))
-    playerX -= turn_power;
-  if (Keyboard::isKeyPressed(Keyboard::Up))
-    speed = 200;
-  if (Keyboard::isKeyPressed(Keyboard::Down))
-    speed = -200;
-  if (Keyboard::isKeyPressed(Keyboard::Tab))
-    speed *= 3;
-  if (Keyboard::isKeyPressed(Keyboard::W))
+    if(speed > 0){
+      playerX -= turn_power * ((float(speed)/maxSpeed));
+    }
+  if (Keyboard::isKeyPressed(Keyboard::Up)){
+    if(!enHierba){
+      if(marchaBaja){
+        if(speed < 100){
+          speed += 10;
+        }else if(speed < 300){
+          speed += 20;
+        }else{
+          speed=300;
+        }
+      }else{//marcha alta
+        if(speed < 300){
+          speed += 5;
+        }else if(speed < maxSpeed){
+          speed += 30;
+        }
+      }
+    }else{
+      if(speed>100){
+        speed-=20;
+      }
+    }
+  }else{
+    if(speed>0){
+      speed-=10;
+    }
+  }
+  
+    
+    
+  if (Keyboard::isKeyPressed(Keyboard::Down)){
+    if (speed > 10) {
+      speed -= 20;
+    }else if(speed == 10){
+      speed = 0;
+    }
+  }
+    
+  
+  /*if (Keyboard::isKeyPressed(Keyboard::W))
     H += 100;
   if (Keyboard::isKeyPressed(Keyboard::S))
     H -= 100;
+*/
 }
 
 /**
@@ -144,14 +216,263 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   for (int n = startPos + draw_distance; n > startPos; n--)
     lines[n % N].drawSprite(app);
 
-  app.draw(car);
+  Texture exp;
+  exp.loadFromFile("sprites/coches/tile207.png");
+  Sprite expl(exp);
+  expl.setTextureRect(IntRect(0, 0, car_width, car_height));
+  expl.setPosition(width/2-car_width*1.5,600);
+  expl.setScale(3,3);
+  //std::cout<<"car: "<<car.getPosition().x<<std::endl;
+  //std::cout<<"spr: "<<lines[(startPos+10)%N].localBounds.height<<std::endl;
+
+  const bool areColliding{ collision::areColliding(lines[(startPos+10)%N].sprite, car )}; // this is the collision detection section
+  if(!car.getGlobalBounds().intersects(lines[(startPos+10)%N].localBounds)){//no choca
+    app.draw(car);
+  }else if(lines[(startPos+10)%N].sprite_type == charco){
+    speed = 50;
+  }else{
+    app.draw(expl);
+  }
 }
+
+// in = ( scenew, sceneh ); clip = ( windoww, windowh )
+sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip )
+{
+        sf::Vector2f ret( in );
+        if ( ( clip.y * in.x ) / in.y >= clip.x )
+        {
+                ret.y = ( clip.x * in.y ) / in.x;
+                ret.x = clip.x;
+        }
+        else if ( ( clip.x * in.y ) / in.x >= clip.y )
+        {
+                ret.x = ( clip.y * in.x ) / in.y;
+                ret.y = clip.y;
+        }
+        else
+                ret = clip;
+        return ret;
+}
+
+
+void leerPuntuaciones(String puntuaciones[]) {
+
+    fstream f;
+    f.open("puntuaciones.txt");
+    if (f.is_open()) {
+        int i = 0;
+        string cadena;
+        getline(f, cadena, '\n');
+        puntuaciones[i] = cadena;
+        i++;
+        while (!f.eof() || i < 7) {
+            getline(f, cadena, '\n');
+            puntuaciones[i] = cadena;
+            i++;
+        }
+        if (i < 7) {
+            while (i < 7) {
+                puntuaciones[i] = "0";
+                i++;
+                f << "0000" << endl;
+            }
+        }
+
+        f.close();
+
+    }
+    else {
+        cerr << "no se ha podido abrir fichero puntuaciones" << endl;
+    }
+
+}
+
+
+String inttostring(int entero) {
+    stringstream ss;
+    ss << entero;
+    string s;
+    ss >> s;
+    return s;
+}
+
+void leerLimite(int &limite, int numero) {
+
+    fstream f;
+    f.open("limites.txt");
+    if (f.is_open()) {
+        int i = 0;
+        string cadena;
+        getline(f, cadena, '\n');
+        if (numero == i) {
+            limite = stoi(cadena);
+        }
+        else {
+            i++;
+            while (!f.eof() || i < NumCircuitos) {
+                getline(f, cadena, '\n');
+                if (i == numero) {
+                    limite=stoi(cadena);
+                    break;
+                }
+                i++;
+            }
+        }
+        f.close();
+
+    }
+    else {
+        cerr << "no se ha podido abrir fichero limites" << endl;
+    }
+
+}
+
+void drawLetters(RenderWindow& app, String puntuaciones[], int velocidad, Time& elapsed, int &limite,bool &gameOver) {
+    sf::Text top;
+    sf::Text topnumber;
+    sf::Text score;
+    sf::Text scorenumber;
+    sf::Text time;
+    sf::Text timenumber;
+    sf::Text lap;
+    sf::Text lapnumber;
+    sf::Text speed;
+    sf::Text speednumber;
+
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    // select the font
+    top.setFont(font); // font is a sf::Font
+    topnumber.setFont(font);
+    time.setFont(font);
+    lap.setFont(font);
+    lapnumber.setFont(font);
+    score.setFont(font);
+    scorenumber.setFont(font);
+    timenumber.setFont(font);
+    speed.setFont(font);
+    speednumber.setFont(font);
+
+
+
+    // set the string to display
+    top.setString("TOP");
+
+
+    topnumber.setString(puntuaciones[0]);
+    time.setString("TIME");
+    lap.setString("LAP");
+
+    int seconds = elapsed.asSeconds();
+    int mili = elapsed.asMilliseconds();
+    while (mili > 1000) {
+        mili = mili - 1000;
+    }
+
+    String minu = inttostring(mili);
+    String sec = inttostring(seconds);
+    lapnumber.setString(sec + "''" + minu);
+    score.setString("SCORE");
+    scorenumber.setString("0000");
+
+    int resta = limite - seconds;
+    if (resta >=0) {
+        String lim = inttostring(resta);
+        timenumber.setString(lim);
+    }
+    else {
+        timenumber.setString("0");
+        gameOver = true;
+    }
+    speed.setString("SPEED");
+    String s = inttostring(velocidad);
+    speednumber.setString(s + "km");
+    //int width = 1024;
+  //int height = 768;
+
+
+    top.setPosition(55, 0);
+    topnumber.setPosition(150, 0);
+    time.setPosition(340, 0);
+    lap.setPosition(700, 0);
+    lapnumber.setPosition(850, 0);
+    score.setPosition(10, 60);
+    scorenumber.setPosition(150, 60);
+
+    timenumber.setPosition(340, 60);
+    speednumber.setPosition(870, 60);
+    speed.setPosition(650, 60);
+
+
+
+    // set the character size
+    top.setCharacterSize(50); // in pixels, not points!
+    topnumber.setCharacterSize(50);
+    time.setCharacterSize(50);
+    lap.setCharacterSize(50);
+    lapnumber.setCharacterSize(50);
+    score.setCharacterSize(50);
+    scorenumber.setCharacterSize(50);
+    timenumber.setCharacterSize(50);
+    speed.setCharacterSize(50);
+    speednumber.setCharacterSize(50);
+
+    // set the color
+    top.setFillColor(sf::Color::Red);
+    topnumber.setFillColor(sf::Color::Red);
+    time.setFillColor(sf::Color::Yellow);
+    timenumber.setFillColor(sf::Color::Yellow);
+    lap.setFillColor(sf::Color::Green);
+    lapnumber.setFillColor(sf::Color::Green);
+
+    score.setFillColor(sf::Color::White);
+    scorenumber.setFillColor(sf::Color::White);
+    speed.setFillColor(sf::Color::White);
+    speednumber.setFillColor(sf::Color::White);
+    // set the text style
+
+
+
+
+        // inside the main loop, between window.clear() and window.display()
+    app.draw(top);
+    app.draw(topnumber);
+    app.draw(time);
+    app.draw(timenumber);
+    app.draw(lap);
+    app.draw(lapnumber);
+    app.draw(score);
+    app.draw(scorenumber);
+    app.draw(speed);
+    app.draw(speednumber);
+}
+
+void drawGameOver(RenderWindow& app) {
+    sf::Text gameOvertext;
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    gameOvertext.setFont(font);
+    gameOvertext.setString(" GAME OVER");
+    gameOvertext.setPosition(300, 340);
+    gameOvertext.setCharacterSize(80);
+    gameOvertext.setFillColor(sf::Color::Magenta);
+    app.draw(gameOvertext);
+}
+
 
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
 int main() {
   RenderWindow app(VideoMode(width, height), "Pole Position");
   app.setFramerateLimit(60);
+  Clock clock;
+
+  String puntuaciones[7];
+  leerPuntuaciones(puntuaciones);
+  int limite = 0;
+
+  leerLimite(limite, 0);
 
   Texture t[50];
   Sprite object[50];
@@ -224,8 +545,21 @@ int main() {
         app.close();
     }
 
-    int speed = 0;
-
+    // catch the resize events
+    if (e.type == sf::Event::Resized)
+    {
+      sf::View v( sf::FloatRect( 0, 0, (float)e.size.width, (float)e.size.height ) );
+      sf::FloatRect viewport( sf::Vector2f( 0, 0 ), scaleToFit( sf::Vector2f( (float)e.size.width, (float)e.size.height ), sf::Vector2f( (float)e.size.width, (float)e.size.height ) ) );
+      viewport.width  = viewport.width  / width;
+      viewport.height = viewport.height / height;
+      viewport.left = ( 1.0 - viewport.width  ) * 0.5;
+      viewport.top  = ( 1.0 - viewport.height ) * 0.5;
+      v.setViewport( viewport );
+      app.setView( v );
+        // update the view to the new size of the window
+        //sf::FloatRect visibleArea(0, 0, e.size.width, e.size.width*(4/3));
+            //app.setView(sf::View(app.getView().getCenter(), sf::Vector2f((float)e.size.width, (float)e.size.height)));
+    }
     manageKeys(playerX, speed, H);
 
     
@@ -259,10 +593,22 @@ int main() {
     int maxy = height;
     float x = 0, dx = 0;
 
+
+    sf::Time elapsed = clock.getElapsedTime();
+    //clock.restart() cuando hagamos vuelta
+
+  
+
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
+    drawLetters(app, puntuaciones, speed, elapsed, limite,gameOver);
+
+    if (gameOver == true) {
+        drawGameOver(app);
+    }
 
     app.display();
+    
   }
 
   return 0;
