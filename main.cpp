@@ -9,15 +9,15 @@ using namespace sf;
 
 int width = 1024;
 int height = 768;
-int roadW = 2000;
-int segL = 200;    // segment length
-float camD = 0.84; // camera depth
-float draw_distance = 300; // empiezan a aparecer en pantalla en el 8
-int car_width = 56;
-int car_height = 50;
-float off_road_allowed = 700;
-float turn_power = 0.1;
-float draft_power = 0.02;
+int roadW;// = 2000;
+int segL;// = 200;    // segment length
+float camD;// = 0.84; // camera depth
+float draw_distance;// = 300; // empiezan a aparecer en pantalla en el 8
+int car_width;// = 56;
+int car_height;// = 50;
+float off_road_allowed;// = 700;
+float turn_power;// = 0.1;
+float draft_power;// = 0.02;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -83,6 +83,58 @@ void setConfig(){
 
   while(std::getline(f, line)){
     std::cout << line << std::endl;
+    std::size_t found = line.find("=");
+    if(found!=std::string::npos){
+      //std::cout << "hay un igual " << found << std::endl;
+      // ahora hay que identificar la variable, pillar el valor y darselo con un switch
+      // identificamos variable
+      std::string var = "";
+      for(int i = 0; i < found; i++){
+        if(line[i] == ' ' || line[i] == '=' || line[i] == '\t'){
+          break;
+        }else{
+          var += line[i];
+        }
+      }
+      
+      
+      std::string valueStr = "";
+      for(int i = found; i < line.size(); i++){
+          if(line[i] == ' ' || line[i] == '=' || line[i] == '\t'){
+            continue;
+          }else if(line[i] == ';' || line[i] == '\n'){
+
+          }
+          else{
+            valueStr += line[i];
+          }
+      }
+
+      float value = std::stof(valueStr);
+      std::cout << var << " " << value << std::endl;
+      if(var == "roadW"){
+        roadW = value;
+      }else if(var == "segL"){
+        segL = value;
+      }else if(var == "camD"){
+        camD = value;
+      }else if(var == "draw_distance"){
+        draw_distance = value;
+      }else if(var == "car_width"){
+        car_width = value;
+      }else if(var == "car_height"){
+        car_height = value;
+      }else if(var == "off_road_allowed"){
+        off_road_allowed = value;
+      }else if(var == "turn_power"){
+        turn_power = value;
+      }else if(var == "draft_power"){
+        draft_power = value;
+      }else{
+        std::cout << "No existe esa variable de configuracion" << std::endl;
+      }
+    }
+    
   }
 
   f.close();
@@ -203,6 +255,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
 int main() {
+  //INICIALIZANDO EL JUEGO
   setConfig();
   RenderWindow app(VideoMode(width, height), "Pole Position");
   app.setFramerateLimit(60);
