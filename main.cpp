@@ -18,6 +18,7 @@ int car_height;// = 50;
 float off_road_allowed;// = 700;
 float turn_power;// = 0.1;
 float draft_power;// = 0.02;
+float numMaps;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -72,6 +73,8 @@ struct Line {
   }
 };
 
+/*------------------------------- FUNCIONES DE INICIALIZACIÓN DEL JUEGO -------------------------------*/
+
 void setConfig(){
   std::string file = "config/config.conf";
   std::ifstream f(file);
@@ -82,7 +85,6 @@ void setConfig(){
   }
 
   while(std::getline(f, line)){
-    std::cout << line << std::endl;
     std::size_t found = line.find("=");
     if(found!=std::string::npos){
       //std::cout << "hay un igual " << found << std::endl;
@@ -111,7 +113,6 @@ void setConfig(){
       }
 
       float value = std::stof(valueStr);
-      std::cout << var << " " << value << std::endl;
       if(var == "roadW"){
         roadW = value;
       }else if(var == "segL"){
@@ -130,8 +131,10 @@ void setConfig(){
         turn_power = value;
       }else if(var == "draft_power"){
         draft_power = value;
+      }else if(var == "numMaps"){
+        numMaps = value;
       }else{
-        std::cout << "No existe esa variable de configuracion" << std::endl;
+        std::cout << "No existe la variable de configuracion " << var << std::endl;
       }
     }
     
@@ -140,6 +143,70 @@ void setConfig(){
   f.close();
 
 }
+
+void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
+  maps.resize(numMaps);
+  for(int j = 0; j < numMaps; j++){
+    std::vector<Line> lines;
+    switch (j)
+    {
+    case 0:
+      for (int i = 0; i < 1600; i++) {
+        Line line;
+        line.z = i * segL;
+
+        if (i > 300 && i < 700)
+          line.curve = 0.5;
+        if (i > 1100)
+          line.curve = -0.7;
+
+        if (i < 300 && i % 20 == 0) {
+          line.spriteX = -2.5;
+          line.sprite = object[5];
+        }
+        if (i % 17 == 0) {
+          line.spriteX = 2.0;
+          line.sprite = object[6];
+        }
+        if (i > 300 && i % 20 == 0) {
+          line.spriteX = -0.7;
+          line.sprite = object[4];
+        }
+        if (i > 800 && i % 20 == 0) {
+          line.spriteX = -1.2;
+          line.sprite = object[1];
+        }
+        if (i == 400) {
+          line.spriteX = -1.2;
+          line.sprite = object[7];
+        }
+
+        if (i > 750)
+          line.y = std::sin(i / 30.0) * 1500;
+
+        lines.push_back(line);
+      }
+      break;
+    
+    case 1:
+      break;
+
+    case 2:
+      break;
+    
+    case 3:
+      break;
+    }
+    
+    maps[j] = lines;
+  }
+}
+
+void loadTextures(){
+
+}
+
+/*------------------------------- FIN FUNCIONES DE INICIALIZACIÓN DEL JUEGO -------------------------------*/
 
 
 /*------------------------------- FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
@@ -260,6 +327,7 @@ int main() {
   RenderWindow app(VideoMode(width, height), "Pole Position");
   app.setFramerateLimit(60);
 
+
   Texture t[50];
   Sprite object[50];
   Texture ca;
@@ -281,43 +349,13 @@ int main() {
   sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
   sBackground.setPosition(-2000, 0);
 
+  std::vector<std::vector<Line>> maps; // esto es el conjunto de mapas
   std::vector<Line> lines; // esto es el mapa, 
 
-  for (int i = 0; i < 1600; i++) {
-    Line line;
-    line.z = i * segL;
+  setMaps(maps, object);
 
-    if (i > 300 && i < 700)
-      line.curve = 0.5;
-    if (i > 1100)
-      line.curve = -0.7;
-
-    if (i < 300 && i % 20 == 0) {
-      line.spriteX = -2.5;
-      line.sprite = object[5];
-    }
-    if (i % 17 == 0) {
-      line.spriteX = 2.0;
-      line.sprite = object[6];
-    }
-    if (i > 300 && i % 20 == 0) {
-      line.spriteX = -0.7;
-      line.sprite = object[4];
-    }
-    if (i > 800 && i % 20 == 0) {
-      line.spriteX = -1.2;
-      line.sprite = object[1];
-    }
-    if (i == 400) {
-      line.spriteX = -1.2;
-      line.sprite = object[7];
-    }
-
-    if (i > 750)
-      line.y = std::sin(i / 30.0) * 1500;
-
-    lines.push_back(line);
-  }
+  // eleccion del mapa
+  lines = maps[0];
 
   int N = lines.size();
   float playerX = 0;
