@@ -5,8 +5,15 @@
 #include <cmath>
 #include <iostream>
 #include "RectangularBoundaryCollision.hpp"
+#include <fstream>
+#include <string>
+#include <sstream>
 
 using namespace sf;
+using namespace std;
+
+#define charco 0
+#define spriteColisión 1
 
 #define charco 0
 #define spriteColisión 1
@@ -29,6 +36,8 @@ bool pressed = false;
 int maxSpeed = 600;
 bool enHierba = false;
 std::array<bool, sf::Keyboard::KeyCount> keyState;
+int NumCircuitos = 5;
+bool gameOver = false;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -245,6 +254,216 @@ sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip )
         return ret;
 }
 
+// in = ( scenew, sceneh ); clip = ( windoww, windowh )
+
+
+
+void leerPuntuaciones(String puntuaciones[]) {
+
+    fstream f;
+    f.open("puntuaciones.txt");
+    if (f.is_open()) {
+        int i = 0;
+        string cadena;
+        getline(f, cadena, '\n');
+        puntuaciones[i] = cadena;
+        i++;
+        while (!f.eof() || i < 7) {
+            getline(f, cadena, '\n');
+            puntuaciones[i] = cadena;
+            i++;
+        }
+        if (i < 7) {
+            while (i < 7) {
+                puntuaciones[i] = "0";
+                i++;
+                f << "0000" << endl;
+            }
+        }
+
+        f.close();
+
+    }
+    else {
+        cerr << "no se ha podido abrir fichero puntuaciones" << endl;
+    }
+
+}
+
+
+String inttostring(int entero) {
+    stringstream ss;
+    ss << entero;
+    string s;
+    ss >> s;
+    return s;
+}
+
+void leerLimite(int &limite, int numero) {
+
+    fstream f;
+    f.open("limites.txt");
+    if (f.is_open()) {
+        int i = 0;
+        string cadena;
+        getline(f, cadena, '\n');
+        if (numero == i) {
+            limite = stoi(cadena);
+        }
+        else {
+            i++;
+            while (!f.eof() || i < NumCircuitos) {
+                getline(f, cadena, '\n');
+                if (i == numero) {
+                    limite=stoi(cadena);
+                    break;
+                }
+                i++;
+            }
+        }
+        f.close();
+
+    }
+    else {
+        cerr << "no se ha podido abrir fichero limites" << endl;
+    }
+
+}
+
+void drawLetters(RenderWindow& app, String puntuaciones[], int velocidad, Time& elapsed, int &limite,bool &gameOver) {
+    sf::Text top;
+    sf::Text topnumber;
+    sf::Text score;
+    sf::Text scorenumber;
+    sf::Text time;
+    sf::Text timenumber;
+    sf::Text lap;
+    sf::Text lapnumber;
+    sf::Text speed;
+    sf::Text speednumber;
+
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    // select the font
+    top.setFont(font); // font is a sf::Font
+    topnumber.setFont(font);
+    time.setFont(font);
+    lap.setFont(font);
+    lapnumber.setFont(font);
+    score.setFont(font);
+    scorenumber.setFont(font);
+    timenumber.setFont(font);
+    speed.setFont(font);
+    speednumber.setFont(font);
+
+
+
+    // set the string to display
+    top.setString("TOP");
+
+
+    topnumber.setString(puntuaciones[0]);
+    time.setString("TIME");
+    lap.setString("LAP");
+
+    int seconds = elapsed.asSeconds();
+    int mili = elapsed.asMilliseconds();
+    while (mili > 1000) {
+        mili = mili - 1000;
+    }
+
+    String minu = inttostring(mili);
+    String sec = inttostring(seconds);
+    lapnumber.setString(sec + "''" + minu);
+    score.setString("SCORE");
+    scorenumber.setString("0000");
+
+    int resta = limite - seconds;
+    if (resta >=0) {
+        String lim = inttostring(resta);
+        timenumber.setString(lim);
+    }
+    else {
+        timenumber.setString("0");
+        gameOver = true;
+    }
+    speed.setString("SPEED");
+    String s = inttostring(velocidad);
+    speednumber.setString(s + "km");
+    //int width = 1024;
+  //int height = 768;
+
+
+    top.setPosition(55, 0);
+    topnumber.setPosition(150, 0);
+    time.setPosition(340, 0);
+    lap.setPosition(700, 0);
+    lapnumber.setPosition(850, 0);
+    score.setPosition(10, 60);
+    scorenumber.setPosition(150, 60);
+
+    timenumber.setPosition(340, 60);
+    speednumber.setPosition(870, 60);
+    speed.setPosition(650, 60);
+
+
+
+    // set the character size
+    top.setCharacterSize(50); // in pixels, not points!
+    topnumber.setCharacterSize(50);
+    time.setCharacterSize(50);
+    lap.setCharacterSize(50);
+    lapnumber.setCharacterSize(50);
+    score.setCharacterSize(50);
+    scorenumber.setCharacterSize(50);
+    timenumber.setCharacterSize(50);
+    speed.setCharacterSize(50);
+    speednumber.setCharacterSize(50);
+
+    // set the color
+    top.setFillColor(sf::Color::Red);
+    topnumber.setFillColor(sf::Color::Red);
+    time.setFillColor(sf::Color::Yellow);
+    timenumber.setFillColor(sf::Color::Yellow);
+    lap.setFillColor(sf::Color::Green);
+    lapnumber.setFillColor(sf::Color::Green);
+
+    score.setFillColor(sf::Color::White);
+    scorenumber.setFillColor(sf::Color::White);
+    speed.setFillColor(sf::Color::White);
+    speednumber.setFillColor(sf::Color::White);
+    // set the text style
+
+
+
+
+        // inside the main loop, between window.clear() and window.display()
+    app.draw(top);
+    app.draw(topnumber);
+    app.draw(time);
+    app.draw(timenumber);
+    app.draw(lap);
+    app.draw(lapnumber);
+    app.draw(score);
+    app.draw(scorenumber);
+    app.draw(speed);
+    app.draw(speednumber);
+}
+
+void drawGameOver(RenderWindow& app) {
+    sf::Text gameOvertext;
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    gameOvertext.setFont(font);
+    gameOvertext.setString(" GAME OVER");
+    gameOvertext.setPosition(300, 340);
+    gameOvertext.setCharacterSize(80);
+    gameOvertext.setFillColor(sf::Color::Magenta);
+    app.draw(gameOvertext);
+}
+
+
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
 int main() {
@@ -253,6 +472,13 @@ int main() {
   app.setFramerateLimit(60);
   keyState.fill(false);
 
+  Clock clock;
+
+  String puntuaciones[7];
+  leerPuntuaciones(puntuaciones);
+  int limite = 0;
+
+  leerLimite(limite, 0);
 
   Texture t[50];
   Sprite object[50];
@@ -383,8 +609,19 @@ int main() {
     int maxy = height;
     float x = 0, dx = 0;
 
+
+    sf::Time elapsed = clock.getElapsedTime();
+    //clock.restart() cuando hagamos vuelta
+
+  
+
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
+    drawLetters(app, puntuaciones, speed, elapsed, limite,gameOver);
+
+    if (gameOver == true) {
+        drawGameOver(app);
+    }
 
     app.display();
     
