@@ -140,7 +140,9 @@ void manageKeys(float &playerX, int &speed, int &H){
       }
     }
   }else{
-    if(speed>0){
+    if(speed == 5){
+      speed = 0;
+    }else if(speed>0){
       speed-=10;
     }
   }
@@ -462,7 +464,41 @@ void drawGameOver(RenderWindow& app) {
     gameOvertext.setFillColor(sf::Color::Magenta);
     app.draw(gameOvertext);
 }
+/*++++++++++++*/
+sf::View getLetterboxView(sf::View view, int windowWidth, int windowHeight) {
 
+    // Compares the aspect ratio of the window to the aspect ratio of the view,
+    // and sets the view's viewport accordingly in order to archieve a letterbox effect.
+    // A new view (with a new viewport set) is returned.
+
+    float windowRatio = windowWidth / (float) windowHeight;
+    float viewRatio = view.getSize().x / (float) view.getSize().y;
+    float sizeX = 1;
+    float sizeY = 1;
+    float posX = 0;
+    float posY = 0;
+
+    bool horizontalSpacing = true;
+    if (windowRatio < viewRatio)
+        horizontalSpacing = false;
+
+    // If horizontalSpacing is true, the black bars will appear on the left and right side.
+    // Otherwise, the black bars will appear on the top and bottom.
+
+    if (horizontalSpacing) {
+        sizeX = viewRatio / windowRatio;
+        posX = (1 - sizeX) / 2.f;
+    }
+
+    else {
+        sizeY = windowRatio / viewRatio;
+        posY = (1 - sizeY) / 2.f;
+    }
+
+    view.setViewport( sf::FloatRect(posX, posY, sizeX, sizeY) );
+
+    return view;
+}
 
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
@@ -489,9 +525,9 @@ int main() {
   car.setPosition(width/2-car_width*1.5,600);
   car.setScale(3,3);
   for (int i = 1; i <= 7; i++) {
-    t[i].loadFromFile("images/" + std::to_string(i) + ".png");
-    t[i].setSmooth(true);
-    object[i].setTexture(t[i]);
+      t[i].loadFromFile("images/" + std::to_string(i) + ".png");
+      t[i].setSmooth(true);
+      object[i].setTexture(t[i]);
   }
 
   Texture bg;
@@ -551,21 +587,13 @@ int main() {
         app.close();
     }
 
-    // catch the resize events
-    if (e.type == sf::Event::Resized)
-    {
-      sf::View v( sf::FloatRect( 0, 0, (float)e.size.width, (float)e.size.height ) );
-      sf::FloatRect viewport( sf::Vector2f( 0, 0 ), scaleToFit( sf::Vector2f( (float)e.size.width, (float)e.size.height ), sf::Vector2f( (float)e.size.width, (float)e.size.height ) ) );
-      viewport.width  = viewport.width  / width;
-      viewport.height = viewport.height / height;
-      viewport.left = ( 1.0 - viewport.width  ) * 0.5;
-      viewport.top  = ( 1.0 - viewport.height ) * 0.5;
-      v.setViewport( viewport );
-      app.setView( v );
-        // update the view to the new size of the window
-        //sf::FloatRect visibleArea(0, 0, e.size.width, e.size.width*(4/3));
-            //app.setView(sf::View(app.getView().getCenter(), sf::Vector2f((float)e.size.width, (float)e.size.height)));
+
+    if (e.type == sf::Event::Resized){
+      sf::View view = app.getDefaultView();
+      view = getLetterboxView( view, e.size.width, e.size.height );
+      app.setView(view);
     }
+
     if (e.type == sf::Event::KeyPressed) {
       if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
         marchaBaja = !marchaBaja;
