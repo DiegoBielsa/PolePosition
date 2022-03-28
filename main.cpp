@@ -28,6 +28,7 @@ bool marchaBaja = true;
 bool pressed = false;
 int maxSpeed = 600;
 bool enHierba = false;
+std::array<bool, sf::Keyboard::KeyCount> keyState;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -91,10 +92,6 @@ struct Line {
 
 /*------------------------------- FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 void manageKeys(float &playerX, int &speed, int &H){
-  if (Keyboard::isKeyPressed(Keyboard::Tab)){
-    marchaBaja=!marchaBaja;
-    std::cout<<"pressed"<<std::endl;
-  }
   if(((playerX * roadW) > (roadW + road_limit)) || ((playerX * roadW) < (-roadW-road_limit)) || (((playerX + turn_power) * roadW) > (roadW + road_limit)) || (((playerX - turn_power) * roadW) < (-roadW-road_limit)))
   {
     enHierba = true;
@@ -127,8 +124,10 @@ void manageKeys(float &playerX, int &speed, int &H){
         }
       }
     }else{
-      if(speed>100){
-        speed-=20;
+      if (speed > 100) {
+        speed -= 20;
+      }else{
+        speed += 5;
       }
     }
   }else{
@@ -222,8 +221,6 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   const bool areColliding{ collision::areColliding(lines[(startPos+10)%N].sprite, car )}; // this is the collision detection section
   if(!car.getGlobalBounds().intersects(lines[(startPos+10)%N].localBounds)){//no choca
     app.draw(car);
-  }else if(lines[(startPos+10)%N].sprite_type == charco){
-    speed = 50;
   }else{
     app.draw(expl);
   }
@@ -252,7 +249,10 @@ sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip )
 
 int main() {
   RenderWindow app(VideoMode(width, height), "Pole Position");
+  app.setKeyRepeatEnabled(false);
   app.setFramerateLimit(60);
+  keyState.fill(false);
+
 
   Texture t[50];
   Sprite object[50];
@@ -339,6 +339,16 @@ int main() {
         // update the view to the new size of the window
         //sf::FloatRect visibleArea(0, 0, e.size.width, e.size.width*(4/3));
             //app.setView(sf::View(app.getView().getCenter(), sf::Vector2f((float)e.size.width, (float)e.size.height)));
+    }
+    if (e.type == sf::Event::KeyPressed) {
+      if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
+        marchaBaja = !marchaBaja;
+      }
+      keyState[e.key.code] = true;
+
+    } else if (e.type == sf::Event::KeyReleased) {
+      // Update state of current key:
+      keyState[e.key.code] = false;
     }
     manageKeys(playerX, speed, H);
 
