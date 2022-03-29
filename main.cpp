@@ -19,6 +19,7 @@ float off_road_allowed;// = 700;
 float turn_power;// = 0.1;
 float draft_power;// = 0.02;
 float numMaps;
+float goalPos;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -35,9 +36,10 @@ struct Line {
   float x, y, z; // 3d center of line
   float X, Y, W; // screen coord
   float curve, spriteX, clip, scale;
+  bool isGoal;
   Sprite sprite;
 
-  Line() { spriteX = curve = x = y = z = 0; }
+  Line() { spriteX = curve = x = y = z = 0; isGoal = false; }
 
   // decide las screen cord dependiendo de dónde está la cámara
   void project(int camX, int camY, int camZ) {
@@ -133,6 +135,8 @@ void setConfig(){
         draft_power = value;
       }else if(var == "numMaps"){
         numMaps = value;
+      }else if(var == "goalPos"){
+        goalPos = value;
       }else{
         std::cout << "No existe la variable de configuracion " << var << std::endl;
       }
@@ -155,6 +159,9 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         Line line;
         line.z = i * segL;
 
+        if(i == goalPos){
+          line.isGoal = true;
+        }
         if (i > 300 && i < 700)
           line.curve = 0.5;
         if (i > 1100)
@@ -349,6 +356,10 @@ int main() {
   sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
   sBackground.setPosition(-2000, 0);
 
+  t[8].loadFromFile("sprites/entorno/fondos-00-01.png");
+  t[8].setSmooth(true);
+  object[8].setTexture(t[8]);
+
   std::vector<std::vector<Line>> maps; // esto es el conjunto de mapas
   std::vector<Line> lines; // esto es el mapa, 
 
@@ -374,6 +385,9 @@ int main() {
     int startPos, camH, maxy;
     float x, dx;
     updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
+    if(lines[startPos].isGoal){
+      std::cout << "GOAL" << std::endl;
+    }
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
 
