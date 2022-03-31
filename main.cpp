@@ -178,16 +178,18 @@ struct carSprite{
             //Movimiento dcha
             if(car_inv){
               //Recuperando direccion del coche
-              if(rectSrcSprite.left == 0){
+              if(rectSrcSprite.left == car_width){
                 car_inv = false;
+                rectSrcSprite.left -= rectSrcSprite.width;
                 rectSrcSprite.width = -rectSrcSprite.width;
               }
               else
                 rectSrcSprite.left -= car_width;
+            }else{
+              //Giro a dcha
+              if(rectSrcSprite.left < 7*car_width)
+                rectSrcSprite.left += car_width;
             }
-            //Giro a dcha
-            if(rectSrcSprite.left < 7*car_width)
-              rectSrcSprite.left += car_width;
           }
           if(car_dir == -1){
             //Movimiento a izq
@@ -195,25 +197,29 @@ struct carSprite{
               //Recuperando direccion del coche
               if(rectSrcSprite.left == 0){
                 car_inv = true;
+                rectSrcSprite.left += rectSrcSprite.width;
                 rectSrcSprite.width = -rectSrcSprite.width;
               }
               else
                 rectSrcSprite.left -= car_width; 
-            }
-            if(rectSrcSprite.left < 7*car_width)
+            }else{
+              //Giro a izq
+              if(rectSrcSprite.left < 7*car_width)
               rectSrcSprite.left += car_width;
+            }
           }
         }
         if(car_status == 1){
           //Acelerando
           if(car_dir == 0){
             //Movimiento recto
-            if(rectSrcSprite.left > car_width){
+            if(rectSrcSprite.left >= car_width){
               if(car_inv){
                 //Recuperando direccion del coche
-                if(rectSrcSprite.left == 0){
-                  car_inv = false;
-                  rectSrcSprite.width = -rectSrcSprite.width;
+                if(rectSrcSprite.left == rectSrcSprite.width){
+                car_inv = false;
+                rectSrcSprite.left -= rectSrcSprite.width;
+                rectSrcSprite.width = -rectSrcSprite.width;
                 }
               }
               rectSrcSprite.left -= car_width;
@@ -227,16 +233,19 @@ struct carSprite{
             //Movimiento dcha
             if(car_inv){
               //Recuperando direccion del coche
-              if(rectSrcSprite.left == 0){
+             if(rectSrcSprite.left == car_width){
                 car_inv = false;
+                rectSrcSprite.left -= rectSrcSprite.width;
                 rectSrcSprite.width = -rectSrcSprite.width;
               }
               else
                 rectSrcSprite.left -= car_width;
-            }else if(rectSrcSprite.left < 7*car_width)
-              rectSrcSprite.left += car_width;
-            else
-              rectSrcSprite.left = 6*car_width;
+            }else{
+              if(rectSrcSprite.left < 7*car_width)
+                rectSrcSprite.left += car_width;
+              else
+                rectSrcSprite.left = 6*car_width;
+            } 
           }
           if(car_dir == -1){
             //Movimiento a izq
@@ -244,15 +253,18 @@ struct carSprite{
               //Recuperando direccion del coche
               if(rectSrcSprite.left == 0){
                 car_inv = true;
+                rectSrcSprite.left += rectSrcSprite.width;
                 rectSrcSprite.width = -rectSrcSprite.width;
               }
               else
                 rectSrcSprite.left -= car_width;
+            }else{
+              if(rectSrcSprite.left < 8*car_width)
+                rectSrcSprite.left += car_width;
+              else
+                rectSrcSprite.left = 7*car_width;
             }
-            else if(rectSrcSprite.left < 7*car_width)
-              rectSrcSprite.left += car_width;
-            else
-              rectSrcSprite.left = 6*car_width;
+            
           }
         }
       }
@@ -274,16 +286,18 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
   }else{
     enHierba = false;
   }
-  if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX * roadW) < (roadW + off_road_allowed)) && (((playerX + turn_power) * roadW) < (roadW + off_road_allowed)))
+  if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX * roadW) < (roadW + off_road_allowed)) && (((playerX + turn_power) * roadW) < (roadW + off_road_allowed))){
     if(speed>0){
       playerX += turn_power * ((float(speed)/maxSpeed));
-      car.car_dir = 1;
     }
-  if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed)))
+    car.car_dir = 1;
+  }
+  if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed))){
     if(speed > 0){
       playerX -= turn_power * ((float(speed)/maxSpeed));
-      car.car_dir = -1;
     }
+    car.car_dir = -1;
+  }
   if (Keyboard::isKeyPressed(Keyboard::Up)){
     car.car_status = 1;
     if(!enHierba){
