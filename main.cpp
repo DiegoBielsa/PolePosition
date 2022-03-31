@@ -324,6 +324,95 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
       break;
     
     case 3:
+      for(int i = 0; i < 5100; i++){
+        // solo hay que poner los sprites y las curvas (y la meta)
+        Line line;
+        line.z = i * segL;
+
+        if(i >= goalPosIni && i <= goalPosEnd){
+          line.isGoal = true;
+          line.sprite = object[7];
+        }
+
+        if(i >= 400 && i <= 700){
+            line.curve = 2.5;
+        }
+
+        if(i >= 700 && i <= 800){
+            line.curve = 3;
+        }
+
+        if(i >= 800 && i <= 1000){
+            line.curve = -3;
+        }
+
+        if(i >= 1000 && i <= 1200){
+            line.curve = 3;
+        }
+
+        if(i >= 1200 && i <= 1400){
+            line.curve = -3;
+        }
+
+        if(i >= 1400 && i <= 1600){
+            line.curve = 3;
+        }
+
+        if(i >= 1600 && i <= 1800){
+            line.curve = -3;
+        }
+
+        if(i >= 2100 && i <= 2400){
+            line.curve = 2.5;
+        }
+
+        if(i >= 2500 && i <= 2650){
+            line.curve = -1.2;
+        }
+
+        if(i >= 2900 && i <= 3200){
+            line.curve = 2.7;
+        }
+
+        if(i >= 3200 && i <= 3400){
+            line.curve = -0.2;
+        }
+
+        if(i >= 3400 && i <= 3500){
+            line.curve = -2.4;
+        }
+
+        if(i >= 3500 && i <= 3750){
+            line.curve = 0.8;
+        }
+
+        if(i >= 3750 && i <= 3900){
+            line.curve = 2.5;
+        }
+
+        if(i >= 3900 && i <= 4100){
+            line.curve = -0.2;
+        }
+
+        if(i >= 4100 && i <= 4300){
+            line.curve = -2.2;
+        }
+
+        if(i >= 4600 && i <= 4700){
+            line.curve = 2.5;
+        }
+
+        if(i >= 4700 && i <= 4800){
+            line.curve = -2.5;
+        }
+
+        if(i >= 4800 && i <= 4900){
+            line.curve = 2.5;
+        }
+
+        lines.push_back(line);
+
+      }
       break;
     }
     
@@ -369,13 +458,14 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   startPos = pos / segL;
   camH = lines[startPos].y + H;
   if (speed != 0){
+    float actual_draft_power = draft_power * floatAbs(lines[startPos].curve);
     if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))
       && !Keyboard::isKeyPressed(Keyboard::Right) && !Keyboard::isKeyPressed(Keyboard::Left)){
-      if(lines[startPos].curve > 0 && (((playerX - draft_power) * roadW) > (-roadW-off_road_allowed))){
-        playerX -= draft_power * floatAbs(lines[startPos].curve);
+      if(lines[startPos].curve > 0 && (((playerX - actual_draft_power) * roadW) > (-roadW-off_road_allowed))){
+        playerX -= actual_draft_power;
       }
-      if(lines[startPos].curve < 0 && (((playerX + draft_power) * roadW) < (roadW + off_road_allowed))){
-        playerX += draft_power * floatAbs(lines[startPos].curve);
+      if(lines[startPos].curve < 0 && (((playerX + actual_draft_power) * roadW) < (roadW + off_road_allowed))){
+        playerX += actual_draft_power;
       }
     }
   }
@@ -488,7 +578,7 @@ int main() {
   setMaps(maps, object);
 
   // eleccion del mapa
-  lines = maps[2];
+  lines = maps[3];
 
   int N = lines.size();
   float playerX = 0;
@@ -507,9 +597,6 @@ int main() {
     int startPos, camH, maxy;
     float x, dx;
     updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
-    if(lines[startPos].isGoal){
-      std::cout << "GOAL" << std::endl;
-    }
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
 
