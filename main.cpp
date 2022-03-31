@@ -19,7 +19,8 @@ float off_road_allowed;// = 700;
 float turn_power;// = 0.1;
 float draft_power;// = 0.02;
 float numMaps;
-float goalPos;
+float goalPosIni;
+float goalPosEnd;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -74,6 +75,15 @@ struct Line {
     app.draw(s);
   }
 };
+
+/*------------------------------- FUNCIONES AUXILIARES -------------------------------*/
+
+float floatAbs(float a){
+  if(a < 0) return -1.0*a;
+  return a;
+}
+
+/*------------------------------- FUNCIONES AUXILIARES -------------------------------*/
 
 /*------------------------------- FUNCIONES DE INICIALIZACIÓN DEL JUEGO -------------------------------*/
 
@@ -135,8 +145,10 @@ void setConfig(){
         draft_power = value;
       }else if(var == "numMaps"){
         numMaps = value;
-      }else if(var == "goalPos"){
-        goalPos = value;
+      }else if(var == "goalPosIni"){
+        goalPosIni = value;
+      }else if(var == "goalPosEnd"){
+        goalPosEnd = value;
       }else{
         std::cout << "No existe la variable de configuracion " << var << std::endl;
       }
@@ -155,50 +167,160 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
     switch (j)
     {
     case 0:
-      for (int i = 0; i < 1600; i++) {
+      for(int i = 0; i < 3600; i++){
+        // solo hay que poner los sprites y las curvas (y la meta)
         Line line;
         line.z = i * segL;
 
-        if(i == goalPos){
+        if(i >= goalPosIni && i <= goalPosEnd){
           line.isGoal = true;
-        }
-        if (i > 300 && i < 700)
-          line.curve = 0.5;
-        if (i > 1100)
-          line.curve = -0.7;
-
-        if (i < 300 && i % 20 == 0) {
-          line.spriteX = -2.5;
-          line.sprite = object[5];
-        }
-        if (i % 17 == 0) {
-          line.spriteX = 2.0;
-          line.sprite = object[6];
-        }
-        if (i > 300 && i % 20 == 0) {
-          line.spriteX = -0.7;
-          line.sprite = object[4];
-        }
-        if (i > 800 && i % 20 == 0) {
-          line.spriteX = -1.2;
-          line.sprite = object[1];
-        }
-        if (i == 400) {
-          line.spriteX = -1.2;
           line.sprite = object[7];
         }
 
-        if (i > 750)
-          line.y = std::sin(i / 30.0) * 1500;
+        if((i >= 500 && i <= 800) || (i >= 1000 && i <= 1300) || (i >= 2300 && i <= 2600) || (i >= 2800 && i <= 3100)){
+          line.curve = -1;
+        }
 
         lines.push_back(line);
+
       }
       break;
     
     case 1:
+      for(int i = 0; i < 3700; i++){
+        // solo hay que poner los sprites y las curvas (y la meta)
+        Line line;
+        line.z = i * segL;
+
+        if(i >= goalPosIni && i <= goalPosEnd){
+          line.isGoal = true;
+          line.sprite = object[7];
+        }
+
+        if(i >= 500 && i <= 800){
+          line.curve = 2.5;
+        }
+
+        if(i >= 800 && i <= 1300){
+          line.curve = -0.5;
+        }
+
+        if(i >= 1300 && i <= 1600){
+          line.curve = 2.5;
+        }
+
+        if(i >= 1600 && i <= 1900){
+          line.curve = 0.2;
+        }
+
+        if(i >= 1900 && i <= 2300){
+          line.curve = -1.5;
+        }
+
+        if(i >= 2300 && i <= 2700){
+          line.curve = 0.3;
+        }
+
+        if(i >= 2700 && i <= 3700){
+          line.curve = 1;
+        }
+        
+
+        lines.push_back(line);
+
+      }
       break;
 
     case 2:
+      for(int i = 0; i < 7200; i++){
+          // solo hay que poner los sprites y las curvas (y la meta)
+          Line line;
+          line.z = i * segL;
+
+          if(i >= goalPosIni && i <= goalPosEnd){
+            line.isGoal = true;
+            line.sprite = object[7];
+          }
+
+          if(i >= 0 && i <= 1000){
+            line.curve = 0.5;
+          }
+
+          if(i >= 1000 && i <= 1200){
+            line.curve = -0.2;
+          }
+
+          if(i >= 1200 && i <= 1400){
+            line.curve = 2;
+          }
+
+          if(i >= 1600 && i <= 1800){
+            line.curve = -2;
+          }
+
+          if(i >= 2000 && i <= 2200){
+            line.curve = 2;
+          }
+
+          if(i >= 2300 && i <= 2400){
+            line.curve = 2;
+          }
+
+          if(i >= 2400 && i <= 2700){
+            line.curve = -0.4;
+          }
+
+          if(i >= 2700 && i <= 3000){
+            line.curve = 0.4;
+          }
+
+          if(i >= 3000 && i <= 3200){
+            line.curve = -0.7;
+          }
+
+          if(i >= 3300 && i <= 3400){
+            line.curve = 2;
+          }
+
+          if(i >= 4100 && i <= 4200){
+            line.curve = 1.7;
+          }
+
+          if(i >= 4350 && i <= 4500){
+            line.curve = -1.7;
+          }
+
+          if(i >= 4750 && i <= 4900){
+            line.curve = 1.4;
+          }
+
+          if(i >= 5100 && i <= 5250){
+            line.curve = -1.4;
+          }
+
+          if(i >= 5400 && i <= 5500){
+            line.curve = -1.5;
+          }
+
+          if(i >= 5800 && i <= 6000){
+            line.curve = 2;
+          }
+
+          if(i >= 6300 && i <= 6600){
+            line.curve = 1.5;
+          }
+
+          if(i >= 6600 && i <= 6900){
+            line.curve = -1.8;
+          }
+
+          if(i >= 6900 && i <= 7200){
+            line.curve = 0.5;
+          }
+
+          lines.push_back(line);
+
+      }
       break;
     
     case 3:
@@ -250,10 +372,10 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
     if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))
       && !Keyboard::isKeyPressed(Keyboard::Right) && !Keyboard::isKeyPressed(Keyboard::Left)){
       if(lines[startPos].curve > 0 && (((playerX - draft_power) * roadW) > (-roadW-off_road_allowed))){
-        playerX -= draft_power;
+        playerX -= draft_power * floatAbs(lines[startPos].curve);
       }
       if(lines[startPos].curve < 0 && (((playerX + draft_power) * roadW) < (roadW + off_road_allowed))){
-        playerX += draft_power;
+        playerX += draft_power * floatAbs(lines[startPos].curve);
       }
     }
   }
@@ -302,7 +424,7 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 
     // elige el color y da esa sensación de lineas
     Color grass = (n / 3) % 2 ? Color(16, 200, 16) : Color(0, 154, 0);
-    Color rumble = (n / 3) % 2 ? Color(255, 255, 255) : Color(0, 0, 0);
+    Color rumble = (n / 3) % 2 ? Color(255, 255, 255) : Color(255, 0, 0);
     Color road = (n / 3) % 2 ? Color(107, 107, 107) : Color(105, 105, 105);
 
     // pilla la anterior que es la que ha modificado en la iteración anterior para diujar lo que hay puesto
@@ -366,7 +488,7 @@ int main() {
   setMaps(maps, object);
 
   // eleccion del mapa
-  lines = maps[0];
+  lines = maps[2];
 
   int N = lines.size();
   float playerX = 0;
