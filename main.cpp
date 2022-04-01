@@ -168,7 +168,7 @@ struct carSprite{
               //Recuperando direccion del coche
               if(rectSrcSprite.left == 0){
                 car_inv = true;
-                rectSrcSprite.left += rectSrcSprite.width;
+                rectSrcSprite.left += car_width;
                 rectSrcSprite.width = -rectSrcSprite.width;
               }
               else
@@ -187,7 +187,7 @@ struct carSprite{
             if(rectSrcSprite.left >= car_width){
               if(car_inv){
                 //Recuperando direccion del coche
-                if(rectSrcSprite.left == rectSrcSprite.width){
+                if(rectSrcSprite.left == car_width){
                 car_inv = false;
                 rectSrcSprite.left -= rectSrcSprite.width;
                 rectSrcSprite.width = -rectSrcSprite.width;
@@ -195,8 +195,6 @@ struct carSprite{
               }
               rectSrcSprite.left -= car_width;
             }
-            else if(rectSrcSprite.left == car_width)
-              rectSrcSprite.left = 0;
             else
               rectSrcSprite.left += car_width;
           }
