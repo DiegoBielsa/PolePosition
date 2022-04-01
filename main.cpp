@@ -38,6 +38,8 @@ bool enHierba = false;
 std::array<bool, sf::Keyboard::KeyCount> keyState;
 int NumCircuitos = 5;
 bool gameOver = false;
+bool perderControl = false;
+int animColision = 0;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
               int w2) {
@@ -129,7 +131,7 @@ struct carSprite{
       vel_refresco = 1.0f;
     else
       vel_refresco = 0.3f;
-    if(clock.getElapsedTime().asSeconds() > 0.3f){
+    if(clock.getElapsedTime().asSeconds() > 0.03f){
       if(colision){
         if(rectSrcSprite.top < 3*car_height){
           car_width = 61;
@@ -279,74 +281,78 @@ struct carSprite{
 void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
   car.car_status = 0;
   car.car_dir = 0;
-
-  if(((playerX * roadW) > (roadW + road_limit)) || ((playerX * roadW) < (-roadW-road_limit)) || (((playerX + turn_power) * roadW) > (roadW + road_limit)) || (((playerX - turn_power) * roadW) < (-roadW-road_limit)))
-  {
-    enHierba = true;
+  if(perderControl){
+    speed = 50;
+    animColision++;
+    std::cout<<animColision<<std::endl;
+    if(animColision == 150){
+      //ponerlo en el medio
+      perderControl = false;
+      animColision = 0;
+      car.init(IntRect(0, 0, car_width, car_height), car.tex);
+    }
   }else{
-    enHierba = false;
-  }
-  if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX * roadW) < (roadW + off_road_allowed)) && (((playerX + turn_power) * roadW) < (roadW + off_road_allowed))){
-    if(speed>0){
-      playerX += turn_power * ((float(speed)/maxSpeed));
+    if(((playerX * roadW) > (roadW + road_limit)) || ((playerX * roadW) < (-roadW-road_limit)) || (((playerX + turn_power) * roadW) > (roadW + road_limit)) || (((playerX - turn_power) * roadW) < (-roadW-road_limit)))
+    {
+      enHierba = true;
+    }else{
+      enHierba = false;
     }
-    car.car_dir = 1;
-  }
-  if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed))){
-    if(speed > 0){
-      playerX -= turn_power * ((float(speed)/maxSpeed));
+    if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX * roadW) < (roadW + off_road_allowed)) && (((playerX + turn_power) * roadW) < (roadW + off_road_allowed))){
+      if(speed>0){
+        playerX += turn_power * ((float(speed)/maxSpeed));
+      }
+      car.car_dir = 1;
     }
-    car.car_dir = -1;
-  }
-  if (Keyboard::isKeyPressed(Keyboard::Up)){
-    car.car_status = 1;
-    if(!enHierba){
-      if(marchaBaja){
-        if(speed < 100){
-          speed += 10;
-        }else if(speed < 300){
-          speed += 20;
-        }else{
-          speed=300;
+    if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed))){
+      if(speed > 0){
+        playerX -= turn_power * ((float(speed)/maxSpeed));
+      }
+      car.car_dir = -1;
+    }
+    if (Keyboard::isKeyPressed(Keyboard::Up)){
+      car.car_status = 1;
+      if(!enHierba){
+        if(marchaBaja){
+          if(speed < 100){
+            speed += 10;
+          }else if(speed < 300){
+            speed += 20;
+          }else{
+            speed=300;
+          }
+        }else{//marcha alta
+          if(speed < 300){
+            speed += 5;
+          }else if(speed < maxSpeed){
+            speed += 30;
+          }
         }
-      }else{//marcha alta
-        if(speed < 300){
+      }else{
+        if (speed > 100) {
+          speed -= 20;
+        }else{
           speed += 5;
-        }else if(speed < maxSpeed){
-          speed += 30;
         }
       }
     }else{
-      if (speed > 100) {
-        speed -= 20;
-      }else{
-        speed += 5;
+      if(speed == 5){
+        speed = 0;
+      }else if(speed>0){
+        speed-=10;
       }
     }
-  }else{
-    if(speed == 5){
-      speed = 0;
-    }else if(speed>0){
-      speed-=10;
+    
+      
+      
+    if (Keyboard::isKeyPressed(Keyboard::Down)){
+      if (speed > 10) {
+        speed -= 20;
+      }else if(speed == 10){
+        speed = 0;
+      }
     }
   }
-  
-    
-    
-  if (Keyboard::isKeyPressed(Keyboard::Down)){
-    if (speed > 10) {
-      speed -= 20;
-    }else if(speed == 10){
-      speed = 0;
-    }
-  }
-    
-  
-  /*if (Keyboard::isKeyPressed(Keyboard::W))
-    H += 100;
-  if (Keyboard::isKeyPressed(Keyboard::S))
-    H -= 100;
-*/
 }
 
 /**
@@ -419,6 +425,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     app.draw(car.sprite);
   }else{
     car.colision = true;
+    perderControl = true;
     //app.draw(expl);
   }
 }
@@ -733,26 +740,28 @@ int main() {
     if (i > 1100)
       line.curve = -0.7;
 
-    if (i < 300 && i % 20 == 0) {
+    /*if (i < 300 && i % 20 == 0) {
       line.spriteX = -2.5;
       line.sprite = object[5];
     }
     if (i % 17 == 0) {
       line.spriteX = 2.0;
       line.sprite = object[6];
-    }
+    }*/
     if (i > 300 && i % 20 == 0) {
-      line.spriteX = -0.7;
-      line.sprite = object[4];
+      if (i==320){
+        line.spriteX = -0.7;
+        line.sprite = object[4];
+      }
     }
-    if (i > 800 && i % 20 == 0) {
+    /*if (i > 800 && i % 20 == 0) {
       line.spriteX = -1.2;
       line.sprite = object[1];
     }
     if (i == 400) {
       line.spriteX = -1.2;
       line.sprite = object[7];
-    }
+    }*/
 
     if (i > 750)
       line.y = std::sin(i / 30.0) * 1500;
