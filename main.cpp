@@ -13,10 +13,8 @@ using namespace sf;
 using namespace std;
 
 #define charco 0
-#define spriteColisión 1
+#define spriteColision 1
 
-#define charco 0
-#define spriteColisión 1
 
 int width = 1024;
 int height = 768;
@@ -120,6 +118,17 @@ struct carSprite{
     colision = false;
     rectSrcSprite = rect;
     tex = t;
+    sprite.setTexture(tex);
+    sprite.setTextureRect(rectSrcSprite);
+    sprite.setPosition(width/2-car_width*1.5,600);
+    sprite.setScale(3,3);
+  }
+  void reinit(){
+    car_status = 0;
+    car_dir = 0;
+    spriteN = 0;
+    car_inv = false;
+    colision = false;
     sprite.setTexture(tex);
     sprite.setTextureRect(rectSrcSprite);
     sprite.setPosition(width/2-car_width*1.5,600);
@@ -419,9 +428,10 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   //std::cout<<"car: "<<car.getPosition().x<<std::endl;
   //std::cout<<"spr: "<<lines[(startPos+10)%N].localBounds.height<<std::endl;
 
+  car.updateCarSprite();
   if(!car.sprite.getGlobalBounds().intersects(lines[(startPos+10)%N].localBounds)){//no choca
       //actualizar sprite
-    car.updateCarSprite();
+    
     app.draw(car.sprite);
   }else{
     car.colision = true;
