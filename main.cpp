@@ -124,11 +124,14 @@ struct carSprite{
     sprite.setScale(3,3);
   }
   void reinit(){
+    car_width = 56;
+    car_height = 33;
     car_status = 0;
     car_dir = 0;
     spriteN = 0;
     car_inv = false;
     colision = false;
+    rectSrcSprite = IntRect(0, 0, car_width, car_height);
     sprite.setTexture(tex);
     sprite.setTextureRect(rectSrcSprite);
     sprite.setPosition(width/2-car_width*1.5,600);
@@ -208,7 +211,7 @@ struct carSprite{
               //Recuperando direccion del coche
               if(rectSrcSprite.left == 0){
                 car_inv = true;
-                rectSrcSprite.left += rectSrcSprite.width;
+                rectSrcSprite.left += car_width;
                 rectSrcSprite.width = -rectSrcSprite.width;
               }
               else
@@ -227,7 +230,7 @@ struct carSprite{
             if(rectSrcSprite.left >= car_width){
               if(car_inv){
                 //Recuperando direccion del coche
-                if(rectSrcSprite.left == rectSrcSprite.width){
+                if(rectSrcSprite.left == car_width){
                 car_inv = false;
                 rectSrcSprite.left -= rectSrcSprite.width;
                 rectSrcSprite.width = -rectSrcSprite.width;
@@ -235,8 +238,6 @@ struct carSprite{
               }
               rectSrcSprite.left -= car_width;
             }
-            else if(rectSrcSprite.left == car_width)
-              rectSrcSprite.left = 0;
             else
               rectSrcSprite.left += car_width;
           }
@@ -293,12 +294,11 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
   if(perderControl){
     speed = 50;
     animColision++;
-    std::cout<<animColision<<std::endl;
     if(animColision == 150){
       //ponerlo en el medio
       perderControl = false;
       animColision = 0;
-      car.init(IntRect(0, 0, car_width, car_height), car.tex);
+      car.reinit();
     }
   }else{
     if(((playerX * roadW) > (roadW + road_limit)) || ((playerX * roadW) < (-roadW-road_limit)) || (((playerX + turn_power) * roadW) > (roadW + road_limit)) || (((playerX - turn_power) * roadW) < (-roadW-road_limit)))
@@ -419,12 +419,6 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   for (int n = startPos + draw_distance; n > startPos; n--)
     lines[n % N].drawSprite(app);
 
-  Texture exp;
-  exp.loadFromFile("sprites/coches/tile207.png");
-  Sprite expl(exp);
-  expl.setTextureRect(IntRect(0, 0, car_width, car_height));
-  expl.setPosition(width/2-car_width*1.5,600);
-  expl.setScale(3,3);
   //std::cout<<"car: "<<car.getPosition().x<<std::endl;
   //std::cout<<"spr: "<<lines[(startPos+10)%N].localBounds.height<<std::endl;
 
@@ -436,7 +430,6 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   }else{
     car.colision = true;
     perderControl = true;
-    //app.draw(expl);
   }
 }
 
