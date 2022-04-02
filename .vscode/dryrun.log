@@ -1,0 +1,5 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/oscargo/repos/PolePosition'
+g++ main.o -o pole-position -L/home/diego/SFML-2.5.1/include/ -lsfml-graphics -lsfml-window -lsfml-system
+make: Leaving directory '/home/oscargo/repos/PolePosition'
+ 
