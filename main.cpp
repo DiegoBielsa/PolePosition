@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <cmath>
@@ -56,6 +57,8 @@ struct Line {
   float curve, spriteX, clip, scale;
   FloatRect localBounds;
   Sprite sprite;
+  Sprite iaCar;
+  bool hayCar ;
   int sprite_type;
 
   Line() { spriteX = curve = x = y = z = 0; }
@@ -70,6 +73,39 @@ struct Line {
 
   void drawSprite(RenderWindow &app) {
     Sprite s = sprite;
+    int w = s.getTextureRect().width;
+    int h = s.getTextureRect().height;
+
+    float destX = X + scale * spriteX * width / 2;
+    float destY = Y + 4;
+    float destW = w * W / 266;
+    float destH = h * W / 266;
+
+    destX += destW * spriteX; // offsetX
+    destY += destH * (-1);    // offsetY
+
+    float clipH = destY + destH - clip;
+    if (clipH < 0)
+      clipH = 0;
+
+    if (clipH >= destH)
+      return;
+    s.setTextureRect(IntRect(0, 0, w, h - h * clipH / destH));
+    s.setScale(destW / w, destH / h);
+    s.setPosition(destX, destY);
+    
+    localBounds = s.getGlobalBounds();
+    
+    //std::cout<<destX<<destY<<std::endl;
+    app.draw(s);
+  }
+
+  bool hayCoche(){
+    return hayCar;
+  }
+
+  void drawCar(RenderWindow &app) {
+    Sprite s = iaCar;
     int w = s.getTextureRect().width;
     int h = s.getTextureRect().height;
 
@@ -416,21 +452,40 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 
 void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car){
   ////////draw objects////////
-  for (int n = startPos + draw_distance; n > startPos; n--)
+  //std::cout<<startPos<<std::endl;
+  for (int n = startPos + draw_distance; n > startPos; n--){
     lines[n % N].drawSprite(app);
+    if (lines[n % N].hayCoche()){
+      lines[n % N].drawCar(app);
+    }
+      
+  }
 
   //std::cout<<"car: "<<car.getPosition().x<<std::endl;
   //std::cout<<"spr: "<<lines[(startPos+10)%N].localBounds.height<<std::endl;
+  //std::cout<<"car: "<<car.sprite.getGlobalBounds().height<<std::endl;
 
   car.updateCarSprite();
-  if(!car.sprite.getGlobalBounds().intersects(lines[(startPos+10)%N].localBounds)){//no choca
-      //actualizar sprite
-    
-    app.draw(car.sprite);
-  }else{
-    car.colision = true;
-    perderControl = true;
+  app.draw(car.sprite);
+  if(enHierba){
+    if(car.sprite.getGlobalBounds().intersects(lines[(startPos+10)%N].localBounds)){//no choca
+      car.colision = true;
+      perderControl = true;
+      //std::cout<<"choque"<<std::endl;
+    }
   }
+}
+
+void updateCars(RenderWindow& app, int startPos, std::vector<Line>& lines, int &N, carSprite &car){
+  ////////draw objects////////
+  //std::cout<<startPos<<std::endl;
+
+      lines[(startPos+5)% N].iaCar = car.sprite;
+      lines[(startPos)% N].hayCar = false;
+      lines[(startPos+5)% N].hayCar = true;
+      
+      
+
 }
 
 // in = ( scenew, sceneh ); clip = ( windoww, windowh )
@@ -724,6 +779,9 @@ int main() {
       t[i].setSmooth(true);
       object[i].setTexture(t[i]);
   }
+  t[8].loadFromFile("sprites/coches/tile302.png");
+  t[8].setSmooth(true);
+  object[8].setTexture(t[8]);
 
   Texture bg;
   bg.loadFromFile("images/bg.png");
@@ -757,6 +815,12 @@ int main() {
         line.sprite = object[4];
       }
     }
+      if (i==100){
+        line.spriteX = 0.0;
+        line.iaCar = object[8];
+        line.hayCar = true;
+      }
+
     /*if (i > 800 && i % 20 == 0) {
       line.spriteX = -1.2;
       line.sprite = object[1];
@@ -843,6 +907,7 @@ int main() {
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
     drawLetters(app, puntuaciones, speed, elapsed, limite,gameOver);
+    updateCars(app, 100, lines, N, car);
 
     if (gameOver == true) {
         drawGameOver(app);
