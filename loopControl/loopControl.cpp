@@ -74,7 +74,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
       if(speed == 5){
         speed = 0;
       }else if(speed>0){
-        speed-=10;
+        speed-=5;
       }
     }
     
@@ -120,6 +120,10 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
 
   maxy = height;
   x = 0, dx = 0;
+
+  if (startPos == 3500){//será goalposend
+    gameOver = true;
+  }
 }
 
 /**

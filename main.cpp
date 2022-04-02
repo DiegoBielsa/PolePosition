@@ -78,6 +78,16 @@ int main() {
       t[i].setSmooth(true);
       object[i].setTexture(t[i]);
   }
+  t[8].loadFromFile("sprites/entorno/meta.png");
+  t[8].setSmooth(true);
+  object[8].setTexture(t[8]);
+  for(int i=0; i <6 ; i++){
+    t[i+9].loadFromFile("sprites/entorno/cartel"+std::to_string(i+1)+".png");
+    t[i+9].setSmooth(true);
+    object[i+9].setTexture(t[i+9]);
+  }
+
+
 
   Texture bg;
   bg.loadFromFile("images/bg.png");

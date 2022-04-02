@@ -22,7 +22,7 @@ using namespace sf;
 using namespace std;
 
 #define charco 0
-#define spriteColisión 1
+#define spriteColisiï¿½n 1
 
 int width = 1024;
 int height = 768;
@@ -32,7 +32,7 @@ float camD = 0.84; // camera depth
 float draw_distance = 300; // empiezan a aparecer en pantalla en el 8
 int car_width = 56;
 int car_height = 50;
-float off_road_allowed = 700;
+float off_road_allowed = 1500;
 float road_limit = 700;
 float turn_power = 0.1;
 float draft_power = 0.02;
