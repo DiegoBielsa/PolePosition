@@ -34,7 +34,7 @@ bool pressed = false;
 int maxSpeed = 600;
 bool enHierba = false;
 std::array<bool, sf::Keyboard::KeyCount> keyState;
-int NumCircuitos = 5;
+int numMaps = 5;
 bool gameOver = false;
 bool perderControl = false;
 int animColision = 0;
@@ -510,7 +510,7 @@ void leerLimite(int &limite, int numero) {
         }
         else {
             i++;
-            while (!f.eof() || i < NumCircuitos) {
+            while (!f.eof() || i < numMaps) {
                 getline(f, cadena, '\n');
                 if (i == numero) {
                     limite=stoi(cadena);
