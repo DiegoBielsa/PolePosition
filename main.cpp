@@ -89,25 +89,14 @@ int main() {
   sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
   sBackground.setPosition(-2000, 0);
 
-<<<<<<< HEAD
-  t[8].loadFromFile("sprites/entorno/fondos-00-01.png");
-  t[8].setSmooth(true);
-  object[8].setTexture(t[8]);
-
-=======
->>>>>>> main
   std::vector<std::vector<Line>> maps; // esto es el conjunto de mapas
   std::vector<Line> lines; // esto es el mapa, 
 
   setMaps(maps, object);
 
   // eleccion del mapa
-<<<<<<< HEAD
-  lines = maps[3];
-=======
   lines = maps[0];
   
->>>>>>> main
 
   int N = lines.size();
   float playerX = 0;
@@ -121,13 +110,6 @@ int main() {
         app.close();
     }
 
-<<<<<<< HEAD
-    int speed = 0;
-    manageKeys(playerX, speed, H);
-    int startPos, camH, maxy;
-    float x, dx;
-    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
-=======
 
     if (e.type == sf::Event::Resized){
       sf::View view = app.getDefaultView();
@@ -157,7 +139,6 @@ int main() {
 
   
 
->>>>>>> main
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
     drawLetters(app, puntuaciones, speed, elapsed, limite,gameOver);
