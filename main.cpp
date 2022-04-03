@@ -51,6 +51,7 @@ int animColision = 0;
 
 Time tiempoconseguido;
 bool ultimotiempo = false;
+int score = 0;
 
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
@@ -155,13 +156,13 @@ int main() {
         elapsed= clock.getElapsedTime();
         lim = limite;
     }
-
+    calcularScore(score,speed,gameOver);
 
   
 
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
-    drawLetters(app, puntuaciones, speed, elapsed, lim,gameOver);
+    drawLetters(app, puntuaciones, speed,score ,elapsed, lim,gameOver);
     drawGear(app, marchaBaja, marcha);
 
 
