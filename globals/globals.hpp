@@ -27,3 +27,6 @@ extern int numMaps;
 extern bool gameOver;
 extern bool perderControl;
 extern int animColision;
+
+extern sf::Time tiempoconseguido;
+extern bool ultimotiempo;
