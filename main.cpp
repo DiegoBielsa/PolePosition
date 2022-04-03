@@ -70,6 +70,7 @@ int main() {
   Texture t[50];
   Sprite object[50];
   Texture ca;
+  Texture marcha;
   ca.loadFromFile("sprites/coches/carSpritesheet.png");
   carSprite car;
   car.init(IntRect(0, 0, car_width, car_height), ca); //Inicializar sprite coche
@@ -149,6 +150,7 @@ int main() {
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
     drawLetters(app, puntuaciones, speed, elapsed, limite,gameOver);
+    drawGear(app, marchaBaja, marcha);
 
     if (gameOver == true) {
         drawGameOver(app);
