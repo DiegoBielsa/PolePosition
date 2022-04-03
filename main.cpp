@@ -36,6 +36,7 @@ float turn_power;
 float draft_power;
 float goalPosIni;
 float goalPosEnd;
+
 int speed = 0;
 bool marchaBaja = true;
 bool pressed = false;
@@ -48,6 +49,8 @@ bool perderControl = false;
 int animColision = 0;
 
 
+Time tiempoconseguido;
+bool ultimotiempo = false;
 
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
@@ -64,8 +67,10 @@ int main() {
   String puntuaciones[7];
   leerPuntuaciones(puntuaciones);
   int limite = 0;
+ 
 
   leerLimite(limite, 0);
+  int lim = limite; //variable que iremos restando para no tener que volver a leer el fichero cuando hacemos vuelta
 
   Texture t[50];
   Sprite object[50];
@@ -140,23 +145,33 @@ int main() {
     
     int startPos, camH, maxy;
     float x, dx;
-    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
+    updateVars(app, pos, startPos,camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
     
     sf::Time elapsed = clock.getElapsedTime();
-    //clock.restart() cuando hagamos vuelta
+    bool metacruz = false;
+    comprobarMeta(startPos,goalPosIni,metacruz);
+    if (metacruz == true) {
+        clock.restart();  //cuando hagamos vuelta
+        elapsed= clock.getElapsedTime();
+        lim = limite;
+    }
+
 
   
 
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
-    drawLetters(app, puntuaciones, speed, elapsed, limite,gameOver);
+    drawLetters(app, puntuaciones, speed, elapsed, lim,gameOver);
     drawGear(app, marchaBaja, marcha);
+
+
 
     if (gameOver == true) {
         drawGameOver(app);
     }
 
     app.display();
+
     
   }
 
