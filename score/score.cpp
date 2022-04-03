@@ -96,7 +96,7 @@ void leerLimite(int &limite, int numero) {
 
 }
 
-void drawLetters(RenderWindow& app, String puntuaciones[], int velocidad, Time& elapsed, int &limite,bool &gameOver) {
+void drawLetters(RenderWindow& app, String puntuaciones[], int velocidad,int puntu, Time& elapsed, int &limite,bool &gameOver) {
     sf::Text top;
     sf::Text topnumber;
     sf::Text score;
@@ -134,19 +134,11 @@ void drawLetters(RenderWindow& app, String puntuaciones[], int velocidad, Time& 
     lap.setString("LAP");
 
     int seconds = elapsed.asSeconds();
-    int mili = elapsed.asMilliseconds();
-    while (mili > 1000) {
-        mili = mili - 1000;
-    }
-
-    String minu = inttostring(mili);
-    String sec = inttostring(seconds);
-    lapnumber.setString(sec + "''" + minu);
-    score.setString("SCORE");
-    scorenumber.setString("0000");
-
     int resta = limite - seconds;
-    if (resta >=0) {
+    if (gameOver == true) {
+        timenumber.setString("0");
+    }
+    else if (resta >= 0) {
         String lim = inttostring(resta);
         timenumber.setString(lim);
     }
@@ -154,6 +146,36 @@ void drawLetters(RenderWindow& app, String puntuaciones[], int velocidad, Time& 
         timenumber.setString("0");
         gameOver = true;
     }
+
+    Time tiempo;
+    int punt;
+    if (gameOver == true && ultimotiempo==false) {
+        ultimotiempo = true;
+        tiempoconseguido = elapsed;
+        tiempo = tiempoconseguido;
+        
+    }
+    else if (gameOver == true) {
+        tiempo = tiempoconseguido;
+    }
+    else { // no ha terminado
+        tiempo = elapsed;
+
+    }
+    int seconds2 = tiempo.asSeconds();
+    int mili = tiempo.asMilliseconds();
+    while (mili > 1000) {
+        mili = mili - 1000;
+    }
+
+    String minu = inttostring(mili);
+    String sec = inttostring(seconds2);
+    lapnumber.setString(sec + "''" + minu);
+    score.setString("SCORE");
+    String puntuacion= inttostring(puntu);
+    scorenumber.setString(puntuacion);
+
+  
     speed.setString("SPEED");
     String s = inttostring(velocidad);
     speednumber.setString(s + "km");
@@ -263,4 +285,14 @@ sf::View getLetterboxView(sf::View view, int windowWidth, int windowHeight) {
 
     return view;
 
+}
+void calcularScore(int& score, int velocidad,bool gameOver) {
+    if (gameOver != true) {
+        int v = velocidad - 50;
+        if (v < 0) {
+            v = 0;
+        }
+        int punt = 1 * v;
+        score = score + punt;
+    }
 }

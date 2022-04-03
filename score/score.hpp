@@ -9,8 +9,9 @@ String inttostring(int entero);
 
 void leerLimite(int &limite, int numero);
 
-void drawLetters(RenderWindow& app, String puntuaciones[], int velocidad, Time& elapsed, int &limite,bool &gameOver);
+void drawLetters(RenderWindow& app, String puntuaciones[], int velocidad, int puntu, Time& elapsed, int &limite,bool &gameOver);
 
 void drawGameOver(RenderWindow& app);
 
 sf::View getLetterboxView(sf::View view, int windowWidth, int windowHeight);
+void calcularScore(int& score, int velocidad,bool gameOver);
