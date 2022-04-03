@@ -211,3 +211,13 @@ void drawGear(RenderWindow& app, bool marcha_baja, Texture& marcha) {
     app.draw(march);
 
 }
+void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
+    if ( startPos == goalPosIni) {
+        metacruz = true;
+
+    }
+    else {
+        metacruz = false;
+
+    }
+}
