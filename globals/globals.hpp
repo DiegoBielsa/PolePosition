@@ -30,3 +30,4 @@ extern int animColision;
 
 extern sf::Time tiempoconseguido;
 extern bool ultimotiempo;
+extern int score;
