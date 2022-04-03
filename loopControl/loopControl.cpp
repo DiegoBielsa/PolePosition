@@ -196,3 +196,18 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     perderControl = true;
   }
 }
+
+void drawGear(RenderWindow& app, bool marcha_baja, Texture& marcha) {
+    if (marchaBaja == true) {
+        marcha.loadFromFile("images/marcha_baja.png");
+
+    }
+    else {
+        marcha.loadFromFile("images/marcha_alta.png");
+
+    }
+    Sprite march(marcha);
+    march.setPosition(width - 80, height - 200);
+    app.draw(march);
+
+}
