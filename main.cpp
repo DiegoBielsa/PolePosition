@@ -181,7 +181,7 @@ int main() {
     else if (gameOver == true && restart == true) {
         if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//mayor que 10 segundos
             escribirPuntuaciones(puntuaciones, score);
-            //app.close();   terminamos?
+            app.close();   //terminamos?
         }
     }
 
