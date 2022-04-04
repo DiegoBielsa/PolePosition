@@ -3,8 +3,9 @@ route_functions = ./functions/functions
 route_init = ./init/init
 route_loopControl = ./loopControl/loopControl
 route_score = ./score/score
+route_pantallas = ./pantallas/Pantallaranking
 RM = /bin/rm -f  # para limpiar
-objects = main.o ${route_functions}.o ${route_init}.o ${route_loopControl}.o ${route_score}.o
+objects = main.o ${route_functions}.o ${route_init}.o ${route_loopControl}.o ${route_score}.o ${route_pantallas}.o
 CC = g++
 DIRS = -I. -I./functions -I./init -I./loopControl -I./score
 CFLAGS = -Wall -g ${DIRS}
@@ -28,6 +29,9 @@ ${route_loopControl}.o: ${route_loopControl}.cpp ${route_loopControl}.hpp
 #---------------------------------------------------------
 ${route_score}.o: ${route_score}.cpp ${route_score}.hpp
 	${CC} -c ${CFLAGS} ${route_score}.cpp -o ${route_score}.o
+#---------------------------------------------------------
+${route_pantallas}.o: ${route_pantallas}.cpp ${route_pantallas}.hpp
+	${CC} -c ${CFLAGS} ${route_pantallas}.cpp -o ${route_pantallas}.o
 
 
 
