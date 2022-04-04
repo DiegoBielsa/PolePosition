@@ -1,6 +1,8 @@
 #include "score.hpp"
 
 using namespace std;
+
+bool control = false;
 // in = ( scenew, sceneh ); clip = ( windoww, windowh )
 sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip )
 {
@@ -32,7 +34,7 @@ void leerPuntuaciones(string puntuaciones[]) {
         int i = 0;
         string cadena;
         getline(f, cadena, '\n');
-        while (!f.eof() || i < 7) {
+        while (!f.eof() && i < 7) {
             puntuaciones[i] = cadena;
             i++;
             getline(f, cadena, '\n');
@@ -102,7 +104,7 @@ void leerLimite(int &limite, int numero) {
 
 }
 
-void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad,int puntu, Time& elapsed, int &limite,bool &gameOver) {
+void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int puntu, Time& elapsed, int& limite,bool& gameOver) {
     sf::Text top;
     sf::Text topnumber;
     sf::Text score;
@@ -292,7 +294,7 @@ sf::View getLetterboxView(sf::View view, int windowWidth, int windowHeight) {
     return view;
 
 }
-void calcularScore(int& score, int velocidad,bool gameOver) {
+void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver) {
     if (gameOver != true) {
         int v = velocidad - 50;
         if (v < 0) {
@@ -300,6 +302,14 @@ void calcularScore(int& score, int velocidad,bool gameOver) {
         }
         int punt = 1 * v;
         score = score + punt;
+    }
+    else if (gameOver == true && control == false) {
+        control = true;
+        double multi= -1*(lim - limite) / 10;
+        if (multi < 1.0) {
+            multi = 1.0;
+        }
+        score = score * multi;
     }
 }
 void escribirPuntuaciones(string puntuaciones[],int puntuacion) {
