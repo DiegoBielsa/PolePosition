@@ -1,3 +1,4 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Window/Event.hpp>
@@ -12,6 +13,7 @@
 #include <string.h>
 #include "score/score.hpp"
 #include "globals/globals.hpp"
+#include "pantallas/PantallaRanking.hpp"
 
 
 
@@ -53,8 +55,6 @@ Time tiempoconseguido;
 bool ultimotiempo = false;
 int score = 0;
 
-
-
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
 int main() {
@@ -77,7 +77,6 @@ int main() {
   leerLimite(limite, 0);
   int lim = limite; //variable que iremos restando para no tener que volver a leer el fichero cuando hacemos vuelta
 
-
   Texture t[50];
   Sprite object[50];
   Texture ca;
@@ -93,7 +92,7 @@ int main() {
   t[8].loadFromFile("sprites/entorno/meta.png");
   t[8].setSmooth(true);
   object[8].setTexture(t[8]);
-  for(int i=0; i <7 ; i++){
+  for(int i=0; i <6 ; i++){
     t[i+9].loadFromFile("sprites/entorno/cartel"+std::to_string(i+1)+".png");
     t[i+9].setSmooth(true);
     object[i+9].setTexture(t[i+9]);
@@ -114,7 +113,7 @@ int main() {
   setMaps(maps, object);
 
   // eleccion del mapa
-  lines = maps[3];
+  lines = maps[0];
   
 
   int N = lines.size();
@@ -161,7 +160,7 @@ int main() {
         elapsed= clock.getElapsedTime();
         lim = limite;
     }
-    calcularScore(score,speed,gameOver);
+    calcularScore(score,speed,lim,limite,gameOver);
 
   
 
@@ -179,12 +178,15 @@ int main() {
 
     if (gameOver == true && restart == false) {
         tiempoparafin.restart();
+        escribirPuntuaciones(puntuaciones, score);
         restart = true;
     }
     else if (gameOver == true && restart == true) {
-        if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//mayor que 10 segundos
-            escribirPuntuaciones(puntuaciones, score);
-            app.close();   //terminamos?
+        if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
+             app.clear(Color(0, 0, 180));
+
+            drawRanking(app,puntuaciones,lim,score);
+
         }
     }
 
