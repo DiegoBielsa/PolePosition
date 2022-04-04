@@ -191,7 +191,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
       //actualizar sprite
     
     app.draw(car.sprite);
-  }else{
+  }else if(lines[(startPos+10)%N].sprite_type == 0){
     car.colision = true;
     perderControl = true;
   }
