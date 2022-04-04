@@ -66,8 +66,10 @@ int main() {
   keyState.fill(false);
 
   Clock clock;
+  Clock tiempoparafin;
+  bool restart = false;
 
-  String puntuaciones[7];
+  string puntuaciones[7];
   leerPuntuaciones(puntuaciones);
   int limite = 0;
  
@@ -169,9 +171,21 @@ int main() {
     drawGear(app, marchaBaja, marcha);
 
 
-
+    
     if (gameOver == true) {
         drawGameOver(app);
+    }
+
+
+    if (gameOver == true && restart == false) {
+        tiempoparafin.restart();
+        restart = true;
+    }
+    else if (gameOver == true && restart == true) {
+        if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//mayor que 10 segundos
+            escribirPuntuaciones(puntuaciones, score);
+            app.close();   //terminamos?
+        }
     }
 
     app.display();

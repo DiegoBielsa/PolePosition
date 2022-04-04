@@ -1,6 +1,6 @@
 #include "score.hpp"
 
-
+using namespace std;
 // in = ( scenew, sceneh ); clip = ( windoww, windowh )
 sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip )
 {
@@ -24,7 +24,7 @@ sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip )
 
 
 
-void leerPuntuaciones(String puntuaciones[]) {
+void leerPuntuaciones(string puntuaciones[]) {
 
     fstream f;
     f.open("puntuaciones.txt");
@@ -32,12 +32,10 @@ void leerPuntuaciones(String puntuaciones[]) {
         int i = 0;
         string cadena;
         getline(f, cadena, '\n');
-        puntuaciones[i] = cadena;
-        i++;
         while (!f.eof() || i < 7) {
-            getline(f, cadena, '\n');
             puntuaciones[i] = cadena;
             i++;
+            getline(f, cadena, '\n');
         }
         if (i < 7) {
             while (i < 7) {
@@ -46,7 +44,6 @@ void leerPuntuaciones(String puntuaciones[]) {
                 f << "0000" << endl;
             }
         }
-
         f.close();
 
     }
@@ -63,6 +60,15 @@ String inttostring(int entero) {
     string s;
     ss >> s;
     return s;
+}
+
+int stringtoint(string s) {
+
+    stringstream degree(s);
+
+    int x = 0;
+    degree >> x;
+    return x;
 }
 
 void leerLimite(int &limite, int numero) {
@@ -96,7 +102,7 @@ void leerLimite(int &limite, int numero) {
 
 }
 
-void drawLetters(RenderWindow& app, String puntuaciones[], int velocidad,int puntu, Time& elapsed, int &limite,bool &gameOver) {
+void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad,int puntu, Time& elapsed, int &limite,bool &gameOver) {
     sf::Text top;
     sf::Text topnumber;
     sf::Text score;
@@ -295,4 +301,42 @@ void calcularScore(int& score, int velocidad,bool gameOver) {
         int punt = 1 * v;
         score = score + punt;
     }
+}
+void escribirPuntuaciones(string puntuaciones[],int puntuacion) {
+    bool esMejor = false;
+    int i = 0;
+    while(!esMejor && i<7) {
+        int c = stringtoint(puntuaciones[i]);
+        if (puntuacion > c) {
+            esMejor = true;
+        }
+        else {
+            i++;
+        }
+    }
+    if (esMejor == true) {
+        for (int j = 6;j > i;j--) { //desplazamos todos a la derecha
+            puntuaciones[j] = puntuaciones[j - 1];
+        }
+        puntuaciones[i] = inttostring(puntuacion);
+        fstream f;
+        f.open("puntuaciones.txt");
+        if (f.is_open()) {
+            int z = 0;
+            while ( z < 7) {
+                f << puntuaciones[z];
+                f << '\n';
+                z++;
+            }
+            
+
+            f.close();
+
+        }
+        else {
+            cerr << "no se ha podido abrir fichero puntuaciones" << endl;
+        }
+    }
+   
+
 }
