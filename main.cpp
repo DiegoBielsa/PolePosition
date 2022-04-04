@@ -13,7 +13,7 @@
 #include <string.h>
 #include "score/score.hpp"
 #include "globals/globals.hpp"
-#include "pantallas/PantallaRanking.hpp"
+#include "pantallas/Pantallaranking.hpp"
 
 
 
