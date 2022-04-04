@@ -93,7 +93,7 @@ int main() {
   t[8].loadFromFile("sprites/entorno/meta.png");
   t[8].setSmooth(true);
   object[8].setTexture(t[8]);
-  for(int i=0; i <6 ; i++){
+  for(int i=0; i <7 ; i++){
     t[i+9].loadFromFile("sprites/entorno/cartel"+std::to_string(i+1)+".png");
     t[i+9].setSmooth(true);
     object[i+9].setTexture(t[i+9]);
@@ -114,7 +114,7 @@ int main() {
   setMaps(maps, object);
 
   // eleccion del mapa
-  lines = maps[0];
+  lines = maps[3];
   
 
   int N = lines.size();

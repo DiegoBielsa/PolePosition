@@ -91,12 +91,18 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         Line line;
         line.z = i * segL;
 
-        if(i == goalPosIni || i == goalPosEnd){
+        if(i == goalPosIni){
           line.isGoal = true;
           line.sprite = object[8];
           line.spriteX = -0.5;
           line.sprite_type = 2;//meta
         }
+        
+
+        if((i >= 500 && i <= 800) || (i >= 1000 && i <= 1300) || (i >= 2300 && i <= 2600) || (i >= 2800 && i <= 3100)){
+          line.curve = -1;
+        }
+
         if(i>100 && i % 400 == 0){//cartel1
           line.sprite = object[9];
           line.spriteX = -2.5;
@@ -108,7 +114,7 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
           line.sprite_type = 0;
         }
 
-        if(i>100 && (i+400) % 500 == 0){//cartel3
+        if(i>100 && (i+400) % 500 == 0 && line.curve < 0){//cartel3
           line.sprite = object[11];
           line.spriteX = -2.5;
           line.sprite_type = 0;
@@ -132,10 +138,6 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
           line.sprite_type = 0;
         }
 
-        if((i >= 500 && i <= 800) || (i >= 1000 && i <= 1300) || (i >= 2300 && i <= 2600) || (i >= 2800 && i <= 3100)){
-          line.curve = -1;
-        }
-
         lines.push_back(line);
 
       }
@@ -147,9 +149,11 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         Line line;
         line.z = i * segL;
 
-        if(i >= goalPosIni && i <= goalPosEnd){
+        if(i == goalPosIni){
           line.isGoal = true;
-          line.sprite = object[7];
+          line.sprite = object[8];
+          line.spriteX = -0.5;
+          line.sprite_type = 2;//meta
         }
 
         if(i >= 500 && i <= 800){
@@ -179,6 +183,48 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         if(i >= 2700 && i <= 3700){
           line.curve = 1;
         }
+
+        
+        if(i>100 && i % 400 == 0){//cartel1
+          line.sprite = object[9];
+          line.spriteX = -2.5;
+          line.sprite_type = 0;
+        }
+        if(i>100 && (i+200) % 400 == 0){//cartel2
+          line.sprite = object[10];
+          line.spriteX = 2;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+400) % 500 == 0 && line.curve < 0){//cartel3
+          line.sprite = object[11];
+          line.spriteX = -2.5;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+250) % 700 == 0){//cartel4
+          line.sprite = object[12];
+          line.spriteX = 1.5;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+250) % 450 == 0){//cartel5
+          line.sprite = object[13];
+          line.spriteX = 2;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+100) % 800 == 0){//cartel5
+          line.sprite = object[14];
+          line.spriteX = -2.6;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+400) % 500 == 0 && line.curve > 0){//cartel7
+          line.sprite = object[15];
+          line.spriteX = -2.5;
+          line.sprite_type = 0;
+        }
         
 
         lines.push_back(line);
@@ -192,10 +238,12 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
           Line line;
           line.z = i * segL;
 
-          if(i >= goalPosIni && i <= goalPosEnd){
-            line.isGoal = true;
-            line.sprite = object[7];
-          }
+          if(i == goalPosIni){
+          line.isGoal = true;
+          line.sprite = object[8];
+          line.spriteX = -0.5;
+          line.sprite_type = 2;//meta
+        }
 
           if(i >= 0 && i <= 1000){
             line.curve = 0.5;
@@ -273,6 +321,47 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
             line.curve = 0.5;
           }
 
+          if(i>100 && i % 400 == 0){//cartel1
+          line.sprite = object[9];
+          line.spriteX = -2.5;
+          line.sprite_type = 0;
+        }
+        if(i>100 && (i+200) % 400 == 0){//cartel2
+          line.sprite = object[10];
+          line.spriteX = 2;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+400) % 500 == 0 && line.curve < 0){//cartel3
+          line.sprite = object[11];
+          line.spriteX = -2.5;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+250) % 700 == 0){//cartel4
+          line.sprite = object[12];
+          line.spriteX = 1.5;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+250) % 450 == 0){//cartel5
+          line.sprite = object[13];
+          line.spriteX = 2;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+100) % 800 == 0){//cartel5
+          line.sprite = object[14];
+          line.spriteX = -2.6;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+400) % 500 == 0 && line.curve > 0){//cartel7
+          line.sprite = object[15];
+          line.spriteX = -2.5;
+          line.sprite_type = 0;
+        }
+
           lines.push_back(line);
 
       }
@@ -284,10 +373,13 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         Line line;
         line.z = i * segL;
 
-        if(i >= goalPosIni && i <= goalPosEnd){
+        if(i == goalPosIni){
           line.isGoal = true;
-          line.sprite = object[7];
+          line.sprite = object[8];
+          line.spriteX = -0.5;
+          line.sprite_type = 2;//meta
         }
+        
 
         if(i >= 400 && i <= 700){
             line.curve = 2.5;
@@ -363,6 +455,47 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
 
         if(i >= 4800 && i <= 4900){
             line.curve = 2.5;
+        }
+
+        if(i>100 && i % 400 == 0){//cartel1
+          line.sprite = object[9];
+          line.spriteX = -2.5;
+          line.sprite_type = 0;
+        }
+        if(i>100 && (i+200) % 400 == 0){//cartel2
+          line.sprite = object[10];
+          line.spriteX = 2;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+400) % 500 == 0 && line.curve < 0){//cartel3
+          line.sprite = object[11];
+          line.spriteX = -2.5;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+250) % 700 == 0){//cartel4
+          line.sprite = object[12];
+          line.spriteX = 1.5;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+250) % 450 == 0){//cartel5
+          line.sprite = object[13];
+          line.spriteX = 2;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+100) % 800 == 0){//cartel5
+          line.sprite = object[14];
+          line.spriteX = -2.6;
+          line.sprite_type = 0;
+        }
+
+        if(i>100 && (i+400) % 500 == 0 && line.curve > 0){//cartel7
+          line.sprite = object[15];
+          line.spriteX = -2.5;
+          line.sprite_type = 0;
         }
 
         lines.push_back(line);
