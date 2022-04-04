@@ -74,7 +74,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
       if(speed == 5){
         speed = 0;
       }else if(speed>0){
-        speed-=10;
+        speed-=5;
       }
     }
     
@@ -120,6 +120,10 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
 
   maxy = height;
   x = 0, dx = 0;
+
+  if (startPos == 3500){//será goalposend
+    gameOver = true;
+  }
 }
 
 /**
@@ -191,4 +195,29 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     car.colision = true;
     perderControl = true;
   }
+}
+
+void drawGear(RenderWindow& app, bool marcha_baja, Texture& marcha) {
+    if (marchaBaja == true) {
+        marcha.loadFromFile("images/marcha_baja.png");
+
+    }
+    else {
+        marcha.loadFromFile("images/marcha_alta.png");
+
+    }
+    Sprite march(marcha);
+    march.setPosition(width - 80, height - 200);
+    app.draw(march);
+
+}
+void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
+    if ( startPos == goalPosIni) {
+        metacruz = true;
+
+    }
+    else {
+        metacruz = false;
+
+    }
 }
