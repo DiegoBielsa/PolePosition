@@ -2,4 +2,4 @@
 
 #include "../score/score.hpp"
 
-void drawRanking(RenderWindow& app, string puntuaciones[], int lim, int score);
+void drawRanking(RenderWindow& app, string puntuaciones[], int lim, int scoreentero);
