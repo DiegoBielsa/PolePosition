@@ -167,6 +167,9 @@ int main() {
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
     drawLetters(app, puntuaciones, speed,score ,elapsed, lim,gameOver);
+    if(startPos == 3599){
+      gameOver == true;
+    }
     drawGear(app, marchaBaja, marcha);
 
     if(speed < 0) speed = 0;
