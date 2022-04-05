@@ -167,8 +167,9 @@ int main() {
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
     drawObjects(app, startPos, lines, N, car);
     drawLetters(app, puntuaciones, speed,score ,elapsed, lim,gameOver);
-    if(startPos == 3599){
-      gameOver == true;
+    std::cout<<startPos<<std::endl;
+    if(startPos >= 3500 && startPos <= 3550){
+      gameOver = true;
     }
     drawGear(app, marchaBaja, marcha);
 
