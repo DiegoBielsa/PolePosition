@@ -1,4 +1,6 @@
 #include "loopControl.hpp"
+#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 using namespace sf;
@@ -49,18 +51,16 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
       car.car_status = 1;
       if(!enHierba){
         if(marchaBaja){
-          if(speed < 100){
-            speed += 10;
-          }else if(speed < 300){
-            speed += 20;
-          }else{
-            speed=300;
+          if(speed < 300){
+            speed += 2;
+          }else if(speed > 300){
+            speed -= 8;
           }
         }else{//marcha alta
           if(speed < 300){
-            speed += 5;
+            speed += 1;
           }else if(speed < maxSpeed){
-            speed += 30;
+            speed += 3;
           }
         }
       }else{
@@ -174,6 +174,7 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
     drawQuad(app, rumble, p.X, p.Y, p.W * 1.2, l.X, l.Y, l.W * 1.2);
     drawQuad(app, road, p.X, p.Y, p.W, l.X, l.Y, l.W);
     drawQuad(app, whiteLine, p.X, p.Y, p.W * 0.05, l.X, l.Y, l.W * 0.05);
+
   } 
 
 }

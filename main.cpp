@@ -169,6 +169,8 @@ int main() {
     drawLetters(app, puntuaciones, speed,score ,elapsed, lim,gameOver);
     drawGear(app, marchaBaja, marcha);
 
+    if(speed < 0) speed = 0;
+
 
     
     if (gameOver == true) {
