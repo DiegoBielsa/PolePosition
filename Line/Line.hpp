@@ -1,4 +1,5 @@
 #include "../globals/globals.hpp"
+#include <SFML/Graphics/Rect.hpp>
 
 using namespace sf;
 
@@ -43,7 +44,7 @@ struct Line {
     s.setTextureRect(IntRect(0, 0, w, h - h * clipH / destH));
     s.setScale(destW / w, destH / h);
     s.setPosition(destX, destY);
-    
+
     localBounds = s.getGlobalBounds();
     
     //std::cout<<destX<<destY<<std::endl;
