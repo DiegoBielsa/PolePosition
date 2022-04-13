@@ -161,7 +161,7 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
     maxy = l.Y;
 
     // elige el color y da esa sensación de lineas
-    Color grass = (n / 3) % 2 ? Color(135, 86, 54) : Color(145, 96, 64);
+    Color grass = (n / 3) % 2 ? Color(16, 200, 16) : Color(0, 154, 0);;
     if(mapa == 1){
       grass = (n / 3) % 2 ? Color(16, 200, 16) : Color(0, 154, 0);
     }
