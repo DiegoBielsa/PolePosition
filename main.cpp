@@ -179,7 +179,7 @@ int main() {
 
 
     
-    if (gameOver == true) {
+    /*if (gameOver == true) {
         drawGameOver(app);
     }
 
@@ -196,7 +196,7 @@ int main() {
             drawRanking(app,puntuaciones,lim,score);
 
         }
-    }
+    }*/
 
     app.display();
 

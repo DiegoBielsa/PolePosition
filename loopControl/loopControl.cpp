@@ -90,7 +90,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
   }
 }
 
-void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vector<Line>& lines, float &playerX , int &maxy, float& x, float& dx, int& speed, int N, int H, Sprite sBackground){
+void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vector<Line>& lines, float &playerX , int &maxy, float& x, float& dx, int& speed, int N, int H, Sprite& sBackground){
   pos += speed;
   while (pos >= N * segL)
     pos -= N * segL;
