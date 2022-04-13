@@ -55,6 +55,8 @@ Time tiempoconseguido;
 bool ultimotiempo = false;
 int score = 0;
 
+int mapa; //mapa a elegir
+
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
 int main() {
@@ -74,7 +76,7 @@ int main() {
   int limite = 0;
  
 
-  leerLimite(limite, 0);
+  leerLimite(limite, mapa);
   int lim = limite; //variable que iremos restando para no tener que volver a leer el fichero cuando hacemos vuelta
 
   Texture t[50];
@@ -113,7 +115,7 @@ int main() {
   setMaps(maps, object);
 
   // eleccion del mapa
-  lines = maps[0];
+  lines = maps[mapa];
   
 
   int N = lines.size();
