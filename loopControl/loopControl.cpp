@@ -161,10 +161,16 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
     maxy = l.Y;
 
     // elige el color y da esa sensación de lineas
-    Color grass = (n / 3) % 2 ? Color(16, 200, 16) : Color(0, 154, 0);
+    Color grass = (n / 3) % 2 ? Color(135, 86, 54) : Color(145, 96, 64);
+    if(mapa == 1){
+      grass = (n / 3) % 2 ? Color(16, 200, 16) : Color(0, 154, 0);
+    }
+    //Color grass = (n / 3) % 2 ? Color(16, 200, 16) : Color(0, 154, 0);
+
     Color rumble = (n / 3) % 2 ? Color(255, 255, 255) : Color(255, 0, 0);
     Color road = (n / 3) % 2 ? Color(107, 107, 107) : Color(105, 105, 105);
     Color whiteLine = (n / 3) % 4 ? Color(107, 107, 107) : Color(255, 255, 255);
+    Color white = Color(255, 255, 255);
 
     // pilla la anterior que es la que ha modificado en la iteración anterior para diujar lo que hay puesto
     Line p = lines[(n - 1) % N]; // previous line
@@ -173,6 +179,8 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
     drawQuad(app, grass, 0, p.Y, width, 0, l.Y, width);
     drawQuad(app, rumble, p.X, p.Y, p.W * 1.2, l.X, l.Y, l.W * 1.2);
     drawQuad(app, road, p.X, p.Y, p.W, l.X, l.Y, l.W);
+    drawQuad(app, white, p.X, p.Y, p.W*0.93, l.X, l.Y, l.W*0.93);
+    drawQuad(app, road, p.X, p.Y, p.W*0.9, l.X, l.Y, l.W*0.9);
     drawQuad(app, whiteLine, p.X, p.Y, p.W * 0.05, l.X, l.Y, l.W * 0.05);
 
   } 
