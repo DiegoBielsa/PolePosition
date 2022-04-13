@@ -51,13 +51,13 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
       car.car_status = 1;
       if(!enHierba){
         if(marchaBaja){
-          if(speed < 300){
+          if(speed < 200){
             speed += 2;
-          }else if(speed > 300){
+          }else if(speed > 200){
             speed -= 8;
           }
         }else{//marcha alta
-          if(speed < 300){
+          if(speed < 200){
             speed += 1;
           }else if(speed < maxSpeed){
             speed += 3;

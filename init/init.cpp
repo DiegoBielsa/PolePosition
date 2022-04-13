@@ -67,6 +67,8 @@ void setConfig(){
         road_limit = value;
       }else if(var == "maxSpeed"){
         maxSpeed = value;
+      }else if(var == "mapa"){
+        mapa = value;
       }else{
         std::cout << "No existe la variable de configuracion " << var << std::endl;
       }
@@ -100,7 +102,7 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         
 
         if((i >= 500 && i <= 800) || (i >= 1000 && i <= 1300) || (i >= 2300 && i <= 2600) || (i >= 2800 && i <= 3100)){
-          line.curve = -1;
+          line.curve = 3* -1;
         }
 
         if(i>100 && i % 400 == 0){//cartel1
@@ -157,31 +159,31 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         }
 
         if(i >= 500 && i <= 800){
-          line.curve = 2.5;
+          line.curve = 3* 2.5;
         }
 
         if(i >= 800 && i <= 1300){
-          line.curve = -0.5;
+          line.curve = 3* -0.5;
         }
 
         if(i >= 1300 && i <= 1600){
-          line.curve = 2.5;
+          line.curve = 3* 2.5;
         }
 
         if(i >= 1600 && i <= 1900){
-          line.curve = 0.2;
+          line.curve = 3* 0.2;
         }
 
         if(i >= 1900 && i <= 2300){
-          line.curve = -1.5;
+          line.curve = 3* -1.5;
         }
 
         if(i >= 2300 && i <= 2700){
-          line.curve = 0.3;
+          line.curve = 3* 0.3;
         }
 
         if(i >= 2700 && i <= 3700){
-          line.curve = 1;
+          line.curve = 3* 1;
         }
 
         
@@ -246,79 +248,79 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         }
 
           if(i >= 0 && i <= 1000){
-            line.curve = 0.5;
+            line.curve = 3* 0.5;
           }
 
           if(i >= 1000 && i <= 1200){
-            line.curve = -0.2;
+            line.curve = 3* -0.2;
           }
 
           if(i >= 1200 && i <= 1400){
-            line.curve = 2;
+            line.curve = 3* 2;
           }
 
           if(i >= 1600 && i <= 1800){
-            line.curve = -2;
+            line.curve = 3* -2;
           }
 
           if(i >= 2000 && i <= 2200){
-            line.curve = 2;
+            line.curve = 3* 2;
           }
 
           if(i >= 2300 && i <= 2400){
-            line.curve = 2;
+            line.curve = 3* 2;
           }
 
           if(i >= 2400 && i <= 2700){
-            line.curve = -0.4;
+            line.curve = 3* -0.4;
           }
 
           if(i >= 2700 && i <= 3000){
-            line.curve = 0.4;
+            line.curve = 3* 0.4;
           }
 
           if(i >= 3000 && i <= 3200){
-            line.curve = -0.7;
+            line.curve = 3* -0.7;
           }
 
           if(i >= 3300 && i <= 3400){
-            line.curve = 2;
+            line.curve = 3* 2;
           }
 
           if(i >= 4100 && i <= 4200){
-            line.curve = 1.7;
+            line.curve = 3* 1.7;
           }
 
           if(i >= 4350 && i <= 4500){
-            line.curve = -1.7;
+            line.curve = 3* -1.7;
           }
 
           if(i >= 4750 && i <= 4900){
-            line.curve = 1.4;
+            line.curve = 3* 1.4;
           }
 
           if(i >= 5100 && i <= 5250){
-            line.curve = -1.4;
+            line.curve = 3* -1.4;
           }
 
           if(i >= 5400 && i <= 5500){
-            line.curve = -1.5;
+            line.curve = 3* -1.5;
           }
 
           if(i >= 5800 && i <= 6000){
-            line.curve = 2;
+            line.curve = 3* 2;
           }
 
           if(i >= 6300 && i <= 6600){
-            line.curve = 1.5;
+            line.curve = 3* 1.5;
           }
 
           if(i >= 6600 && i <= 6900){
-            line.curve = -1.8;
+            line.curve = 3* -1.8;
           }
 
           if(i >= 6900 && i <= 7200){
-            line.curve = 0.5;
+            line.curve = 3* 0.5;
           }
 
           if(i>100 && i % 400 == 0){//cartel1
@@ -382,79 +384,79 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         
 
         if(i >= 400 && i <= 700){
-            line.curve = 2.5;
+            line.curve = 3* 2.5;
         }
 
         if(i >= 700 && i <= 800){
-            line.curve = 3;
+            line.curve = 3* 3;
         }
 
         if(i >= 800 && i <= 1000){
-            line.curve = -3;
+            line.curve = 3* -3;
         }
 
         if(i >= 1000 && i <= 1200){
-            line.curve = 3;
+            line.curve = 3* 3;
         }
 
         if(i >= 1200 && i <= 1400){
-            line.curve = -3;
+            line.curve = 3* -3;
         }
 
         if(i >= 1400 && i <= 1600){
-            line.curve = 3;
+            line.curve = 3* 3;
         }
 
         if(i >= 1600 && i <= 1800){
-            line.curve = -3;
+            line.curve = 3* -3;
         }
 
         if(i >= 2100 && i <= 2400){
-            line.curve = 2.5;
+            line.curve = 3* 2.5;
         }
 
         if(i >= 2500 && i <= 2650){
-            line.curve = -1.2;
+            line.curve = 3* -1.2;
         }
 
         if(i >= 2900 && i <= 3200){
-            line.curve = 2.7;
+            line.curve = 3* 2.7;
         }
 
         if(i >= 3200 && i <= 3400){
-            line.curve = -0.2;
+            line.curve = 3* -0.2;
         }
 
         if(i >= 3400 && i <= 3500){
-            line.curve = -2.4;
+            line.curve = 3* -2.4;
         }
 
         if(i >= 3500 && i <= 3750){
-            line.curve = 0.8;
+            line.curve = 3* 0.8;
         }
 
         if(i >= 3750 && i <= 3900){
-            line.curve = 2.5;
+            line.curve = 3* 2.5;
         }
 
         if(i >= 3900 && i <= 4100){
-            line.curve = -0.2;
+            line.curve = 3* -0.2;
         }
 
         if(i >= 4100 && i <= 4300){
-            line.curve = -2.2;
+            line.curve = 3* -2.2;
         }
 
         if(i >= 4600 && i <= 4700){
-            line.curve = 2.5;
+            line.curve = 3* 2.5;
         }
 
         if(i >= 4700 && i <= 4800){
-            line.curve = -2.5;
+            line.curve = 3* -2.5;
         }
 
         if(i >= 4800 && i <= 4900){
-            line.curve = 2.5;
+            line.curve = 3* 2.5;
         }
 
         if(i>100 && i % 400 == 0){//cartel1
