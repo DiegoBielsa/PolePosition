@@ -1,5 +1,7 @@
 #include "../globals/globals.hpp"
 #include <SFML/Graphics/Rect.hpp>
+#include <cmath>
+#include <iostream>
 
 using namespace sf;
 
@@ -45,9 +47,11 @@ struct Line {
     s.setScale(destW / w, destH / h);
     s.setPosition(destX, destY);
 
-    localBounds = s.getGlobalBounds();
+    if(!std::isnan(s.getGlobalBounds().height)){
+      localBounds = s.getGlobalBounds();
+    }
     
-    //std::cout<<destX<<destY<<std::endl;
+    //std::cout<<"drw"<<localBounds.height<<std::endl;
     app.draw(s);
   }
 };
