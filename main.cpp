@@ -20,7 +20,6 @@
 using namespace sf;
 using namespace std;
 
-#define charco 0
 #define spriteColision 1
 
 
@@ -48,6 +47,7 @@ std::array<bool, sf::Keyboard::KeyCount> keyState;
 int numMaps;
 bool gameOver = false;
 bool perderControl = false;
+bool charco = false;
 int animColision = 0;
 
 
@@ -99,6 +99,9 @@ int main() {
         t[i + 9].setSmooth(true);
         object[i + 9].setTexture(t[i + 9]);
     }
+    t[15].loadFromFile("sprites/entorno/charcogrande.png");
+    t[15].setSmooth(true);
+    object[15].setTexture(t[15]);
 
 
 

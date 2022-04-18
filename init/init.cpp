@@ -105,6 +105,12 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
           line.curve = 4* -1;
         }
 
+        if(i>100 && i % 551 == 0 && line.curve == 0){//charco grande
+          line.sprite = object[15];
+          line.spriteX = 0;
+          line.sprite_type = 3;
+        }
+
         if(i>100 && i % 400 == 0){//cartel1
           line.sprite = object[9];
           line.spriteX = -2.5;
@@ -184,6 +190,12 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
 
         if(i >= 2700 && i <= 3700){
           line.curve = 4* 1;
+        }
+
+        if(i>100 && i % 551 == 0 && line.curve == 0){//charco grande
+          line.sprite = object[15];
+          line.spriteX = 0;
+          line.sprite_type = 3;
         }
 
         
@@ -323,6 +335,12 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
             line.curve = 4* 0.5;
           }
 
+          if(i>100 && i % 551 == 0 && line.curve == 0){//charco grande
+            line.sprite = object[15];
+            line.spriteX = 0;
+            line.sprite_type = 3;
+          }
+
           if(i>100 && i % 400 == 0){//cartel1
           line.sprite = object[9];
           line.spriteX = -2.5;
@@ -457,6 +475,12 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
 
         if(i >= 4800 && i <= 4900){
             line.curve = 4* 2.5;
+        }
+
+        if(i>100 && i % 551 == 0 && line.curve == 0){//charco grande
+          line.sprite = object[15];
+          line.spriteX = 0;
+          line.sprite_type = 3;
         }
 
         if(i>100 && i % 400 == 0){//cartel1
