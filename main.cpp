@@ -21,7 +21,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-
+int estado = 0;
 
 int width = 1024;
 int height = 768;
@@ -72,7 +72,7 @@ int main() {
     bool restart = false;
 
     string puntuaciones[7];
-    leerPuntuaciones(puntuaciones,mapa);
+    leerPuntuaciones(puntuaciones, mapa);
     int limite = 0;
 
 
@@ -125,87 +125,106 @@ int main() {
     float playerX = 0;
     int pos = 0;
     int H = 1500;
+    while (true) {
+        switch (estado)
+        {
+        case 0://clasificacion
+           
 
-    while (app.isOpen()) {
-        Event e;
-        while (app.pollEvent(e)) {
-            if (e.type == Event::Closed)
-                app.close();
-        }
+            while (app.isOpen()) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
 
 
-        if (e.type == sf::Event::Resized) {
-            sf::View view = app.getDefaultView();
-            view = getLetterboxView(view, e.size.width, e.size.height);
-            app.setView(view);
-        }
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
 
-        if (e.type == sf::Event::KeyPressed) {
-            if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
-                marchaBaja = !marchaBaja;
+                if (e.type == sf::Event::KeyPressed) {
+                    if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
+                        marchaBaja = !marchaBaja;
+                    }
+                    keyState[e.key.code] = true;
+
+                }
+                else if (e.type == sf::Event::KeyReleased) {
+                    // Update state of current key:
+                    keyState[e.key.code] = false;
+                }
+                manageKeys(playerX, speed, H, car);
+
+
+                int startPos, camH, maxy;
+                float x, dx;
+                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
+
+                sf::Time elapsed = clock.getElapsedTime();
+                bool metacruz = false;
+                comprobarMeta(startPos, goalPosIni, metacruz);
+                if (metacruz == true) {
+                    clock.restart();  //cuando hagamos vuelta
+                    elapsed = clock.getElapsedTime();
+                    lim = limite;
+                }
+                calcularScore(score, speed, lim, limite, gameOver);
+
+
+
+                drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
+                drawObjects(app, startPos, lines, N, car);
+                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
+                //std::cout<<startPos<<std::endl;
+                if (startPos >= 3500 && startPos <= 3550) {
+                    gameOver = true;
+                }
+                drawGear(app, marchaBaja, marcha);
+
+                if (speed < 0) speed = 0;
+
+
+
+                if (gameOver == true) {
+                    drawGameOver(app);
+                }
+
+
+                if (gameOver == true && restart == false) {
+                    tiempoparafin.restart();
+                    escribirPuntuaciones(puntuaciones, score, mapa);
+                    restart = true;
+                }
+                else if (gameOver == true && restart == true) {
+                    if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
+                        app.clear(Color(0, 0, 180));
+
+                        drawRanking(app, puntuaciones, lim, score);
+
+                    }
+                }
+
+                app.display();
+
+
             }
-            keyState[e.key.code] = true;
+
+            break;
+
+        case 1://carrera
+            break;
+        case 2: //resultados
+            break;
+        default:
+            break;
+
 
         }
-        else if (e.type == sf::Event::KeyReleased) {
-            // Update state of current key:
-            keyState[e.key.code] = false;
-        }
-        manageKeys(playerX, speed, H, car);
-
-
-        int startPos, camH, maxy;
-        float x, dx;
-        updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
-
-        sf::Time elapsed = clock.getElapsedTime();
-        bool metacruz = false;
-        comprobarMeta(startPos, goalPosIni, metacruz);
-        if (metacruz == true) {
-            clock.restart();  //cuando hagamos vuelta
-            elapsed = clock.getElapsedTime();
-            lim = limite;
-        }
-        calcularScore(score, speed, lim, limite, gameOver);
-
-
-
-        drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-        drawObjects(app, startPos, lines, N, car);
-        drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
-        //std::cout<<startPos<<std::endl;
-        if (startPos >= 3500 && startPos <= 3550) {
-            gameOver = true;
-        }
-        drawGear(app, marchaBaja, marcha);
-
-        if (speed < 0) speed = 0;
-
-
-
-        if (gameOver == true) {
-            drawGameOver(app);
-        }
-
-
-        if (gameOver == true && restart == false) {
-            tiempoparafin.restart();
-            escribirPuntuaciones(puntuaciones, score,mapa);
-            restart = true;
-        }
-        else if (gameOver == true && restart == true) {
-            if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
-                app.clear(Color(0, 0, 180));
-
-                drawRanking(app, puntuaciones, lim, score);
-
-            }
-        }
-
-        app.display();
-
-
     }
+    
 
     return 0;
 }
