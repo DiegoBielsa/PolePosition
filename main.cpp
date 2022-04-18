@@ -199,6 +199,7 @@ int main() {
                     restart = true;
                 }
                 else if (gameOver == true && restart == true) {
+                    estado = 2;
                     if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
                         app.clear(Color(0, 0, 180));
 
@@ -215,8 +216,98 @@ int main() {
             break;
 
         case 1://carrera
+            while (app.isOpen()) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+
+                if (e.type == sf::Event::KeyPressed) {
+                    if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
+                        marchaBaja = !marchaBaja;
+                    }
+                    keyState[e.key.code] = true;
+
+                }
+                else if (e.type == sf::Event::KeyReleased) {
+                    // Update state of current key:
+                    keyState[e.key.code] = false;
+                }
+                manageKeys(playerX, speed, H, car);
+
+
+                int startPos, camH, maxy;
+                float x, dx;
+                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
+
+                sf::Time elapsed = clock.getElapsedTime();
+                bool metacruz = false;
+                comprobarMeta(startPos, goalPosIni, metacruz);
+                if (metacruz == true) {
+                    clock.restart();  //cuando hagamos vuelta
+                    elapsed = clock.getElapsedTime();
+                    lim = limite;
+                }
+                calcularScore(score, speed, lim, limite, gameOver);
+
+
+
+                drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
+                drawObjects(app, startPos, lines, N, car);
+                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
+                //std::cout<<startPos<<std::endl;
+               
+                drawGear(app, marchaBaja, marcha);
+
+                if (speed < 0) speed = 0;
+
+
+
+                if (gameOver == true) {
+                    drawGameOver(app);
+                }
+
+
+                if (gameOver == true && restart == false) {
+                    tiempoparafin.restart();
+                    escribirPuntuaciones(puntuaciones, score, mapa);
+                    restart = true;
+                }
+                else if (gameOver == true && restart == true) {
+                    estado = 2;
+                    if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
+                        app.clear(Color(0, 0, 180));
+
+                        drawRanking(app, puntuaciones, lim, score);
+
+                    }
+                }
+
+                app.display();
+
+
+            }
+
             break;
-        case 2: //resultados
+        case 2: //resultados clas
+            if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
+                app.clear(Color(0, 0, 180));
+
+                drawRanking(app, puntuaciones, lim, score);
+
+            }
+            else {
+                estado = 1;
+            }
+            app.display();
             break;
         default:
             break;
