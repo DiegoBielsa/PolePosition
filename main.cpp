@@ -106,11 +106,11 @@ int main() {
 
 
     Texture bg;
-    bg.loadFromFile("images/bg.png");
-    bg.setRepeated(true);
+    bg.loadFromFile("sprites/entorno/backgroundMountains.png");
+    bg.setRepeated(false);
     Sprite sBackground(bg);
-    sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
-    sBackground.setPosition(-2000, 0);
+    sBackground.setTextureRect(IntRect(0, 0, 30000, 411));
+    sBackground.setPosition(-5000, 0);
 
     std::vector<std::vector<Line>> maps; // esto es el conjunto de mapas
     std::vector<Line> lines; // esto es el mapa, 
