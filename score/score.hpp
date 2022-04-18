@@ -3,7 +3,7 @@
 #include "../loopControl/loopControl.hpp"
 sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip );
 
-void leerPuntuaciones(string puntuaciones[]);
+void leerPuntuaciones(string puntuaciones[],int numero);
 
 String inttostring(int entero);
 int stringtoint(string s);
@@ -17,4 +17,4 @@ void drawGameOver(RenderWindow& app);
 sf::View getLetterboxView(sf::View view, int windowWidth, int windowHeight);
 void calcularScore(int& score, int velocidad, int lim, int limite, bool gameOver);
 
-void escribirPuntuaciones(string puntuaciones[], int puntuacion);
+void escribirPuntuaciones(string puntuaciones[], int puntuacion,int numero);
