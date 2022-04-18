@@ -28,6 +28,9 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
       animColision = 0;
       car.reinit();
     }
+  }else if(charco){
+    speed = 50;
+    charco = false;
   }else{
     if(((playerX * roadW) > (roadW + road_limit)) || ((playerX * roadW) < (-roadW-road_limit)) || (((playerX + turn_power) * roadW) > (roadW + road_limit)) || (((playerX - turn_power) * roadW) < (-roadW-road_limit)))
     {
@@ -203,6 +206,11 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   }else if(lines[(startPos+10)%N].sprite_type == 0){
     car.colision = true;
     perderControl = true;
+  }else if(lines[(startPos+10)%N].sprite_type == 2){//meta
+    app.draw(car.sprite);
+  }else if(lines[(startPos+10)%N].sprite_type == 3){//charco
+    charco = true;
+    app.draw(car.sprite);
   }
 }
 

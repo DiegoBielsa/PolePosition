@@ -26,10 +26,11 @@ sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip )
 
 
 
-void leerPuntuaciones(string puntuaciones[]) {
+void leerPuntuaciones(string puntuaciones[], int numero) {
 
     fstream f;
-    f.open("puntuaciones.txt");
+    string number = inttostring(numero);
+    f.open("ficheros/puntuaciones"+number+".txt");
     if (f.is_open()) {
         int i = 0;
         string cadena;
@@ -76,7 +77,7 @@ int stringtoint(string s) {
 void leerLimite(int &limite, int numero) {
 
     fstream f;
-    f.open("limites.txt");
+    f.open("ficheros/limites.txt");
     if (f.is_open()) {
         int i = 0;
         string cadena;
@@ -305,14 +306,15 @@ void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver) {
     }
     else if (gameOver == true && control == false) {
         control = true;
-        double multi= -1*(lim - limite) / 10;
+        double multi= -1*(double(lim) - double(limite)) / 10;
         if (multi < 1.0) {
             multi = 1.0;
         }
         score = score * multi;
     }
 }
-void escribirPuntuaciones(string puntuaciones[],int puntuacion) {
+void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero) {
+    string number = inttostring(numero);
     bool esMejor = false;
     int i = 0;
     while(!esMejor && i<7) {
@@ -330,7 +332,7 @@ void escribirPuntuaciones(string puntuaciones[],int puntuacion) {
         }
         puntuaciones[i] = inttostring(puntuacion);
         fstream f;
-        f.open("puntuaciones.txt");
+        f.open("ficheros/puntuaciones" + number + ".txt");
         if (f.is_open()) {
             int z = 0;
             while ( z < 7) {
