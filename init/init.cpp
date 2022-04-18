@@ -1,6 +1,7 @@
 #include "init.hpp"
 
 
+
 void setConfig(){
   std::string file = "config/config.conf";
   std::ifstream f(file);
@@ -512,4 +513,20 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
 
 void loadTextures(){
 
+}
+
+void setSounds(std::vector<Sound>& sounds){
+
+  SoundBuffer buffer;
+  std::cout<<"ello"<<std::endl;
+
+  if(!buffer.loadFromFile("audio/audio2.wav")) {
+    std::cout<<"error en audio"<<std::endl;
+  }
+  Sound sound;
+  sound.setBuffer(buffer);
+
+  sound.play();
+
+  sounds.push_back(sound);
 }

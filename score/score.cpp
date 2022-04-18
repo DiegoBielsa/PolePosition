@@ -152,7 +152,7 @@ void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int pu
     }
     else {
         timenumber.setString("0");
-        gameOver = true;
+        //gameOver = true;
     }
 
     Time tiempo;

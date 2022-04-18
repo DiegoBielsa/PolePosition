@@ -37,13 +37,13 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
     }
     if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX * roadW) < (roadW + off_road_allowed)) && (((playerX + turn_power) * roadW) < (roadW + off_road_allowed))){
       if(speed>0){
-        playerX += turn_power * ((float(speed)/maxSpeed));
+        playerX += turn_power * ((float(speed)/maxSpeed)) ;
       }
       car.car_dir = 1;
     }
     if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed))){
       if(speed > 0){
-        playerX -= turn_power * ((float(speed)/maxSpeed));
+        playerX -= turn_power * ((float(speed)/maxSpeed)) ;
       }
       car.car_dir = -1;
     }
@@ -187,7 +187,7 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 
 }
 
-void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car){
+void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car, std::vector<Sound>& sounds){
   ////////draw objects////////
   for (int n = startPos + draw_distance; n > startPos; n--)
     lines[n % N].drawSprite(app);
@@ -203,6 +203,11 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   }else if(lines[(startPos+10)%N].sprite_type == 0){
     car.colision = true;
     perderControl = true;
+    cout<<sounds.size()<<endl;
+    sounds[0].play();
+    sounds[0].setLoop(true);
+  }else if(lines[(startPos+10)%N].sprite_type == 2){
+        app.draw(car.sprite);
   }
 }
 

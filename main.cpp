@@ -1,7 +1,10 @@
 #pragma once
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Audio.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include <iostream>
@@ -111,12 +114,18 @@ int main() {
 
   std::vector<std::vector<Line>> maps; // esto es el conjunto de mapas
   std::vector<Line> lines; // esto es el mapa, 
+  vector<Sound> sounds;
+
+  setSounds(sounds);
+
 
   setMaps(maps, object);
 
   // eleccion del mapa
   lines = maps[mapa];
-  
+
+  sounds[0].play();
+
 
   int N = lines.size();
   float playerX = 0;
@@ -164,10 +173,9 @@ int main() {
     }
     calcularScore(score,speed,lim,limite,gameOver);
 
-  
 
     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-    drawObjects(app, startPos, lines, N, car);
+    drawObjects(app, startPos, lines, N, car, sounds);
     drawLetters(app, puntuaciones, speed,score ,elapsed, lim,gameOver);
     //std::cout<<startPos<<std::endl;
     if(startPos >= 3500 && startPos <= 3550){
