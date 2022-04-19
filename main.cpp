@@ -22,6 +22,7 @@ using namespace std;
 
 #define spriteColision 1
 int estado = 0;
+bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
 int height = 768;
@@ -54,6 +55,9 @@ int animColision = 0;
 Time tiempoconseguido;
 bool ultimotiempo = false;
 int score = 0;
+bool esPrimeravez = true; //para saber si hemos pasado la meta por primera vez
+bool metacruz = false;
+bool antmetacruz = false; //para ver si estamos parados en la meta
 
 int mapa; //mapa a elegir
 
@@ -106,11 +110,11 @@ int main() {
 
 
     Texture bg;
-    bg.loadFromFile("sprites/entorno/backgroundMountains.png");
-    bg.setRepeated(false);
+    bg.loadFromFile("images/bg.png");
+    bg.setRepeated(true);
     Sprite sBackground(bg);
-    sBackground.setTextureRect(IntRect(0, 0, 30000, 411));
-    sBackground.setPosition(-5000, 0);
+    sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
+    sBackground.setPosition(-2000, 0);
 
     std::vector<std::vector<Line>> maps; // esto es el conjunto de mapas
     std::vector<Line> lines; // esto es el mapa, 
@@ -131,7 +135,7 @@ int main() {
         case 0://clasificacion
            
 
-            while (app.isOpen()) {
+            while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
                     if (e.type == Event::Closed)
@@ -164,13 +168,19 @@ int main() {
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
 
                 sf::Time elapsed = clock.getElapsedTime();
-                bool metacruz = false;
+            
                 comprobarMeta(startPos, goalPosIni, metacruz);
-                if (metacruz == true) {
-                    clock.restart();  //cuando hagamos vuelta
-                    elapsed = clock.getElapsedTime();
-                    lim = limite;
+                if (metacruz == true && antmetacruz==false) {
+                    if (esPrimeravez==true) {
+                        esPrimeravez = false;
+                    }
+                    else {
+                        clock.restart();  //cuando hagamos vuelta
+                        elapsed = clock.getElapsedTime();
+                        lim = limite;
+                    }
                 }
+                antmetacruz = metacruz;
                 calcularScore(score, speed, lim, limite, gameOver);
 
 
@@ -201,10 +211,7 @@ int main() {
                 else if (gameOver == true && restart == true) {
                     estado = 2;
                     if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
-                        app.clear(Color(0, 0, 180));
-
-                        drawRanking(app, puntuaciones, lim, score);
-
+                        terminar = true;
                     }
                 }
 
@@ -216,6 +223,16 @@ int main() {
             break;
 
         case 1://carrera
+
+            //inicializamos todo
+            int lap;
+            lap = 0;
+            gameOver = false;
+            clock.restart();
+            esPrimeravez = true;
+            pos = 0;
+            playerX = 0;
+            speed = 0;
             while (app.isOpen()) {
                 Event e;
                 while (app.pollEvent(e)) {
@@ -251,11 +268,21 @@ int main() {
                 sf::Time elapsed = clock.getElapsedTime();
                 bool metacruz = false;
                 comprobarMeta(startPos, goalPosIni, metacruz);
-                if (metacruz == true) {
-                    clock.restart();  //cuando hagamos vuelta
-                    elapsed = clock.getElapsedTime();
-                    lim = limite;
+                if (metacruz == true && antmetacruz == false) {
+                    if (esPrimeravez==true) {
+                        esPrimeravez = false;
+                    }
+                    else {
+                        clock.restart();  //cuando hagamos vuelta
+                        elapsed = clock.getElapsedTime();
+                        lim = limite;
+                        lap++;
+                        if (lap == 3) {
+                            gameOver = true;
+                        }
+                    }
                 }
+                antmetacruz = metacruz;
                 calcularScore(score, speed, lim, limite, gameOver);
 
 
@@ -298,16 +325,32 @@ int main() {
 
             break;
         case 2: //resultados clas
-            if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
-                app.clear(Color(0, 0, 180));
+            terminar = false;
+            tiempoparafin.restart();
+            while (app.isOpen()&& !terminar) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
 
-                drawRanking(app, puntuaciones, lim, score);
 
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                if (tiempoparafin.getElapsedTime().asSeconds() < 5) {//esperamos 10 segundos para terminar
+                    app.clear(Color(0, 0, 180));
+
+                    drawRanking(app, puntuaciones, lim, score);
+                }
+                else {
+                    estado = 1;
+                    terminar = true;
+                }
+                app.display();
             }
-            else {
-                estado = 1;
-            }
-            app.display();
             break;
         default:
             break;
