@@ -105,7 +105,17 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   startPos = pos / segL;
   camH = lines[startPos].y + H;
   if (speed != 0){
-    float actual_draft_power = draft_power * floatAbs(lines[startPos].curve);
+    float varyng;
+    if(speed >= 0 && speed <= 50) varyng = 0;
+    else if(speed > 50 && speed <= 100) varyng = 0.2;
+    else if(speed > 100 && speed <= 150) varyng = 0.4;
+    else if(speed > 150 && speed <= 200) varyng = 0.6;
+    else if(speed > 200 && speed <= 250) varyng = 0.8;
+    else if(speed > 250 && speed <= 300) varyng = 0.9;
+    else if(speed > 300 && speed <= 380) varyng = 1;
+    float centripetal_force = ((speed/maxSpeed)+varyng) * floatAbs(lines[startPos].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
+    float actual_draft_power = draft_power * centripetal_force;
+    std::cout << actual_draft_power << std::endl;
     if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))
       && !Keyboard::isKeyPressed(Keyboard::Right) && !Keyboard::isKeyPressed(Keyboard::Left)){
       if(lines[startPos].curve > 0 && (((playerX - actual_draft_power) * roadW) > (-roadW-off_road_allowed))){
