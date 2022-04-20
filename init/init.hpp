@@ -16,4 +16,3 @@ void setConfig();
 
 void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]);
 
-void setSounds(std::vector<Sound>& sounds);

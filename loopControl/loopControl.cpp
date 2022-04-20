@@ -204,8 +204,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     car.colision = true;
     perderControl = true;
     cout<<sounds.size()<<endl;
-    sounds[0].play();
-    sounds[0].setLoop(true);
+    sounds[1].play();
   }else if(lines[(startPos+10)%N].sprite_type == 2){
         app.draw(car.sprite);
   }

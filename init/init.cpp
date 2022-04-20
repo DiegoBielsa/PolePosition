@@ -515,18 +515,3 @@ void loadTextures(){
 
 }
 
-void setSounds(std::vector<Sound>& sounds){
-
-  SoundBuffer buffer;
-  std::cout<<"ello"<<std::endl;
-
-  if(!buffer.loadFromFile("audio/audio2.wav")) {
-    std::cout<<"error en audio"<<std::endl;
-  }
-  Sound sound;
-  sound.setBuffer(buffer);
-
-  sound.play();
-
-  sounds.push_back(sound);
-}

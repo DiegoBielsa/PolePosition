@@ -116,7 +116,51 @@ int main() {
   std::vector<Line> lines; // esto es el mapa, 
   vector<Sound> sounds;
 
-  setSounds(sounds);
+  SoundBuffer buffer;
+
+  if(!buffer.loadFromFile("audio/audio2.wav")) {
+    std::cout<<"error en audio"<<std::endl;
+  }
+  Sound sound;
+  sound.setBuffer(buffer);
+
+  //playSound(sound);
+  sounds.push_back(sound);
+  SoundBuffer buffer2;
+  Sound sound2;
+  if(!buffer2.loadFromFile("audio/crash.wav")) {
+    std::cout<<"error en audio"<<std::endl;
+  }
+  sound2.setBuffer(buffer2);
+  sounds.push_back(sound2);
+
+  SoundBuffer buffer3;
+  Sound sound3;
+  if(!buffer3.loadFromFile("audio/prepare.wav")) {
+    std::cout<<"error en audio"<<std::endl;
+  }
+  sound3.setBuffer(buffer3);
+  sounds.push_back(sound3);
+
+  SoundBuffer buffer4;
+  Sound sound4;
+  if(!buffer4.loadFromFile("audio/derrape.wav")) {
+    std::cout<<"error en audio"<<std::endl;
+  }
+  sound4.setBuffer(buffer4);
+  sounds.push_back(sound4);
+  SoundBuffer buffer5;
+  Sound sound5;
+  if(!buffer5.loadFromFile("audio/carengine.wav")) {
+    std::cout<<"error en audio"<<std::endl;
+  }
+  sound5.setBuffer(buffer5);
+  sounds.push_back(sound5);
+  sounds[4].setLoop(true);
+  sounds[4].play();
+
+  //sounds[2].play();
+  playSound(sounds[2]);
 
 
   setMaps(maps, object);
@@ -124,7 +168,7 @@ int main() {
   // eleccion del mapa
   lines = maps[mapa];
 
-  sounds[0].play();
+  //sounds[0].play();
 
 
   int N = lines.size();
