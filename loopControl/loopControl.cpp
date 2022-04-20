@@ -115,7 +115,6 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
     else if(speed > 300 && speed <= 380) varyng = 1;
     float centripetal_force = ((speed/maxSpeed)+varyng) * floatAbs(lines[startPos].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
     float actual_draft_power = draft_power * centripetal_force;
-    std::cout << actual_draft_power << std::endl;
     if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))
       && !Keyboard::isKeyPressed(Keyboard::Right) && !Keyboard::isKeyPressed(Keyboard::Left)){
       if(lines[startPos].curve > 0 && (((playerX - actual_draft_power) * roadW) > (-roadW-off_road_allowed))){
@@ -247,4 +246,23 @@ void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
         metacruz = false;
 
     }
+}
+
+// Creo que sería mejor meterlo directamente en un line, para que así los dibuje en la carretera
+void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite cars[], int numCars){
+  Clock clock;
+  while(!gameOver){
+    if(clock.getElapsedTime().asSeconds() > 0.03f){
+      for(int i = 0; i < 8; i++){
+          if(linePos[i]+2 >= lines.size()) linePos[i] = 0;
+          linePos[i] += 2;
+          lines[linePos[i]].sprite = cars[i].sprite;
+          lines[linePos[i]].spriteX = XPos[i];
+          lines[linePos[i]].sprite_type = 0;
+      }
+      
+      
+    }
+    
+  }
 }

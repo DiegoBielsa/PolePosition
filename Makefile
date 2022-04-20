@@ -8,7 +8,7 @@ RM = /bin/rm -f  # para limpiar
 objects = main.o ${route_functions}.o ${route_init}.o ${route_loopControl}.o ${route_score}.o ${route_pantallas}.o
 CC = g++
 DIRS = -I. -I./functions -I./init -I./loopControl -I./score
-CFLAGS = -Wall -g ${DIRS}
+CFLAGS = -Wall -pthread -g ${DIRS}
 
 
 main: ${objects}

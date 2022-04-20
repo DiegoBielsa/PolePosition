@@ -15,5 +15,9 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
 void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line>& lines, int& N, float& x, float& dx, int& maxy, int& camH);
 
 void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car);
+
 void drawGear(RenderWindow& app, bool marcha_baja, Texture& marcha);
+
 void comprobarMeta(int& startPos,  float& goalPosIni, bool& metacruz);
+
+void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite cars[], int numCars);

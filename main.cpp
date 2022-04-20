@@ -14,6 +14,7 @@
 #include "score/score.hpp"
 #include "globals/globals.hpp"
 #include "pantallas/Pantallaranking.hpp"
+#include <thread>
 
 
 
@@ -95,6 +96,9 @@ int main() {
         t[i].setSmooth(true);
         object[i].setTexture(t[i]);
     }
+
+
+
     t[8].loadFromFile("sprites/entorno/meta.png");
     t[8].setSmooth(true);
     object[8].setTexture(t[8]);
@@ -123,6 +127,17 @@ int main() {
 
     // eleccion del mapa
     lines = maps[mapa];
+
+    carSprite car_arr[8];
+    int XPos[8];
+    int linePos[8];
+    for(int i = 0; i < 8; i++){
+        car_arr[i].init(IntRect(0, 0, car_width, car_height), ca);
+        XPos[i] = i;
+        linePos[i] = goalPosIni+i;
+    }
+
+    std::thread thread(&IA_control, ref(lines), linePos, XPos, car_arr, 8);
 
 
     int N = lines.size();
@@ -314,6 +329,8 @@ int main() {
                         app.clear(Color(0, 0, 180));
 
                         drawRanking(app, puntuaciones, lim, score);
+                        thread.join();
+                        
 
                     }
                 }
