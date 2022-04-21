@@ -51,6 +51,7 @@ bool gameOver = false;
 bool perderControl = false;
 bool charco = false;
 int animColision = 0;
+int numCars;
 
 
 Time tiempoconseguido;
@@ -128,10 +129,10 @@ int main() {
     // eleccion del mapa
     lines = maps[mapa];
 
-    carSprite car_arr[8];
-    int XPos[8];
-    int linePos[8];
-    for(int i = 0; i < 8; i++){
+    carSprite car_arr[1];
+    int XPos[1];
+    int linePos[1];
+    for(int i = 0; i < numCars; i++){
         car_arr[i].init(IntRect(0, 0, car_width, car_height), ca);
         XPos[i] = i;
         linePos[i] = goalPosIni+i;

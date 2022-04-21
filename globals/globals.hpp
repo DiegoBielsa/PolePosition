@@ -28,6 +28,7 @@ extern bool gameOver;
 extern bool perderControl;
 extern bool charco;
 extern int animColision;
+extern int numCars;
 
 extern sf::Time tiempoconseguido;
 extern bool ultimotiempo;

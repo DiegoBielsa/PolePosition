@@ -69,6 +69,8 @@ void setConfig(){
         maxSpeed = value;
       }else if(var == "mapa"){
         mapa = value;
+      }else if(var == "numCars"){
+        numCars = value;
       }else{
         std::cout << "No existe la variable de configuracion " << var << std::endl;
       }

@@ -75,7 +75,7 @@ struct Line {
 
       if (clipH >= destH)
         return;
-      cars[i].setTextureRect(IntRect(0, 0, w, h - h * clipH / destH));
+      cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
       cars[i].setScale(destW / w, destH / h);
       cars[i].setPosition(destX, destY);
 

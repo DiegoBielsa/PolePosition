@@ -203,7 +203,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   ////////draw objects////////
   for (int n = startPos + draw_distance; n > startPos; n--){
     lines[n % N].drawSprite(app);
-    for(int i = 0; i < 8; i++) lines[n % N].drawCars(app, i);
+    for(int i = 0; i < numCars; i++) lines[n % N].drawCars(app, i);
 
     
   }
@@ -256,15 +256,15 @@ void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
 
 // Creo que sería mejor meterlo directamente en un line, para que así los dibuje en la carretera
 void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite cars[], int numCars){
-  int speeds[8];
-  for(int i = 0; i < 8; i++){
+  int speeds[numCars];
+  for(int i = 0; i < numCars; i++){
     speeds[i] = 20;
     cars[i].sprite.setScale(3,3);
   }
   Clock clock;
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 0.2f){
-      for(int i = 0; i < 8; i++){
+    if(clock.getElapsedTime().asSeconds() > 0.03f){
+      for(int i = 0; i < numCars; i++){
           if(linePos[i]+2 >= lines.size()) linePos[i] = 0;
           lines[linePos[i]].cars[i] = sf::Sprite();
           linePos[i] += 1;
