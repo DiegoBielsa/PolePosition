@@ -13,6 +13,8 @@ struct Line {
   bool isGoal;
   Sprite sprite;
   int sprite_type;
+  Sprite cars[8];
+  float carsX[8];
 
   Line() { spriteX = curve = x = y = z = 0; isGoal = false; }
 
@@ -54,4 +56,34 @@ struct Line {
     //std::cout<<"drw"<<localBounds.height<<std::endl;
     app.draw(s);
   }
+
+  void drawCars(RenderWindow &app, int i) {
+      int w = cars[i].getTextureRect().width;
+      int h = cars[i].getTextureRect().height;
+
+      float destX = X + scale * carsX[i] * width / 2;
+      float destY = Y + 4;
+      float destW = w * W / 266;
+      float destH = h * W / 266;
+
+      destX += destW * carsX[i]; // offsetX
+      destY += destH * (-1);    // offsetY
+
+      float clipH = destY + destH - clip;
+      if (clipH < 0)
+        clipH = 0;
+
+      if (clipH >= destH)
+        return;
+      cars[i].setTextureRect(IntRect(0, 0, w, h - h * clipH / destH));
+      cars[i].setScale(destW / w, destH / h);
+      cars[i].setPosition(destX, destY);
+
+      if(!std::isnan(cars[i].getGlobalBounds().height)){
+        localBounds = cars[i].getGlobalBounds();
+      }
+      
+      //std::cout<<"drw"<<localBounds.height<<std::endl;
+      app.draw(cars[i]);
+    }
 };
