@@ -204,6 +204,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   for (int n = startPos + draw_distance; n > startPos; n--){
     lines[n % N].drawSprite(app);
     for(int i = 0; i < numCars; i++) lines[n % N].drawCars(app, i);
+    
 
     
   }
@@ -264,16 +265,16 @@ void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite c
   }
   Clock clock;
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 0.3f){
+    if(clock.getElapsedTime().asSeconds() > 1.0f){
       for(int i = 0; i < numCars; i++){
-          if(carOffset[i] == 10){
+          if(carOffset[i] == 200){
             carOffset[i] = 0;
             lines[linePos[i]].cars[i] = sf::Sprite();
             linePos[i]++;
           }
           else{
             carOffset[i]++;
-            lines[linePos[i]].cars[i] = sf::Sprite();
+            //lines[linePos[i]].cars[i] = sf::Sprite();
           } 
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
           lines[linePos[i]].cars[i] = cars[i].sprite;
@@ -281,7 +282,7 @@ void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite c
           lines[linePos[i]].carOffset[i] = carOffset[i];
           
       }
-      
+
       clock.restart();
     }
     
