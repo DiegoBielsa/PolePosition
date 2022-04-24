@@ -15,7 +15,7 @@ struct Line {
   int sprite_type;
   Sprite cars[8];
   float carsX[8];
-  float carOffset[8];
+  float carsSpeed[8];
 
   Line() { spriteX = curve = x = y = z = 0; isGoal = false; }
 
@@ -58,33 +58,42 @@ struct Line {
     app.draw(s);
   }
 
-  void drawCars(RenderWindow &app, int i) {
+    void drawCars(RenderWindow &app, int i) {
+      float spriteXToDraw = carsX[i];
       int w = cars[i].getTextureRect().width;
       int h = cars[i].getTextureRect().height;
 
-      float destX = X + scale * carsX[i] * width / 2;
-      float destY = Y + 4;
       float destW = w * W / 266;
       float destH = h * W / 266;
 
-      destX += destW * carsX[i]; // offsetX
-      destY += destH * (-1);    // offsetY
+      float destX = X + scale * spriteXToDraw * width / 2;
+      float destY = Y + 4;
+      destX += destW * spriteXToDraw + 3; //offsetX
+                        //destY += destH *(-1) - 20;   
+      destY += destH *(-1);    //offsetY
 
       float clipH = destY + destH - clip;
-      if (clipH < 0)
-        clipH = 0;
+      if (clipH<0) clipH = 0;
 
-      if (clipH >= destH)
-        return;
+
+      destX = X + (W * spriteXToDraw);
+      if (clipH >= destH) return;
+
+
+      int x = (int)(x * carsSpeed[i]) + destX * 1;
+      int y = (int)(y * carsSpeed[i]) + destY * 1;
+
       cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
       cars[i].setScale(destW*1.6 / w, destH*1.6 / h);
-      cars[i].setPosition(destX, destY);
-
-      if(!std::isnan(cars[i].getGlobalBounds().height)){
-        localBounds = cars[i].getGlobalBounds();
-      }
-      
-      //std::cout<<"drw"<<localBounds.height<<std::endl;
+      cars[i].setPosition(x, y);
       app.draw(cars[i]);
-    }
+
+      /*cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
+      cars[i].setScale(destW*1.6 / w, destH*1.6 / h);
+      cars[i].setPosition((int)destX - spriteScaleW / 2, (int)destY);*/
+      //App->renderer->Blit(tex, (int)destX - spriteScaleW / 2, (int)destY + 5, &sp, 0.f, spriteScaleW, spriteScaleH);
+      //App->renderer->ScaledBlit(tex, (int)destX - spriteScaleW / 2,(int)destY+5, &sp, 0.f, 1.5, 1.5);
+	  }
+
+    
 };

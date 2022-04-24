@@ -257,31 +257,34 @@ void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
 
 // Creo que sería mejor meterlo directamente en un line, para que así los dibuje en la carretera
 void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite cars[], int numCars){
-  int speeds[numCars];
-  float carOffset[numCars];
+  float speeds[numCars];
+  float carOffsetX[numCars];
+  float carOffsetY[numCars];
+  int numOffsets[numCars];
+  float carsSpeed[8];
   for(int i = 0; i < numCars; i++){
-    speeds[i] = 20;
-    carOffset[i] = 0;
+    speeds[i] = 0.1f;
+    carOffsetX[i] = 0;
+    carOffsetY[i] = 0;
+    numOffsets[i] = 0;
+    carsSpeed[i] = 0;
   }
   Clock clock;
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 0.02f){
+    if(clock.getElapsedTime().asSeconds() > 0.01f){
       for(int i = 0; i < numCars; i++){
-          if(carOffset[i] == 0){
-            carOffset[i] = 0;
-            lines[linePos[i]].cars[i] = sf::Sprite();
-            linePos[i]++;
-          }
-          else{
-            carOffset[i]++;
-            //lines[linePos[i]].cars[i] = sf::Sprite();
-          } 
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+          lines[linePos[i] -1].cars[i] = sf::Sprite();
           lines[linePos[i]].cars[i] = cars[i].sprite;
           lines[linePos[i]].carsX[i] = XPos[i];
-          lines[linePos[i]].carOffset[i] = carOffset[i];
-          
+          linePos[i]++;
+          if(carsSpeed[i] < mediumSpeed - 50){
+            carsSpeed[i] += 1;
+          }
+          lines[linePos[i]].carsSpeed[i] = carsSpeed[i];
+      
       }
+      
 
       clock.restart();
     }
