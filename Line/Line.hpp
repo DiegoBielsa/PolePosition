@@ -77,8 +77,8 @@ struct Line {
       if (clipH >= destH)
         return;
       cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
-      cars[i].setScale(destW / w, destH / h);
-      cars[i].setPosition(destX, destY - carOffset[i]);
+      cars[i].setScale(destW*1.6 / w, destH*1.6 / h);
+      cars[i].setPosition(destX, destY);
 
       if(!std::isnan(cars[i].getGlobalBounds().height)){
         localBounds = cars[i].getGlobalBounds();

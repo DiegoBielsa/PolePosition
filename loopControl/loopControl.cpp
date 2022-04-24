@@ -54,13 +54,13 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
       car.car_status = 1;
       if(!enHierba){
         if(marchaBaja){
-          if(speed < 200){
+          if(speed < mediumSpeed){
             speed += 2;
-          }else if(speed > 200){
+          }else if(speed > mediumSpeed){
             speed -= 8;
           }
         }else{//marcha alta
-          if(speed < 200){
+          if(speed < mediumSpeed){
             speed += 1;
           }else if(speed < maxSpeed){
             speed += 3;
@@ -265,9 +265,9 @@ void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite c
   }
   Clock clock;
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 1.0f){
+    if(clock.getElapsedTime().asSeconds() > 0.02f){
       for(int i = 0; i < numCars; i++){
-          if(carOffset[i] == 200){
+          if(carOffset[i] == 0){
             carOffset[i] = 0;
             lines[linePos[i]].cars[i] = sf::Sprite();
             linePos[i]++;

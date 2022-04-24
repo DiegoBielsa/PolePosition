@@ -52,6 +52,7 @@ bool perderControl = false;
 bool charco = false;
 int animColision = 0;
 int numCars;
+int mediumSpeed;
 
 
 Time tiempoconseguido;

@@ -71,6 +71,8 @@ void setConfig(){
         mapa = value;
       }else if(var == "numCars"){
         numCars = value;
+      }else if(var == "mediumSpeed"){
+        mediumSpeed = value;
       }else{
         std::cout << "No existe la variable de configuracion " << var << std::endl;
       }
