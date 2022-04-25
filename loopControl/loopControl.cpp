@@ -313,7 +313,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   }
 
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 0.2f){
+    if(clock.getElapsedTime().asSeconds() > 1/speeds[0]){
       for(int i = 0; i < numCars; i++){
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
           lines[linePos[i] -1].cars[i] = sf::Sprite();
