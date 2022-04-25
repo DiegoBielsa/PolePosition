@@ -279,9 +279,10 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           lines[linePos[i]].cars[i] = cars[i].sprite;
           lines[linePos[i]].carsX[i] = XPos[i];
           linePos[i]++;
-          if(speeds[i] < mediumSpeed - 50){
-              speeds[i] += 2;
-          }
+          
+          if(speeds[i] >= 0 && speeds[i] <= 50)  speeds[i] += 1;
+          else if(speeds[i] > 50 && speeds[i] <= 100)  speeds[i] += 2;
+          else if(speeds[i] > 100 && speeds[i] <= mediumSpeed-50)  speeds[i] += 2;
           lines[linePos[i]].carsSpeed[i] = carsSpeed[i];
       
       }
@@ -303,7 +304,69 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   float carsSpeed[8];
   float centripetal_force;
   float actual_draft_power;
+  for(int i = 0; i < numCars; i++){
+    speeds[i] = 1.0f;
+    carOffsetX[i] = 0;
+    carOffsetY[i] = 0;
+    numOffsets[i] = 0;
+    carsSpeed[i] = 0;
+  }
+
+  while(!gameOver){
+    if(clock.getElapsedTime().asSeconds() > 1/speeds[0]){
+      for(int i = 0; i < numCars; i++){
+          if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+          lines[linePos[i] -1].cars[i] = sf::Sprite();
+          lines[linePos[i]].cars[i] = cars[i].sprite;
+          lines[linePos[i]].carsX[i] = XPos[i];
+
+          
+          
+
+          centripetal_force = ((speeds[i]/(mediumSpeed-50))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
+          actual_draft_power = draft_power * centripetal_force; 
+
+
+          
+
+          if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars)){
+            if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
+                XPos[i] += actual_draft_power;
+            }
+            if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars)){
+                XPos[i] -= actual_draft_power;
+            }
+          }
+
+          linePos[i]++;
+          if(speeds[i] >= 0 && speeds[i] <= 50)  speeds[i] += 2;
+          else if(speeds[i] > 50 && speeds[i] <= 100)  speeds[i] += 2;
+          else if(speeds[i] > 100 && speeds[i] <= mediumSpeed-50)  speeds[i] += 3;
+          lines[linePos[i]].carsSpeed[i] = carsSpeed[i];
+      
+      }
+      
+
+      clock.restart();
+    }
+    
+    
+  }
+}
+
+void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars){
+  Clock clock;
+  float speeds[numCars];
+  float carOffsetX[numCars];
+  float carOffsetY[numCars];
+  int numOffsets[numCars];
+  float carsSpeed[8];
+  float centripetal_force;
+  float actual_draft_power;
   float varyng;
+  
+  // sabes que el coche que controlas siempre está en la misma posición, X = 0, Y = nose
+  // cuando estes cerca de esa Y siendo la tuya más arriba te acercas poco a poco a esa X = 0
   for(int i = 0; i < numCars; i++){
     speeds[i] = 1.0f;
     carOffsetX[i] = 0;
@@ -334,7 +397,6 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
 
 
           
-          std::cout << lines[linePos[i]].carsX[i] << std::endl;
 
           if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars)){
             if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
@@ -346,9 +408,9 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
           }
 
           linePos[i]++;
-          if(speeds[i] < mediumSpeed - 50){
-              speeds[i] += 3;
-          }
+          if(speeds[i] >= 0 && speeds[i] <= 50)  speeds[i] += 2;
+          else if(speeds[i] > 50 && speeds[i] <= 100)  speeds[i] += 3;
+          else if(speeds[i] > 100 && speeds[i] <= mediumSpeed-50)  speeds[i] += 4;
           lines[linePos[i]].carsSpeed[i] = carsSpeed[i];
       
       }
@@ -358,22 +420,6 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     }
     
     
-  }
-}
-
-void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars){
-  Clock clock;
-  float speeds[numCars];
-  float carOffsetX[numCars];
-  float carOffsetY[numCars];
-  int numOffsets[numCars];
-  float carsSpeed[8];
-  for(int i = 0; i < numCars; i++){
-    speeds[i] = 1.0f;
-    carOffsetX[i] = 0;
-    carOffsetY[i] = 0;
-    numOffsets[i] = 0;
-    carsSpeed[i] = 0;
   }
 }
 
