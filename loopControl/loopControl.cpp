@@ -255,31 +255,32 @@ void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
     }
 }
 
-// Creo que sería mejor meterlo directamente en un line, para que así los dibuje en la carretera
-void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite cars[], int numCars){
+
+void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars){
+  Clock clock;
   float speeds[numCars];
   float carOffsetX[numCars];
   float carOffsetY[numCars];
   int numOffsets[numCars];
   float carsSpeed[8];
   for(int i = 0; i < numCars; i++){
-    speeds[i] = 0.1f;
+    speeds[i] = 1.0f;
     carOffsetX[i] = 0;
     carOffsetY[i] = 0;
     numOffsets[i] = 0;
     carsSpeed[i] = 0;
   }
-  Clock clock;
+
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 0.01f){
+    if(clock.getElapsedTime().asSeconds() > 1/speeds[0]){
       for(int i = 0; i < numCars; i++){
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
           lines[linePos[i] -1].cars[i] = sf::Sprite();
           lines[linePos[i]].cars[i] = cars[i].sprite;
           lines[linePos[i]].carsX[i] = XPos[i];
           linePos[i]++;
-          if(carsSpeed[i] < mediumSpeed - 50){
-            carsSpeed[i] += 1;
+          if(speeds[i] < mediumSpeed - 50){
+              speeds[i] += 2;
           }
           lines[linePos[i]].carsSpeed[i] = carsSpeed[i];
       
@@ -292,3 +293,107 @@ void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite c
     
   }
 }
+
+void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars){
+  Clock clock;
+  float speeds[numCars];
+  float carOffsetX[numCars];
+  float carOffsetY[numCars];
+  int numOffsets[numCars];
+  float carsSpeed[8];
+  float centripetal_force;
+  float actual_draft_power;
+  float varyng;
+  for(int i = 0; i < numCars; i++){
+    speeds[i] = 1.0f;
+    carOffsetX[i] = 0;
+    carOffsetY[i] = 0;
+    numOffsets[i] = 0;
+    carsSpeed[i] = 0;
+  }
+
+  while(!gameOver){
+    if(clock.getElapsedTime().asSeconds() > 0.2f){
+      for(int i = 0; i < numCars; i++){
+          if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+          lines[linePos[i] -1].cars[i] = sf::Sprite();
+          lines[linePos[i]].cars[i] = cars[i].sprite;
+          lines[linePos[i]].carsX[i] = XPos[i];
+
+          
+          if(speed >= 0 && speed <= 50) varyng = 0;
+          else if(speed > 50 && speed <= 100) varyng = 0.2;
+          else if(speed > 100 && speed <= 150) varyng = 0.4;
+          else if(speed > 150 && speed <= 200) varyng = 0.6;
+          else if(speed > 200 && speed <= 250) varyng = 0.8;
+          else if(speed > 250 && speed <= 300) varyng = 0.9;
+          else if(speed > 300 && speed <= 380) varyng = 1;
+
+          centripetal_force = ((speeds[i]/(mediumSpeed-50))+varyng) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
+          actual_draft_power = draft_power * centripetal_force; 
+
+
+          
+          std::cout << lines[linePos[i]].carsX[i] << std::endl;
+
+          if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars)){
+            if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
+                XPos[i] += actual_draft_power;
+            }
+            if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars)){
+                XPos[i] -= actual_draft_power;
+            }
+          }
+
+          linePos[i]++;
+          if(speeds[i] < mediumSpeed - 50){
+              speeds[i] += 3;
+          }
+          lines[linePos[i]].carsSpeed[i] = carsSpeed[i];
+      
+      }
+      
+
+      clock.restart();
+    }
+    
+    
+  }
+}
+
+void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars){
+  Clock clock;
+  float speeds[numCars];
+  float carOffsetX[numCars];
+  float carOffsetY[numCars];
+  int numOffsets[numCars];
+  float carsSpeed[8];
+  for(int i = 0; i < numCars; i++){
+    speeds[i] = 1.0f;
+    carOffsetX[i] = 0;
+    carOffsetY[i] = 0;
+    numOffsets[i] = 0;
+    carsSpeed[i] = 0;
+  }
+}
+
+// Creo que sería mejor meterlo directamente en un line, para que así los dibuje en la carretera
+void IA_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars, int iaMode){
+
+  switch (iaMode)
+  {
+  case 0: // easy
+    IAeasy_control(lines, linePos, XPos, cars, numCars);
+    break;
+  
+  case 1: // normal
+    IAnormal_control(lines, linePos, XPos, cars, numCars);
+    break;
+  case 2: // hard
+    IAhard_control(lines, linePos, XPos, cars, numCars);
+    break;
+  default:
+    break;
+  }
+}
+

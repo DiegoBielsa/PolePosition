@@ -30,6 +30,8 @@ extern bool charco;
 extern int animColision;
 extern int numCars;
 extern int mediumSpeed;
+extern int iaMode; // 0 --> easy, 1 --> normal, 2 --> hard
+extern float off_road_allowed_cars;
 
 extern sf::Time tiempoconseguido;
 extern bool ultimotiempo;

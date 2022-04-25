@@ -20,4 +20,4 @@ void drawGear(RenderWindow& app, bool marcha_baja, Texture& marcha);
 
 void comprobarMeta(int& startPos,  float& goalPosIni, bool& metacruz);
 
-void IA_control(std::vector<Line>& lines, int linePos[], int XPos[], carSprite cars[], int numCars);
+void IA_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars, int iaMode);

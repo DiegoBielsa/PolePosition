@@ -53,6 +53,8 @@ bool charco = false;
 int animColision = 0;
 int numCars;
 int mediumSpeed;
+int iaMode;
+float off_road_allowed_cars;
 
 
 Time tiempoconseguido;
@@ -131,7 +133,7 @@ int main() {
     lines = maps[mapa];
 
     carSprite car_arr[1];
-    int XPos[1];
+    float XPos[1];
     int linePos[1];
     for(int i = 0; i < numCars; i++){
         car_arr[i].init(IntRect(0, 0, car_width, car_height), ca);
@@ -139,7 +141,7 @@ int main() {
         linePos[i] = goalPosIni+i;
     }
 
-    std::thread thread(&IA_control, ref(lines), linePos, XPos, car_arr, 8);
+    std::thread thread(&IA_control, ref(lines), linePos, XPos, car_arr, 1, iaMode);
 
 
     int N = lines.size();
