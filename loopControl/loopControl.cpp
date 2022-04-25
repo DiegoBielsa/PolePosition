@@ -342,6 +342,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float centripetal_force;
   float actual_draft_power;
   float drivingCarYPos = 600;
+  float drivingCarXPos = width/2-car_width*1.5;
   
   // sabes que el coche que controlas siempre está en la misma posición, X = 0, Y = nose
   // cuando estes cerca de esa Y siendo la tuya más arriba te acercas poco a poco a esa X = 0
@@ -358,7 +359,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           lines[linePos[i]].cars[i] = cars[i].sprite;
           lines[linePos[i]].carsX[i] = XPos[i];
 
-          centripetal_force = ((speeds[i]/(mediumSpeed-50))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
+          centripetal_force = ((speeds[i]/(mediumSpeed-60))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
           actual_draft_power = draft_power * centripetal_force; 
 
 
@@ -376,13 +377,20 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           linePos[i]++;
           if(speeds[i] >= 0 && speeds[i] <= 50)  speeds[i] += 2;
           else if(speeds[i] > 50 && speeds[i] <= 100)  speeds[i] += 3;
-          else if(speeds[i] > 100 && speeds[i] <= mediumSpeed-50)  speeds[i] += 3;
+          else if(speeds[i] > 100 && speeds[i] <= mediumSpeed-60)  speeds[i] += 3;
 
           float carsYpos = lines[linePos[i]-2].carsYPos[i];
-          if(carsYpos > 400 && carsYpos > 500){ //aquí es cuando tiende a ponerse delante tuyo
+          float carsXpos = lines[linePos[i]-2].carsXPos[i];
+          if(carsYpos > 400 && carsYpos < 700){ //aquí es cuando tiende a ponerse delante tuyo
+            // tratas de igualar las X para molestar lo máximo posible
+            if(carsXpos  > drivingCarXPos + (car_width-10) ){ 
+                XPos[i] -= 0.05;
+            }else if(carsXpos  < drivingCarXPos - (car_width-10)){  
+                XPos[i] += 0.05;
+            }
 
           }
-          std::cout << i << carsYpos << std::endl;
+          //std::cout << i << carsYpos << std::endl;
       
       }
       

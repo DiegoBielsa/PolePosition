@@ -16,6 +16,7 @@ struct Line {
   Sprite cars[8];
   float carsX[8];
   float carsYPos[8];
+  float carsXPos[8];
 
   Line() { spriteX = curve = x = y = z = 0; isGoal = false; }
 
@@ -80,12 +81,17 @@ struct Line {
       if (clipH >= destH) return;
 
       carsYPos[i] = destY;
+      carsXPos[i] = destX;
       //std::cout << carsYPos[i] << std::endl;
 
       cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
       cars[i].setScale(destW*1.6 / w, destH*1.6 / h);
       cars[i].setPosition(destX, destY);
       //std::cout << destY << std::endl;
+
+      if(!std::isnan(cars[i].getGlobalBounds().height)){
+        localBounds = cars[i].getGlobalBounds();
+      }
 
       app.draw(cars[i]);
 	  }
