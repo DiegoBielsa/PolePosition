@@ -15,7 +15,7 @@ struct Line {
   int sprite_type;
   Sprite cars[8];
   float carsX[8];
-  float carsSpeed[8];
+  float carsYPos[8];
 
   Line() { spriteX = curve = x = y = z = 0; isGoal = false; }
 
@@ -79,20 +79,15 @@ struct Line {
       destX = X + (W * spriteXToDraw);
       if (clipH >= destH) return;
 
-
-      int x = (int)(x * carsSpeed[i]) + destX * 1;
-      int y = (int)(y * carsSpeed[i]) + destY * 1;
+      carsYPos[i] = destY;
+      //std::cout << carsYPos[i] << std::endl;
 
       cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
       cars[i].setScale(destW*1.6 / w, destH*1.6 / h);
-      cars[i].setPosition(x, y);
-      app.draw(cars[i]);
+      cars[i].setPosition(destX, destY);
+      //std::cout << destY << std::endl;
 
-      /*cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
-      cars[i].setScale(destW*1.6 / w, destH*1.6 / h);
-      cars[i].setPosition((int)destX - spriteScaleW / 2, (int)destY);*/
-      //App->renderer->Blit(tex, (int)destX - spriteScaleW / 2, (int)destY + 5, &sp, 0.f, spriteScaleW, spriteScaleH);
-      //App->renderer->ScaledBlit(tex, (int)destX - spriteScaleW / 2,(int)destY+5, &sp, 0.f, 1.5, 1.5);
+      app.draw(cars[i]);
 	  }
 
     
