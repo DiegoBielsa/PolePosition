@@ -160,13 +160,13 @@ int main() {
                     // Update state of current key:
                     keyState[e.key.code] = false;
                 }
-                manageKeys(playerX, speed, H, car);
+                
 
 
                 int startPos, camH, maxy;
                 float x, dx;
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
-
+                manageKeys(playerX, speed, H, car, lines, startPos);
                 sf::Time elapsed = clock.getElapsedTime();
             
                 comprobarMeta(startPos, goalPosIni, metacruz);
@@ -258,13 +258,13 @@ int main() {
                     // Update state of current key:
                     keyState[e.key.code] = false;
                 }
-                manageKeys(playerX, speed, H, car);
+                
 
 
                 int startPos, camH, maxy;
                 float x, dx;
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
-
+                manageKeys(playerX, speed, H, car, lines, startPos);
                 sf::Time elapsed = clock.getElapsedTime();
                 bool metacruz = false;
                 comprobarMeta(startPos, goalPosIni, metacruz);
