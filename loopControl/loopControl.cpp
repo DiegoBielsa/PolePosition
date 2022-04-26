@@ -259,6 +259,9 @@ void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
 void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars){
   Clock clock;
   float speeds[numCars];
+  float drivingCarYPos = 600;
+  float drivingCarXPos = width/2-car_width*1.5;
+  float rebase = 0;
   for(int i = 0; i < numCars; i++){
     speeds[i] = 1.0f;
   }
@@ -275,6 +278,27 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           if(speeds[i] >= 0 && speeds[i] <= 50)  speeds[i] += 1;
           else if(speeds[i] > 50 && speeds[i] <= 100)  speeds[i] += 2;
           else if(speeds[i] > 100 && speeds[i] <= mediumSpeed-100)  speeds[i] += 2;
+
+          float carsYpos = lines[linePos[i]-2].carsYPos[i];
+          float carsXpos = lines[linePos[i]-2].carsXPos[i];
+          if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
+              if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
+                  if(rebase == 0){
+                        if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
+                            XPos[i] -= 0.5;
+                        }else{
+                          rebase = 1; //si no puede lo intentará a derechas
+                        }
+                  }else{
+                        if((XPos[i] + 0.5 < off_road_allowed_cars)){ // intenta adelantar por la derecha
+                          XPos[i] += 0.5;
+                        }else{
+                          rebase = 0; //si no puede lo intentará a izquierdas
+                        }
+                    
+                  }
+              }
+          }
       
       }
       
@@ -291,6 +315,9 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   float speeds[numCars];
   float centripetal_force;
   float actual_draft_power;
+  float drivingCarYPos = 600;
+  float drivingCarXPos = width/2-car_width*1.5;
+  int rebase = 0; // 0 rebasa por izquierda 1 por derecha
   for(int i = 0; i < numCars; i++){
     speeds[i] = 1.0f;
   }
@@ -312,11 +339,11 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
 
           
 
-          if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars)){
+          if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars -0.2)){
             if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
                 XPos[i] += actual_draft_power;
             }
-            if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars)){
+            if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars-0.2)){
                 XPos[i] -= actual_draft_power;
             }
           }
@@ -325,6 +352,27 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
           if(speeds[i] >= 0 && speeds[i] <= 50)  speeds[i] += 2;
           else if(speeds[i] > 50 && speeds[i] <= 100)  speeds[i] += 2;
           else if(speeds[i] > 100 && speeds[i] <= mediumSpeed-70)  speeds[i] += 3;
+
+          float carsYpos = lines[linePos[i]-2].carsYPos[i];
+          float carsXpos = lines[linePos[i]-2].carsXPos[i];
+          if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
+              if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
+                  if(rebase == 0){
+                        if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
+                            XPos[i] -= 0.5;
+                        }else{
+                          rebase = 1; //si no puede lo intentará a derechas
+                        }
+                  }else{
+                        if((XPos[i] + 0.5 < off_road_allowed_cars)){ // intenta adelantar por la derecha
+                          XPos[i] += 0.5;
+                        }else{
+                          rebase = 0; //si no puede lo intentará a izquierdas
+                        }
+                    
+                  }
+              }
+          }
       
       }
       
@@ -343,6 +391,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float actual_draft_power;
   float drivingCarYPos = 600;
   float drivingCarXPos = width/2-car_width*1.5;
+  float rebase = 0;
   
   // sabes que el coche que controlas siempre está en la misma posición, X = 0, Y = nose
   // cuando estes cerca de esa Y siendo la tuya más arriba te acercas poco a poco a esa X = 0
@@ -351,7 +400,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   }
 
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 0.1f){
+    if(clock.getElapsedTime().asSeconds() > 1/speeds[0]){
       for(int i = 0; i < numCars; i++){
 
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
@@ -365,11 +414,11 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
           
 
-          if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars)){
+          if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars-0.2)){
             if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
                 XPos[i] += actual_draft_power;
             }
-            if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars)){
+            if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars-0.2)){
                 XPos[i] -= actual_draft_power;
             }
           }
@@ -381,7 +430,8 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
           float carsYpos = lines[linePos[i]-2].carsYPos[i];
           float carsXpos = lines[linePos[i]-2].carsXPos[i];
-          if(carsYpos > 400 && carsYpos < 700){ //aquí es cuando tiende a ponerse delante tuyo
+          std::cout << carsYpos << std::endl;
+          if(carsYpos > 410 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
             // tratas de igualar las X para molestar lo máximo posible
             if(carsXpos  > drivingCarXPos + (car_width-10) ){ 
                 XPos[i] -= 0.05;
@@ -390,7 +440,27 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
             }
 
           }
-          //std::cout << i << carsYpos << std::endl;
+
+          carsYpos = lines[linePos[i]-2].carsYPos[i];
+          carsXpos = lines[linePos[i]-2].carsXPos[i];
+          if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
+              if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
+                  if(rebase == 0){
+                        if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
+                            XPos[i] -= 0.5;
+                        }else{
+                          rebase = 1; //si no puede lo intentará a derechas
+                        }
+                  }else{
+                        if((XPos[i] + 0.5 < off_road_allowed_cars)){ // intenta adelantar por la derecha
+                          XPos[i] += 0.5;
+                        }else{
+                          rebase = 0; //si no puede lo intentará a izquierdas
+                        }
+                    
+                  }
+              }
+          }
       
       }
       
