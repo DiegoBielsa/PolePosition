@@ -132,16 +132,16 @@ int main() {
     // eleccion del mapa
     lines = maps[mapa];
 
-    carSprite car_arr[1];
-    float XPos[1];
-    int linePos[1];
+    carSprite car_arr[2];
+    float XPos[2];
+    int linePos[2];
     for(int i = 0; i < numCars; i++){
         car_arr[i].init(IntRect(0, 0, car_width, car_height), ca);
         XPos[i] = i;
-        linePos[i] = goalPosIni+i;
+        linePos[i] = goalPosIni-i*10;
     }
 
-    std::thread thread(&IA_control, ref(lines), linePos, XPos, car_arr, 1, iaMode);
+    std::thread thread(&IA_control, ref(lines), linePos, XPos, car_arr, numCars, iaMode);
 
 
     int N = lines.size();
