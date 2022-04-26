@@ -2,6 +2,8 @@
 #include "../carSprite/carSprite.hpp"
 #include "../init/init.hpp"
 #include "../functions/functions.hpp"
+#include <thread>
+
 
 using namespace std;
 using namespace sf;
@@ -20,4 +22,4 @@ void drawGear(RenderWindow& app, bool marcha_baja, Texture& marcha);
 
 void comprobarMeta(int& startPos,  float& goalPosIni, bool& metacruz);
 
-void IA_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars, int iaMode);
+void IA_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars, int iaMode, std::thread threads[]);

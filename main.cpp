@@ -14,7 +14,6 @@
 #include "score/score.hpp"
 #include "globals/globals.hpp"
 #include "pantallas/Pantallaranking.hpp"
-#include <thread>
 
 
 
@@ -132,16 +131,17 @@ int main() {
     // eleccion del mapa
     lines = maps[mapa];
 
-    carSprite car_arr[2];
-    float XPos[2];
-    int linePos[2];
+    carSprite car_arr[8];
+    float XPos[8];
+    int linePos[8];
+    std::thread threads[8];
     for(int i = 0; i < numCars; i++){
         car_arr[i].init(IntRect(0, 0, car_width, car_height), ca);
         XPos[i] = i;
-        linePos[i] = goalPosIni-i*10;
+        linePos[i] = goalPosIni-i*3;
     }
 
-    std::thread thread(&IA_control, ref(lines), linePos, XPos, car_arr, numCars, iaMode);
+    IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
 
 
     int N = lines.size();
@@ -333,7 +333,7 @@ int main() {
                         app.clear(Color(0, 0, 180));
 
                         drawRanking(app, puntuaciones, lim, score);
-                        thread.join();
+                        for(int i = 0; i < numCars; i++) threads[i].join();
                         
 
                     }

@@ -256,30 +256,28 @@ void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
 }
 
 
-void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars){
+void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars, int i){
   Clock clock;
-  float speeds[numCars];
-  float maxSpeeds[numCars];
+  float speeds;
+  float maxSpeeds;
   float drivingCarYPos = 600;
   float drivingCarXPos = width/2-car_width*1.5;
   float rebase = 0;
-  for(int i = 0; i < numCars; i++){
-    speeds[i] = 1.0f;
-    maxSpeeds[i] = (mediumSpeed - 51000) - (i * 7);
-  }
+
+  speeds = 1.0f;
+  maxSpeeds = (mediumSpeed - 100) - (i * 7);
 
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 1/speeds[0]){
-      for(int i = 0; i < numCars; i++){
+    if(clock.getElapsedTime().asSeconds() > 1/speeds){
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
           lines[linePos[i] -1].cars[i] = sf::Sprite();
           lines[linePos[i]].cars[i] = cars[i].sprite;
           lines[linePos[i]].carsX[i] = XPos[i];
           linePos[i]++;
           
-          if(speeds[i] >= 0 && speeds[i] <= maxSpeeds[i]/3)  speeds[i] += 2;
-          else if(speeds[i] > maxSpeeds[i]/3 && speeds[i] <= maxSpeeds[i]/2)  speeds[i] += 2;
-          else if(speeds[i] > maxSpeeds[i]/2 && speeds[i] <= maxSpeeds[i])  speeds[i] += 3;
+          if(speeds >= 0 && speeds <= maxSpeeds/3)  speeds += 2;
+          else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
+          else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
 
           float carsYpos = lines[linePos[i]-2].carsYPos[i];
           float carsXpos = lines[linePos[i]-2].carsXPos[i];
@@ -302,7 +300,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
               }
           }
       
-      }
+      
       
 
       clock.restart();
@@ -312,23 +310,22 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   }
 }
 
-void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars){
+void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars, int i){
   Clock clock;
-  float speeds[numCars];
-  float maxSpeeds[numCars];
+  float speeds;
+  float maxSpeeds;
   float centripetal_force;
   float actual_draft_power;
   float drivingCarYPos = 600;
   float drivingCarXPos = width/2-car_width*1.5;
   int rebase = 0; // 0 rebasa por izquierda 1 por derecha
-  for(int i = 0; i < numCars; i++){
-    speeds[i] = 1.0f;
-    maxSpeeds[i] = (mediumSpeed - 80) - (i * 7);
-  }
+  
+  speeds = 1.0f;
+  maxSpeeds = (mediumSpeed - 80) - (i * 7);
+  
 
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 1/speeds[0]){
-      for(int i = 0; i < numCars; i++){
+    if(clock.getElapsedTime().asSeconds() > 1/speeds){
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
           lines[linePos[i] -1].cars[i] = sf::Sprite();
           lines[linePos[i]].cars[i] = cars[i].sprite;
@@ -337,7 +334,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
           
           
 
-          centripetal_force = ((speeds[i]/(mediumSpeed-70))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
+          centripetal_force = ((speeds/(mediumSpeed-70))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
           actual_draft_power = draft_power * centripetal_force; 
 
 
@@ -353,9 +350,9 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
           }
 
           linePos[i]++;
-          if(speeds[i] >= 0 && speeds[i] <= maxSpeeds[i]/3)  speeds[i] += 2;
-          else if(speeds[i] > maxSpeeds[i]/3 && speeds[i] <= maxSpeeds[i]/2)  speeds[i] += 2;
-          else if(speeds[i] > maxSpeeds[i]/2 && speeds[i] <= maxSpeeds[i])  speeds[i] += 3;
+          if(speeds >= 0 && speeds <= maxSpeeds/3)  speeds += 2;
+          else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
+          else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
 
           float carsYpos = lines[linePos[i]-2].carsYPos[i];
           float carsXpos = lines[linePos[i]-2].carsXPos[i];
@@ -378,7 +375,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
               }
           }
       
-      }
+      
       
 
       clock.restart();
@@ -388,10 +385,10 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   }
 }
 
-void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars){
+void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars, int i){
   Clock clock;
-  float speeds[numCars];
-  float maxSpeeds[numCars];
+  float speeds;
+  float maxSpeeds;
   float centripetal_force;
   float actual_draft_power;
   float drivingCarYPos = 600;
@@ -400,98 +397,95 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   
   // sabes que el coche que controlas siempre está en la misma posición, X = 0, Y = nose
   // cuando estes cerca de esa Y siendo la tuya más arriba te acercas poco a poco a esa X = 0
-  for(int i = 0; i < numCars; i++){
-    speeds[i] = 1.0f;
-    maxSpeeds[i] = (mediumSpeed- 70) - (i * 7);
-  }
+  speeds = 1.0f;
+  maxSpeeds = (mediumSpeed- 70) - (i * 7);
 
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 1/speeds[0]){
-      for(int i = 0; i < numCars; i++){
-                  std::cout << i << ":"<<speeds[i] << endl;
+    if(clock.getElapsedTime().asSeconds() > 1/speeds){
 
-          if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
-          lines[linePos[i] -1].cars[i] = sf::Sprite();
-          lines[linePos[i]].cars[i] = cars[i].sprite;
-          lines[linePos[i]].carsX[i] = XPos[i];
+        if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+        lines[linePos[i] -1].cars[i] = sf::Sprite();
+        lines[linePos[i]].cars[i] = cars[i].sprite;
+        lines[linePos[i]].carsX[i] = XPos[i];
 
-          centripetal_force = ((speeds[i]/(mediumSpeed-60))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
-          actual_draft_power = draft_power * centripetal_force; 
+        centripetal_force = ((speeds/(mediumSpeed-60))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
+        actual_draft_power = draft_power * centripetal_force; 
 
 
-          
+        
 
-          if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars-0.2)){
-            if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
-                XPos[i] += actual_draft_power;
-            }
-            if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars-0.2)){
-                XPos[i] -= actual_draft_power;
-            }
+        if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars-0.2)){
+          if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
+              XPos[i] += actual_draft_power;
+          }
+          if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars-0.2)){
+              XPos[i] -= actual_draft_power;
+          }
+        }
+
+        linePos[i]++;
+        if(speeds >= 0 && speeds <= maxSpeeds/3)  speeds += 2;
+        else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
+        else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
+
+        float carsYpos = lines[linePos[i]-2].carsYPos[i];
+        float carsXpos = lines[linePos[i]-2].carsXPos[i];
+        if(carsYpos > 460 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
+          // tratas de igualar las X para molestar lo máximo posible
+          if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.05 > -off_road_allowed_cars-0.2){ 
+              XPos[i] -= 0.05;
+          }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.05 < off_road_allowed_cars){  
+              XPos[i] += 0.05;
           }
 
-          linePos[i]++;
-          if(speeds[i] >= 0 && speeds[i] <= maxSpeeds[i]/3)  speeds[i] += 2;
-          else if(speeds[i] > maxSpeeds[i]/3 && speeds[i] <= maxSpeeds[i]/2)  speeds[i] += 2;
-          else if(speeds[i] > maxSpeeds[i]/2 && speeds[i] <= maxSpeeds[i])  speeds[i] += 3;
+        }
 
-          float carsYpos = lines[linePos[i]-2].carsYPos[i];
-          float carsXpos = lines[linePos[i]-2].carsXPos[i];
-          if(carsYpos > 410 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
-            // tratas de igualar las X para molestar lo máximo posible
-            if(carsXpos  > drivingCarXPos + (car_width-10) ){ 
-                XPos[i] -= 0.05;
-            }else if(carsXpos  < drivingCarXPos - (car_width-10)){  
-                XPos[i] += 0.05;
+        carsYpos = lines[linePos[i]-2].carsYPos[i];
+        carsXpos = lines[linePos[i]-2].carsXPos[i];
+        if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
+            if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
+                if(rebase == 0){
+                      if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
+                          XPos[i] -= 0.5;
+                      }else{
+                        rebase = 1; //si no puede lo intentará a derechas
+                      }
+                }else{
+                      if((XPos[i] + 0.5 < off_road_allowed_cars)){ // intenta adelantar por la derecha
+                        XPos[i] += 0.5;
+                      }else{
+                        rebase = 0; //si no puede lo intentará a izquierdas
+                      }
+                  
+                }
             }
-
-          }
-
-          carsYpos = lines[linePos[i]-2].carsYPos[i];
-          carsXpos = lines[linePos[i]-2].carsXPos[i];
-          if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
-              if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
-                  if(rebase == 0){
-                        if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
-                            XPos[i] -= 0.5;
-                        }else{
-                          rebase = 1; //si no puede lo intentará a derechas
-                        }
-                  }else{
-                        if((XPos[i] + 0.5 < off_road_allowed_cars)){ // intenta adelantar por la derecha
-                          XPos[i] += 0.5;
-                        }else{
-                          rebase = 0; //si no puede lo intentará a izquierdas
-                        }
-                    
-                  }
-              }
-          }
+        }
+        clock.restart();
       
       }
       
 
-      clock.restart();
+      
     }
     
     
-  }
+  //}
 }
 
 // Creo que sería mejor meterlo directamente en un line, para que así los dibuje en la carretera
-void IA_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars, int iaMode){
+void IA_control(std::vector<Line>& lines, int linePos[], float XPos[], carSprite cars[], int numCars, int iaMode, std::thread threads[]){
 
   switch (iaMode)
   {
   case 0: // easy
-    IAeasy_control(lines, linePos, XPos, cars, numCars);
+    for(int i = 0; i < numCars; i++) threads[i] = thread(&IAeasy_control, ref(lines), linePos, XPos, cars, numCars, i);
     break;
   
   case 1: // normal
-    IAnormal_control(lines, linePos, XPos, cars, numCars);
+    for(int i = 0; i < numCars; i++) threads[i] = thread(&IAnormal_control, ref(lines), linePos, XPos, cars, numCars, i);
     break;
   case 2: // hard
-    IAhard_control(lines, linePos, XPos, cars, numCars);
+    for(int i = 0; i < numCars; i++) threads[i] = thread(&IAhard_control, ref(lines), linePos, XPos, cars, numCars, i);
     break;
   default:
     break;
