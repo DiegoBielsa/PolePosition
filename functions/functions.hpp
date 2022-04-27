@@ -1,0 +1,2 @@
+
+float floatAbs(float a);
