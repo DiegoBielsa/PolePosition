@@ -136,9 +136,11 @@ int main() {
     int linePos[8];
     std::thread threads[8];
     for(int i = 0; i < numCars; i++){
+        ca.loadFromFile("sprites/coches/carSpritesheet" + std::to_string(i) + ".png");
         car_arr[i].init(IntRect(0, 0, car_width, car_height), ca);
-        XPos[i] = i;
-        linePos[i] = goalPosIni-i*3;
+        if(i%2 == 0) XPos[i] = -0.7;
+        else XPos[i] = 0.4;
+        linePos[i] = goalPosIni-i*6;
     }
 
     IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
@@ -184,7 +186,7 @@ int main() {
 
                 int startPos, camH, maxy;
                 float x, dx;
-                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
+                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
 
                 sf::Time elapsed = clock.getElapsedTime();
             
@@ -282,7 +284,7 @@ int main() {
 
                 int startPos, camH, maxy;
                 float x, dx;
-                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
+                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
 
                 sf::Time elapsed = clock.getElapsedTime();
                 bool metacruz = false;

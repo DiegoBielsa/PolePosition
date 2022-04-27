@@ -93,7 +93,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
   }
 }
 
-void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vector<Line>& lines, float &playerX , int &maxy, float& x, float& dx, int& speed, int N, int H, Sprite& sBackground){
+void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vector<Line>& lines, float &playerX , int &maxy, float& x, float& dx, int& speed, int N, int H, Sprite& sBackground, carSprite &car){
   pos += speed;
   while (pos >= N * segL)
     pos -= N * segL;
@@ -103,6 +103,10 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   app.clear(Color(105, 205, 4));
   app.draw(sBackground);
   startPos = pos / segL;
+  if(car.car_dir == 0 && lines[startPos].curve != 0){
+    if(lines[startPos].curve > 0) car.car_dir = 1;
+    else car.car_dir = -1;
+  }
   camH = lines[startPos].y + H;
   if (speed != 0){
     float varyng;
@@ -265,7 +269,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float rebase = 0;
 
   speeds = 1.0f;
-  maxSpeeds = (mediumSpeed - 100) - (i * 7);
+  maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
     if(clock.getElapsedTime().asSeconds() > 1/speeds){
@@ -299,11 +303,17 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
                   }
               }
           }
+          if(lines[linePos[i]].curve > 0){
+            cars[i].car_dir = 1;
+          }else if(lines[linePos[i]].curve < 0){
+            std::cout << "aqui" << std::endl;
+            cars[i].car_dir = -1;
+          }else{
+            cars[i].car_dir = 0;
+          }
+          cars[i].updateCarSprite();
       
-      
-      
-
-      clock.restart();
+          clock.restart();
     }
     
     
@@ -321,7 +331,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   int rebase = 0; // 0 rebasa por izquierda 1 por derecha
   
   speeds = 1.0f;
-  maxSpeeds = (mediumSpeed - 80) - (i * 7);
+  maxSpeeds = (mediumSpeed - 50) - (i * 7);
   
 
   while(!gameOver){
@@ -376,8 +386,6 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
           }
       
       
-      
-
       clock.restart();
     }
     
@@ -432,10 +440,10 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
         float carsXpos = lines[linePos[i]-2].carsXPos[i];
         if(carsYpos > 460 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
           // tratas de igualar las X para molestar lo máximo posible
-          if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.05 > -off_road_allowed_cars-0.2){ 
-              XPos[i] -= 0.05;
-          }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.05 < off_road_allowed_cars){  
-              XPos[i] += 0.05;
+          if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.02 > -off_road_allowed_cars-0.2){ 
+              XPos[i] -= 0.02;
+          }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.02 < off_road_allowed_cars){  
+              XPos[i] += 0.02;
           }
 
         }

@@ -1,4 +1,5 @@
 #include "../globals/globals.hpp"
+#include <iostream>
 
 using namespace sf;
 
@@ -110,6 +111,7 @@ struct carSprite{
             }
           }
           if(car_dir == -1){
+            std::cout << "aqui" << std::endl;
             //Movimiento a izq
             if(!car_inv){
               //Recuperando direccion del coche
