@@ -272,7 +272,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 1/speeds){
+    if(clock.getElapsedTime().asSeconds() > 0.02f){
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
           
           //std::cout << "aqui " << lines[linePos[i]].curve << std::endl;

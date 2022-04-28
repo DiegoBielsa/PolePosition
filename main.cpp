@@ -136,8 +136,20 @@ int main() {
     int linePos[8];
     std::thread threads[8];
     for(int i = 0; i < numCars; i++){
-        ca.loadFromFile("sprites/coches/carSpritesheet" + std::to_string(i) + ".png");
-        car_arr[i].init(IntRect(0, 0, car_width, car_height), ca);
+        int k = 0;
+        
+        for(int j = 0; j <= 11; j++){
+            std::cout << "sprites/coches/IACar" + std::to_string(i) + "/tile" + std::to_string(j) + std::to_string(0) + ".png" << std::endl;
+            car_arr[i].texCar[k].loadFromFile("sprites/coches/IACar" + std::to_string(i) + "/tile" + std::to_string(j) + std::to_string(0) + ".png");
+            k++;
+            std::cout << "sprites/coches/IACar" + std::to_string(i) + "/tile" + std::to_string(j) + std::to_string(1) + ".png" << std::endl;
+            car_arr[i].texCar[k].loadFromFile("sprites/coches/IACar" + std::to_string(i) + "/tile" + std::to_string(j) + std::to_string(1) + ".png");
+            k++;
+        }
+        for(int j = 0; j < 14; j++){
+            car_arr[i].texCar[k].loadFromFile("sprites/coches/Crash/crash" + std::to_string(j) + ".png");
+        }
+        car_arr[i].init();
         if(i%2 == 0) XPos[i] = -0.7;
         else XPos[i] = 0.4;
         linePos[i] = goalPosIni-i*6;
