@@ -1,5 +1,7 @@
 #include "Pantallaranking.hpp"
 
+
+
 void drawRanking(RenderWindow& app,string puntuaciones[],int lim,int scoreentero) {
     sf::Text score;
     sf::Text scorenumber;
@@ -153,4 +155,57 @@ void drawRanking(RenderWindow& app,string puntuaciones[],int lim,int scoreentero
         app.draw(n);
     }
 }
+
+
+void drawInicio(RenderWindow& app,int& color){
+    Texture titulo;
+    Texture dos;
+    Texture fondodos;
+    Texture letrai;
+        titulo.loadFromFile("images/titulo.png");
+        dos.loadFromFile("images/numero2.png");
+        fondodos.loadFromFile("images/fondonumero.png");
+        letrai.loadFromFile("images/letrasinicio.png");
+
+        Sprite tit(titulo);
+        Sprite numdos(dos);
+        Sprite fondonumdos(fondodos);
+        Sprite letra(letrai);
+
+        if (color == 0 ||color==1) {
+            tit.setColor(sf::Color::Red);
+            numdos.setColor(sf::Color::Red);
+            color++;
+        }
+        
+        else if (color == 2 || color== 3) {
+            tit.setColor(sf::Color::Yellow);
+            numdos.setColor(sf::Color::Blue);
+            color++;
+        }
+        else if (color == 4 || color == 5) {
+            tit.setColor(sf::Color::White);
+            numdos.setColor(sf::Color::White);
+            color++;
+        }
+        else { //azul
+            color = 0;
+        }
+        
+
+        Vector2f tamayo;
+
+    tit.setPosition(20, 0);
+    tamayo=numdos.getScale();
+    numdos.setScale(0.3, 0.3);
+    numdos.setPosition(355, 317);
+    fondonumdos.setPosition(420, 325);
+    letra.setPosition(220, 500);
+    app.draw(tit);
+    app.draw(fondonumdos);
+    app.draw(numdos);
+    app.draw(letra);
+
+}
+
 
