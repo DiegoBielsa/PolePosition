@@ -131,7 +131,7 @@ int main() {
     // eleccion del mapa
     lines = maps[mapa];
 
-    carSprite car_arr[8];
+    carSpriteIA car_arr[8];
     float XPos[8];
     int linePos[8];
     std::thread threads[8];

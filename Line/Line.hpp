@@ -84,7 +84,7 @@ struct Line {
       carsXPos[i] = destX;
       //std::cout << carsYPos[i] << std::endl;
 
-      cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
+      //cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
       cars[i].setScale(destW*1.6 / w, destH*1.6 / h);
       cars[i].setPosition(destX, destY);
       //std::cout << destY << std::endl;

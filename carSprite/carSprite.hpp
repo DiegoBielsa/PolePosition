@@ -111,7 +111,6 @@ struct carSprite{
             }
           }
           if(car_dir == -1){
-            std::cout << "aqui" << std::endl;
             //Movimiento a izq
             if(!car_inv){
               //Recuperando direccion del coche
@@ -159,10 +158,13 @@ struct carSprite{
               else
                 rectSrcSprite.left -= car_width;
             }else{
-              if(rectSrcSprite.left < 7*car_width)
+              
+              if(rectSrcSprite.left < 7*car_width){
                 rectSrcSprite.left += car_width;
-              else
+              }
+              else{
                 rectSrcSprite.left = 6*car_width;
+              }
             } 
           }
           if(car_dir == -1){
@@ -185,6 +187,146 @@ struct carSprite{
             
           }
         }
+      }
+      clock.restart();
+      sprite.setTextureRect(rectSrcSprite);
+    }
+  }
+};
+
+
+//Control sprite coche
+struct carSpriteIA{
+  int car_dir; //-1 izq 0 recto 1 dcha
+  int spriteN; //Numero de sprite (columna)[0-7]
+  bool car_inv; //false normal, true invertido
+  bool colision; //colision detectada
+  Texture tex;
+  IntRect rectSrcSprite; 
+  Sprite sprite;
+  Clock clock;
+
+  void init(IntRect rect, Texture t){
+    car_dir = 0;
+    spriteN = 0;
+    car_inv = false;
+    colision = false;
+    rectSrcSprite = rect;
+    tex = t;
+    sprite.setTexture(tex);
+    sprite.setTextureRect(rectSrcSprite);
+    sprite.setPosition(width/2-car_width*1.5,600);
+    sprite.setScale(3,3);
+  }
+  void reinit(){
+    car_width = 56;
+    car_height = 33;
+    car_dir = 0;
+    spriteN = 0;
+    car_inv = false;
+    colision = false;
+    rectSrcSprite = IntRect(0, 0, car_width, car_height);
+    sprite.setTexture(tex);
+    sprite.setTextureRect(rectSrcSprite);
+    sprite.setPosition(width/2-car_width*1.5,600);
+    sprite.setScale(3,3);
+  }
+  void updateCarSprite(){
+    if(clock.getElapsedTime().asSeconds() > 0.03f){
+      if(colision){
+        if(rectSrcSprite.top < 3*car_height){
+          car_width = 61;
+          rectSrcSprite = IntRect(0,3*car_height, car_width, car_height);
+          spriteN = 0;
+        }
+        else if(spriteN < 2){
+          rectSrcSprite.left += 3+car_width;
+          spriteN++;
+        }
+        else if(spriteN == 2){
+          rectSrcSprite.left += 5+car_width;
+          spriteN++;
+        }
+        else if(spriteN == 3){
+          rectSrcSprite.left += car_width;
+          car_width = 54;
+          rectSrcSprite.width = car_width;
+          spriteN++;
+        }
+        else if(spriteN == 4){
+          rectSrcSprite.left += car_width;
+          spriteN++;
+        }else if(spriteN == 5){
+          rectSrcSprite.left += car_width;
+          car_width = 58;
+          rectSrcSprite.width = car_width;
+          spriteN++;
+        }else if(spriteN == 6){
+          rectSrcSprite.left += car_width;
+          car_width = 68;
+          rectSrcSprite.width = car_width;
+          spriteN++;
+        }
+      }
+      else{
+          //Acelerando
+          if(car_dir == 0){
+            //Movimiento recto
+            if(rectSrcSprite.left >= car_width){
+              if(car_inv){
+                //Recuperando direccion del coche
+                if(rectSrcSprite.left == car_width){
+                car_inv = false;
+                rectSrcSprite.left -= rectSrcSprite.width;
+                rectSrcSprite.width = -rectSrcSprite.width;
+                }
+              }
+              rectSrcSprite.left -= car_width;
+            }
+            else
+              rectSrcSprite.left += car_width;
+          }
+          if(car_dir == 1){
+            //Movimiento dcha
+            if(car_inv){
+              //Recuperando direccion del coche
+             if(rectSrcSprite.left == car_width){
+                car_inv = false;
+                rectSrcSprite.left -= rectSrcSprite.width;
+                rectSrcSprite.width = -rectSrcSprite.width;
+              }
+              else
+                rectSrcSprite.left -= car_width;
+            }else{
+              
+              if(rectSrcSprite.left < 7*car_width){
+                rectSrcSprite.left += car_width;
+              }
+              else{
+                rectSrcSprite.left = 6*car_width;
+              }
+            } 
+          }
+          if(car_dir == -1){
+            //Movimiento a izq
+            if(!car_inv){
+              //Recuperando direccion del coche
+              if(rectSrcSprite.left == 0){
+                car_inv = true;
+                rectSrcSprite.left += rectSrcSprite.width;
+                rectSrcSprite.width = -rectSrcSprite.width;
+              }
+              else
+                rectSrcSprite.left -= car_width;
+            }else{
+              if(rectSrcSprite.left < 8*car_width)
+                rectSrcSprite.left += car_width;
+              else
+                rectSrcSprite.left = 7*car_width;
+            }
+            
+          }
+        
       }
       clock.restart();
       sprite.setTextureRect(rectSrcSprite);
