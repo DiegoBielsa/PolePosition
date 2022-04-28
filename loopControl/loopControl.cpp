@@ -17,6 +17,8 @@ void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
 }
 
 void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
+  static int contadorDer;
+  static int contadorIzq;
   car.car_status = 0;
   car.car_dir = 0;
   if(perderControl){
@@ -41,14 +43,28 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
     if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX * roadW) < (roadW + off_road_allowed)) && (((playerX + turn_power) * roadW) < (roadW + off_road_allowed))){
       if(speed>0){
         playerX += turn_power * ((float(speed)/maxSpeed));
+        contadorDer = 30;
       }
       car.car_dir = 1;
+    }else{
+      if (contadorDer > 0) {
+        std::cout<<contadorDer<<std::endl;
+        playerX += turn_power * sqrt((contadorDer) / (30*1.8));
+        contadorDer--;
+      }
+      
     }
     if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed))){
       if(speed > 0){
         playerX -= turn_power * ((float(speed)/maxSpeed));
+        contadorIzq = 30;
       }
       car.car_dir = -1;
+    }else{
+      if (contadorIzq > 0) {
+        playerX -= turn_power * sqrt((contadorIzq) / (30*1.8));
+        contadorIzq--;
+      }
     }
     if (Keyboard::isKeyPressed(Keyboard::Up)){
       car.car_status = 1;
@@ -115,7 +131,7 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
     else if(speed > 300 && speed <= 380) varyng = 1;
     float centripetal_force = ((speed/maxSpeed)+varyng) * floatAbs(lines[startPos].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
     float actual_draft_power = draft_power * centripetal_force;
-    std::cout << actual_draft_power << std::endl;
+    //std::cout << actual_draft_power << std::endl;
     if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))
       && !Keyboard::isKeyPressed(Keyboard::Right) && !Keyboard::isKeyPressed(Keyboard::Left)){
       if(lines[startPos].curve > 0 && (((playerX - actual_draft_power) * roadW) > (-roadW-off_road_allowed))){
