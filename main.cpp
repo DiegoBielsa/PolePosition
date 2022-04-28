@@ -21,7 +21,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 0;
+int estado = 3;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -38,6 +38,7 @@ float turn_power;
 float draft_power;
 float goalPosIni;
 float goalPosEnd;
+int color = 0;
 
 int speed = 0;
 bool marchaBaja = true;
@@ -133,7 +134,8 @@ int main() {
         switch (estado)
         {
         case 0://clasificacion
-           
+            terminar = false;
+            tiempoparafin.restart();
 
             while (app.isOpen() && !terminar) {
                 Event e;
@@ -347,6 +349,36 @@ int main() {
                 }
                 else {
                     estado = 1;
+                    terminar = true;
+                }
+                app.display();
+            }
+            break;
+        case 3: //pantalla inicio
+            terminar = false;
+            tiempoparafin.restart();
+            color = 0; //color de los sprites
+            while (app.isOpen() && !terminar) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                if (tiempoparafin.getElapsedTime().asSeconds() < 10) {//esperamos 10 segundos para terminar
+                    app.clear(Color(227, 187, 107));
+                    
+                    drawInicio(app,color);
+                    
+                }
+                else {
+                    estado = 0;
                     terminar = true;
                 }
                 app.display();
