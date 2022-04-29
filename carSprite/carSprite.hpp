@@ -207,8 +207,10 @@ struct carSpriteIA{
   IntRect rectSrcSprite; 
   Sprite sprite;
   Clock clock;
+  int maxTex;
 
   void init(){
+    maxTex = 23;
     actualTex = 0;
     car_dir = 0;
     spriteN = 0;
@@ -219,6 +221,7 @@ struct carSpriteIA{
     sprite.setScale(3,3);
   }
   void reinit(){
+    maxTex = 23;
     actualTex = 0;
     car_width = 56;
     car_height = 33;
@@ -231,7 +234,7 @@ struct carSpriteIA{
     sprite.setScale(3,3);
   }
   void updateCarSprite(){
-    if(clock.getElapsedTime().asSeconds() > 1.0f){
+    if(clock.getElapsedTime().asSeconds() > 0.06f){
       if(car_dir == 0){ //Movimiento recto
         if(actualTex > 1){ //si estaba girando recuperamos 
           if(car_inv){ //girando a izquierdas
@@ -257,11 +260,11 @@ struct carSpriteIA{
             actualTex--;
         }else{ // si no tenemos que girar a derechas
           
-          if(actualTex < 23){
+          if(actualTex < maxTex){
             actualTex++;
           }
           else{
-            actualTex = 22;
+            actualTex = maxTex-1;
           }
         } 
       }
@@ -273,10 +276,12 @@ struct carSpriteIA{
           else
             actualTex--;
         }else{
-          if(actualTex < 23)
+          if(actualTex < maxTex){
+            if(actualTex == 0) car_inv = true;
             actualTex++;
+          }
           else
-            actualTex = 22;
+            actualTex = maxTex-1;
         }
         
       }

@@ -272,16 +272,34 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
-    if(clock.getElapsedTime().asSeconds() > 0.02f){
+    if(clock.getElapsedTime().asSeconds() > 1/speeds){
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
           
           //std::cout << "aqui " << lines[linePos[i]].curve << std::endl;
+
+          cars[i].maxTex = 23;
           if(lines[linePos[i]].curve > 0){
             //std::cout << "aquiD" << std::endl;
             cars[i].car_dir = 1;
+            if(lines[linePos[i]].curve > 2.5){ 
+              cars[i].maxTex = 23;
+            }
+            else if(lines[linePos[i]].curve > 1.5){ 
+              cars[i].maxTex = 13;
+            }else{
+              cars[i].maxTex = 7;
+            }
           }else if(lines[linePos[i]].curve < 0){
             //std::cout << "aquiI" << std::endl;
             cars[i].car_dir = -1;
+            if(lines[linePos[i]].curve < -2.5){ 
+              cars[i].maxTex = 23;
+            }
+            else if(lines[linePos[i]].curve < -1.5){ 
+              cars[i].maxTex = 13;
+            }else{
+              cars[i].maxTex = 7;
+            }
           }else{
             //std::cout << "aquiR" << std::endl;
             cars[i].car_dir = 0;
@@ -342,6 +360,35 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   while(!gameOver){
     if(clock.getElapsedTime().asSeconds() > 1/speeds){
           if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+
+          cars[i].maxTex = 23;
+          if(lines[linePos[i]].curve > 0){
+            //std::cout << "aquiD" << std::endl;
+            cars[i].car_dir = 1;
+            if(lines[linePos[i]].curve > 2.5){ 
+              cars[i].maxTex = 23;
+            }
+            else if(lines[linePos[i]].curve > 1.5){ 
+              cars[i].maxTex = 13;
+            }else{
+              cars[i].maxTex = 7;
+            }
+          }else if(lines[linePos[i]].curve < 0){
+            //std::cout << "aquiI" << std::endl;
+            cars[i].car_dir = -1;
+            if(lines[linePos[i]].curve < -2.5){ 
+              cars[i].maxTex = 23;
+            }
+            else if(lines[linePos[i]].curve < -1.5){ 
+              cars[i].maxTex = 13;
+            }else{
+              cars[i].maxTex = 7;
+            }
+          }else{
+            //std::cout << "aquiR" << std::endl;
+            cars[i].car_dir = 0;
+          }
+          cars[i].updateCarSprite();
           lines[linePos[i] -1].cars[i] = sf::Sprite();
           lines[linePos[i]].cars[i] = cars[i].sprite;
           lines[linePos[i]].carsX[i] = XPos[i];
@@ -417,6 +464,34 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     if(clock.getElapsedTime().asSeconds() > 1/speeds){
 
         if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+        cars[i].maxTex = 23;
+          if(lines[linePos[i]].curve > 0){
+            //std::cout << "aquiD" << std::endl;
+            cars[i].car_dir = 1;
+            if(lines[linePos[i]].curve > 2.5){ 
+              cars[i].maxTex = 23;
+            }
+            else if(lines[linePos[i]].curve > 1.5){ 
+              cars[i].maxTex = 13;
+            }else{
+              cars[i].maxTex = 7;
+            }
+          }else if(lines[linePos[i]].curve < 0){
+            //std::cout << "aquiI" << std::endl;
+            cars[i].car_dir = -1;
+            if(lines[linePos[i]].curve < -2.5){ 
+              cars[i].maxTex = 23;
+            }
+            else if(lines[linePos[i]].curve < -1.5){ 
+              cars[i].maxTex = 13;
+            }else{
+              cars[i].maxTex = 7;
+            }
+          }else{
+            //std::cout << "aquiR" << std::endl;
+            cars[i].car_dir = 0;
+          }
+          
         lines[linePos[i] -1].cars[i] = sf::Sprite();
         lines[linePos[i]].cars[i] = cars[i].sprite;
         lines[linePos[i]].carsX[i] = XPos[i];
@@ -447,12 +522,21 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           // tratas de igualar las X para molestar lo máximo posible
           if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.02 > -off_road_allowed_cars-0.2){ 
               XPos[i] -= 0.02;
+              cars[i].car_dir = -1;
+              if(lines[linePos[i]].curve == 0){
+                  cars[i].maxTex = 7;
+              }
           }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.02 < off_road_allowed_cars){  
               XPos[i] += 0.02;
+              cars[i].car_dir = 1;
+              if(lines[linePos[i]].curve == 0){
+                cars[i].maxTex = 7;
+              }
           }
 
         }
 
+        cars[i].updateCarSprite();
         carsYpos = lines[linePos[i]-2].carsYPos[i];
         carsXpos = lines[linePos[i]-2].carsXPos[i];
         if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
