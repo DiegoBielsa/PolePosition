@@ -21,7 +21,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 3;
+int estado = 4;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -378,9 +378,40 @@ int main() {
                     
                 }
                 else {
-                    estado = 0;
+                    estado = 1;
                     terminar = true;
                 }
+                app.display();
+            }
+            break;
+        case 4: //pantalla eleccioncircuito
+            terminar = false;
+            tiempoparafin.restart();
+            color = 0; //color de los sprites
+            mapa = 0;
+            while (app.isOpen() && !terminar) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                app.clear(Color(44, 76, 116));
+
+                manageKeysCircuito(mapa,terminar);
+
+                drawCircuito(app, color,mapa);
+                if (terminar == true) {
+                    estado = 0;
+                }
+
+                
                 app.display();
             }
             break;
