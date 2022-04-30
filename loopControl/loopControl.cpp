@@ -48,7 +48,6 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
       car.car_dir = 1;
     }else{
       if (contadorDer > 0) {
-        std::cout<<contadorDer<<std::endl;
         playerX += turn_power * sqrt((contadorDer) / (30*1.8));
         contadorDer--;
       }
@@ -216,7 +215,7 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 
 }
 
-void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car){
+void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car, std::vector<Sound>& sounds){
   ////////draw objects////////
   for (int n = startPos + draw_distance; n > startPos; n--)
     lines[n % N].drawSprite(app);
@@ -232,6 +231,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   }else if(lines[(startPos+10)%N].sprite_type == 0){
     car.colision = true;
     perderControl = true;
+    sounds[1].play();
   }else if(lines[(startPos+10)%N].sprite_type == 2){//meta
     app.draw(car.sprite);
   }else if(lines[(startPos+10)%N].sprite_type == 3){//charco

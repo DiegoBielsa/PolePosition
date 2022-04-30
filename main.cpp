@@ -1,7 +1,10 @@
 #pragma once
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Audio.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include <iostream>
@@ -64,6 +67,17 @@ int mapa; //mapa a elegir
 
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
+void updateSound(int& speed,   vector<Sound>& sounds ){
+    float pitch = ((float(speed)/maxSpeed));
+    cout<<pitch<<endl;
+    if(pitch < 0.05){
+        sounds[5].setPitch(0.05f);
+    }
+    else{
+        sounds[5].setPitch(pitch);
+    }
+}
+
 int main() {
     //INICIALIZANDO EL JUEGO
     setConfig();
@@ -119,6 +133,60 @@ int main() {
 
     std::vector<std::vector<Line>> maps; // esto es el conjunto de mapas
     std::vector<Line> lines; // esto es el mapa, 
+    vector<Sound> sounds;
+
+    SoundBuffer buffer;
+
+    if(!buffer.loadFromFile("audio/audio2.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    Sound sound;
+    sound.setBuffer(buffer);
+
+    //playSound(sound);
+    sounds.push_back(sound);
+    SoundBuffer buffer2;
+    Sound sound2;
+    if(!buffer2.loadFromFile("audio/crash.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound2.setBuffer(buffer2);
+    sounds.push_back(sound2);
+
+    SoundBuffer buffer3;
+    Sound sound3;
+    if(!buffer3.loadFromFile("audio/prepare.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound3.setBuffer(buffer3);
+    sounds.push_back(sound3);
+
+    SoundBuffer buffer4;
+    Sound sound4;
+    if(!buffer4.loadFromFile("audio/derrape.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound4.setBuffer(buffer4);
+    sounds.push_back(sound4);
+    SoundBuffer buffer5;
+    Sound sound5;
+    if(!buffer5.loadFromFile("audio/carengine.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound5.setBuffer(buffer5);
+    sounds.push_back(sound5);
+
+    SoundBuffer buffer6;
+    Sound sound6;
+    if(!buffer6.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound6.setBuffer(buffer6);
+    sounds.push_back(sound6);
+
+    sounds[5].setPitch(1.0f);
+    sounds[5].setLoop(true);
+    sounds[5].play();
 
     setMaps(maps, object);
 
@@ -165,6 +233,9 @@ int main() {
                 manageKeys(playerX, speed, H, car);
 
 
+                updateSound(speed, sounds);
+
+
                 int startPos, camH, maxy;
                 float x, dx;
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
@@ -188,7 +259,7 @@ int main() {
 
 
                 drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-                drawObjects(app, startPos, lines, N, car);
+                drawObjects(app, startPos, lines, N, car, sounds);
                 drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
                 //std::cout<<startPos<<std::endl;
                 if (startPos >= 3500 && startPos <= 3550) {
@@ -290,7 +361,7 @@ int main() {
 
 
                 drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-                drawObjects(app, startPos, lines, N, car);
+                drawObjects(app, startPos, lines, N, car, sounds);
                 drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
                 //std::cout<<startPos<<std::endl;
                

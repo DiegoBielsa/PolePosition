@@ -317,7 +317,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
     texto2.setString("-TEST-");
     texto3.setString("-SUZUKA-");
     texto4.setString("-SEASIDE-");
-    titulo..setString("SELEECT ");
+    titulo.setString("SELEECT ");
 
 
     texto1.setFillColor(Color(219,224,142));
