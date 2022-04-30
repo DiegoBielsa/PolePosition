@@ -62,6 +62,17 @@ int mapa; //mapa a elegir
 
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
+void updateSound(int& speed,   vector<Sound>& sounds ){
+    float pitch = ((float(speed)/maxSpeed));
+    cout<<pitch<<endl;
+    if(pitch < 0.05){
+        sounds[5].setPitch(0.05f);
+    }
+    else{
+        sounds[5].setPitch(pitch);
+    }
+}
+
 int main() {
   //INICIALIZANDO EL JUEGO
   setConfig();
@@ -156,11 +167,19 @@ int main() {
   }
   sound5.setBuffer(buffer5);
   sounds.push_back(sound5);
-  sounds[4].setLoop(true);
-  sounds[4].play();
 
-  //sounds[2].play();
-  playSound(sounds[2]);
+  SoundBuffer buffer6;
+  Sound sound6;
+  if(!buffer6.loadFromFile("audio/f1sound1.ogg")) {
+    std::cout<<"error en audio"<<std::endl;
+  }
+  sound6.setBuffer(buffer6);
+  sounds.push_back(sound6);
+
+  sounds[5].setPitch(3.0f);
+  sounds[5].setLoop(true);
+  sounds[5].play();
+
 
 
   setMaps(maps, object);
@@ -201,7 +220,9 @@ int main() {
       keyState[e.key.code] = false;
     }
     manageKeys(playerX, speed, H, car);
-
+    
+    
+    updateSound(speed,sounds);
     
     int startPos, camH, maxy;
     float x, dx;
