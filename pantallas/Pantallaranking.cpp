@@ -193,10 +193,8 @@ void drawInicio(RenderWindow& app,int& color){
         }
         
 
-        Vector2f tamayo;
 
     tit.setPosition(20, 0);
-    tamayo=numdos.getScale();
     numdos.setScale(0.3, 0.3);
     numdos.setPosition(355, 317);
     fondonumdos.setPosition(420, 325);
@@ -206,6 +204,243 @@ void drawInicio(RenderWindow& app,int& color){
     app.draw(numdos);
     app.draw(letra);
 
+}
+
+
+void manageKeysCircuito(int& mapa,bool& terminar) {
+
+
+    if (mapa == 0) {//test
+        if (Keyboard::isKeyPressed(Keyboard::Right)) {
+            mapa = 0;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Left)) {
+            //mapa =fuji;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Up)) {
+            mapa = 0;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Down)) {
+           // mapa=seaside
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            terminar = true;
+        }
+    }
+    else if (mapa == 1) {//fuji
+        if (Keyboard::isKeyPressed(Keyboard::Right)) {
+            mapa = 0; //test
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Left)) {
+            mapa = 1;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Up)) {
+            mapa = 1;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Down)) {
+            //mapa=suzuka;
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            terminar = true;
+        }
+    }
+    else if (mapa == 2) {//suzuka
+        if (Keyboard::isKeyPressed(Keyboard::Right)) {
+            //mapa=seaside
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Left)) {
+            mapa = 2;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Up)) {
+            //mapa=fuji
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Down)) {
+            mapa = 2;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            terminar = true;
+
+        }
+    }
+    else if (mapa == 3) {//seaside
+        if (Keyboard::isKeyPressed(Keyboard::Right)) {
+            mapa = 3;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Left)) {
+            //mapa=suzuka
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Up)) {
+            //mapa=test
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Down)) {
+            mapa = true;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            terminar = true;
+
+        }
+    }
+
+}
+
+void drawCircuito(RenderWindow& app, int& color, int mapa) {
+    sf::Text texto1;
+    sf::Text texto2;
+    sf::Text texto3;
+    sf::Text texto4;
+    sf::Text titulo;
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    // select the font
+    texto1.setFont(font); // font is a sf::Font
+    texto2.setFont(font);
+    texto3.setFont(font);
+    texto4.setFont(font);
+    titulo.setFont(font);
+
+    texto1.setString("-FUJI-");
+    texto2.setString("-TEST-");
+    texto3.setString("-SUZUKA-");
+    texto4.setString("-SEASIDE-");
+    titulo..setString("SELEECT ");
+
+
+    texto1.setFillColor(Color(219,224,142));
+    texto2.setFillColor(Color(219, 224, 142));
+    texto3.setFillColor(Color(219, 224, 142));
+    texto4.setFillColor(Color(219, 224, 142));
+
+    texto1.setCharacterSize(55);
+    texto2.setCharacterSize(55);
+    texto3.setCharacterSize(55);
+    texto4.setCharacterSize(55);
+
+    texto1.setPosition(227, 145);
+    texto2.setPosition(630, 145);
+    texto3.setPosition(200, 360);
+    texto4.setPosition(595, 360);
+
+
+    Texture fuj;
+    Texture suzuka;
+    Texture tes;
+    Texture seaside;
+
+    fuj.loadFromFile("images/fuji2.png");
+    suzuka.loadFromFile("images/suzuka.png");
+    tes.loadFromFile("images/test.png");
+    seaside.loadFromFile("images/seaside.png");
+
+    Sprite fuji(fuj);
+    Sprite suzu(suzuka);
+    Sprite test(tes);
+    Sprite sea(seaside);
+
+    if (mapa == 0) {//test
+        if (color == 0 || color == 1) {
+            test.setColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            test.setColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            test.setColor(sf::Color::White);
+            color++;
+        }
+        else { //rojo
+            color = 0;
+        }
+    }
+    else if (mapa == 1) {//fuji
+        if (color == 0 || color == 1) {
+           fuji.setColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            fuji.setColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            fuji.setColor(sf::Color::White);
+            color++;
+        }
+        else { //rojo
+            color = 0;
+        }
+    }
+    else if (mapa == 1) {//suzuka
+        if (color == 0 || color == 1) {
+            suzu.setColor(sf::Color::Blue);
+ 
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            suzu.setColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            suzu.setColor(sf::Color::White);
+            color++;
+        }
+        else { //rojo
+            color = 0;
+        }
+    }
+    else if (mapa == 3) {//seaside
+        if (color == 0 || color == 1) {
+            sea.setColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            sea.setColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            sea.setColor(sf::Color::White);
+            color++;
+        }
+        else { //rojo
+            color = 0;
+        }
+    }
+
+
+    fuji.setPosition(120, 180);
+    test.setPosition(490, 190);
+    suzu.setPosition(120, 370);
+    sea.setScale(0.4, 0.4);
+    sea.setPosition(555, 430);
+
+
+    app.draw(fuji);
+    app.draw(test);
+    app.draw(suzu);
+    app.draw(sea);
+    app.draw(texto1);
+    app.draw(texto2);
+    app.draw(texto3);
+    app.draw(texto4);
 }
 
 
