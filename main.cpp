@@ -91,9 +91,25 @@ int main() {
     Sprite object[50];
     Texture ca;
     Texture marcha;
-    ca.loadFromFile("sprites/coches/carSpritesheet.png");
+    //ca.loadFromFile("sprites/coches/carSpritesheet.png");
+    //carSprite car;
+    //car.init(IntRect(0, 0, car_width, car_height), ca); //Inicializar sprite coche
     carSprite car;
-    car.init(IntRect(0, 0, car_width, car_height), ca); //Inicializar sprite coche
+    int k = 0;
+        
+    for(int j = 0; j <= 11; j++){
+        std::cout << "sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png" << std::endl;
+        car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
+        k++;
+        std::cout << "sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png" << std::endl;
+        car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
+        k++;
+    }
+    for(int j = 0; j < 14; j++){
+        car.texCar[k].loadFromFile("sprites/coches/Crash/crash" + std::to_string(j) + ".png");
+    }
+    
+    car.init(); //Inicializar sprite coche
     for (int i = 1; i <= 7; i++) {
         t[i].loadFromFile("images/" + std::to_string(i) + ".png");
         t[i].setSmooth(true);
