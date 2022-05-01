@@ -116,14 +116,16 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   }
   camH = lines[startPos].y + H;
   if (speed != 0){
-    float varyng;
-    if(speed >= 0 && speed <= 50) {varyng = 0; car.updateTime = 0.04;}
-    else if(speed > 50 && speed <= 100) {varyng = 0.2; car.updateTime = 0.037;}
-    else if(speed > 100 && speed <= 150) {varyng = 0.4; car.updateTime = 0.033;}
-    else if(speed > 150 && speed <= 200) {varyng = 0.6; car.updateTime = 0.03;}
-    else if(speed > 200 && speed <= 250) {varyng = 0.8; car.updateTime = 0.027;}
-    else if(speed > 250 && speed <= 300) {varyng = 0.9; car.updateTime = 0.024;}
-    else if(speed > 300 && speed <= 380) {varyng = 1; car.updateTime = 0.02;}
+    float varyng = 0;
+    if(!car.colision){
+      if(speed >= 0 && speed <= 50) {varyng = 0; car.updateTime = 0.04;}
+      else if(speed > 50 && speed <= 100) {varyng = 0.2; car.updateTime = 0.037;}
+      else if(speed > 100 && speed <= 150) {varyng = 0.4; car.updateTime = 0.033;}
+      else if(speed > 150 && speed <= 200) {varyng = 0.6; car.updateTime = 0.03;}
+      else if(speed > 200 && speed <= 250) {varyng = 0.8; car.updateTime = 0.027;}
+      else if(speed > 250 && speed <= 300) {varyng = 0.9; car.updateTime = 0.024;}
+      else if(speed > 300 && speed <= 380) {varyng = 1; car.updateTime = 0.02;}
+    }
     float centripetal_force = ((speed/maxSpeed)+varyng) * floatAbs(lines[startPos].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
     float actual_draft_power = draft_power * centripetal_force;
     if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))

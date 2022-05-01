@@ -99,15 +99,13 @@ int main() {
     int k = 0;
         
     for(int j = 0; j <= 11; j++){
-        std::cout << "sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png" << std::endl;
         car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
         k++;
-        std::cout << "sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png" << std::endl;
         car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
         k++;
     }
-    for(int j = 0; j < 14; j++){
-        car.texCar[k].loadFromFile("sprites/coches/Crash/crash" + std::to_string(j) + ".png");
+    for(int j = 0; j < 12; j++){
+        car.texCarExp[j].loadFromFile("sprites/coches/Crash/crash" + std::to_string(j) + ".png");
     }
     
     car.init(); //Inicializar sprite coche
@@ -157,15 +155,13 @@ int main() {
         int k = 0;
         
         for(int j = 0; j <= 11; j++){
-            std::cout << "sprites/coches/IACar" + std::to_string(i) + "/tile" + std::to_string(j) + std::to_string(0) + ".png" << std::endl;
             car_arr[i].texCar[k].loadFromFile("sprites/coches/IACar" + std::to_string(i) + "/tile" + std::to_string(j) + std::to_string(0) + ".png");
             k++;
-            std::cout << "sprites/coches/IACar" + std::to_string(i) + "/tile" + std::to_string(j) + std::to_string(1) + ".png" << std::endl;
             car_arr[i].texCar[k].loadFromFile("sprites/coches/IACar" + std::to_string(i) + "/tile" + std::to_string(j) + std::to_string(1) + ".png");
             k++;
         }
-        for(int j = 0; j < 14; j++){
-            car_arr[i].texCar[k].loadFromFile("sprites/coches/Crash/crash" + std::to_string(j) + ".png");
+        for(int j = 0; j < 18; j++){
+            car_arr[i].texCarExp[j].loadFromFile("sprites/coches/Crash/crash" + std::to_string(j) + ".png");
         }
         car_arr[i].init();
         if(i%2 == 0) XPos[i] = -0.7;

@@ -11,7 +11,7 @@ struct carSpriteIA{
   bool colision; //colision detectada
   Texture texCar[24];
   int actualTex;
-  Texture texCarExp[15];
+  Texture texCarExp[18];
   IntRect rectSrcSprite; 
   Sprite sprite;
   Clock clock;
@@ -116,7 +116,7 @@ struct carSpriteIA{
 struct carSprite{
   int car_status; //-1 atras 0 quieto 1 alante
   int car_dir; //-1 izq 0 recto 1 dcha
-  int spriteN; //Numero de sprite (columna)[0-7]
+  int colisionSprite; //Numero de sprite (columna)[0-7]
   bool car_inv; //false normal, true invertido
   bool colision; //colision detectada
   int maxTexNoKey = 7;
@@ -124,7 +124,7 @@ struct carSprite{
   int maxTexDraft = 23;
   Texture texCar[24]; // los 4 ultimos para el derrape
   int actualTex;
-  Texture texCarExp[15];
+  Texture texCarExp[11];
   IntRect rectSrcSprite; 
   Sprite sprite;
   Clock clock;
@@ -135,7 +135,7 @@ struct carSprite{
     maxTex = maxTexNoKey;
     actualTex = 0;
     car_dir = 0;
-    spriteN = 0;
+    colisionSprite = 0;
     car_inv = false;
     colision = false;
     sprite.setTexture(texCar[actualTex]);
@@ -146,7 +146,7 @@ struct carSprite{
     maxTex = maxTexNoKey;
     actualTex = 0;
     car_dir = 0;
-    spriteN = 0;
+    colisionSprite = 0;
     car_inv = false;
     colision = false;
     sprite.setTexture(texCar[actualTex]);
@@ -161,47 +161,13 @@ struct carSprite{
       vel_refresco = 0.3f;*/
     if(clock.getElapsedTime().asSeconds() > updateTime){
       if(colision){
-        if(rectSrcSprite.top < 3*car_height){
-          car_width = 61;
-          rectSrcSprite = IntRect(0,3*car_height, car_width, car_height);
-          spriteN = 0;
+        updateTime = 0.07;
+        if(colisionSprite < 11){
+          colisionSprite++;
         }
-        else if(spriteN < 2){
-          rectSrcSprite.left += 3+car_width;
-          spriteN++;
-        }
-        else if(spriteN == 2){
-          rectSrcSprite.left += 5+car_width;
-          spriteN++;
-        }
-        else if(spriteN == 3){
-          rectSrcSprite.left += car_width;
-          car_width = 54;
-          rectSrcSprite.width = car_width;
-          spriteN++;
-        }
-        else if(spriteN == 4){
-          rectSrcSprite.left += car_width;
-          spriteN++;
-        }else if(spriteN == 5){
-          rectSrcSprite.left += car_width;
-          car_width = 58;
-          rectSrcSprite.width = car_width;
-          spriteN++;
-        }else if(spriteN == 6){
-          rectSrcSprite.left += car_width;
-          car_width = 68;
-          rectSrcSprite.width = car_width;
-          spriteN++;
-        }
-        /*else{
-          car_width = 61;
-          rectSrcSprite.width = car_width;
-          rectSrcSprite.left = 0;
-          spriteN = 0;
-        }*/
       }
       else{
+        colisionSprite = 0;
         if(car_status == 0){
           //Quieto
           if(car_dir == 1){ //Movimiento dcha
@@ -296,11 +262,22 @@ struct carSprite{
       }
       clock.restart();
       sprite = sf::Sprite();
-      sprite.setTexture(texCar[actualTex]);
-      if(car_inv){
-        sprite.setTextureRect(sf::IntRect(texCar[actualTex].getSize().x, 0, -texCar[actualTex].getSize().x, texCar[actualTex].getSize().y));    
+      if(!colision){
+        sprite.setTexture(texCar[actualTex]);
+        if(car_inv){
+          sprite.setTextureRect(sf::IntRect(texCar[actualTex].getSize().x, 0, -texCar[actualTex].getSize().x, texCar[actualTex].getSize().y));    
+        }
+        sprite.setPosition(width/2-car_width*1.5,600);
+      }else{
+        sprite.setTexture(texCarExp[colisionSprite]);
+        if(colisionSprite >= 3){
+            sprite.setPosition((width/2-car_width) -225,400);
+          }else{
+            sprite.setPosition(width/2-car_width*1.5,600);
+          }
       }
-      sprite.setPosition(width/2-car_width*1.5,600);
+      
+      
       sprite.setScale(3,3); 
     }
   }
