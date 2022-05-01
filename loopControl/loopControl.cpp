@@ -17,6 +17,7 @@ void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
 }
 
 void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
+  car.maxTex = car.maxTexNoKey;
   car.car_status = 0;
   car.car_dir = 0;
   if(perderControl){
@@ -40,12 +41,14 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
     }
     if (Keyboard::isKeyPressed(Keyboard::Right) && ((playerX * roadW) < (roadW + off_road_allowed)) && (((playerX + turn_power) * roadW) < (roadW + off_road_allowed))){
       if(speed>0){
+        car.maxTex = car.maxTexUsualTurn;
         playerX += turn_power * ((float(speed)/maxSpeed));
       }
       car.car_dir = 1;
     }
     if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed))){
       if(speed > 0){
+        car.maxTex = car.maxTexUsualTurn;
         playerX -= turn_power * ((float(speed)/maxSpeed));
       }
       car.car_dir = -1;
@@ -110,13 +113,13 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   camH = lines[startPos].y + H;
   if (speed != 0){
     float varyng;
-    if(speed >= 0 && speed <= 50) varyng = 0;
-    else if(speed > 50 && speed <= 100) varyng = 0.2;
-    else if(speed > 100 && speed <= 150) varyng = 0.4;
-    else if(speed > 150 && speed <= 200) varyng = 0.6;
-    else if(speed > 200 && speed <= 250) varyng = 0.8;
-    else if(speed > 250 && speed <= 300) varyng = 0.9;
-    else if(speed > 300 && speed <= 380) varyng = 1;
+    if(speed >= 0 && speed <= 50) {varyng = 0; car.updateTime = 0.04;}
+    else if(speed > 50 && speed <= 100) {varyng = 0.2; car.updateTime = 0.037;}
+    else if(speed > 100 && speed <= 150) {varyng = 0.4; car.updateTime = 0.033;}
+    else if(speed > 150 && speed <= 200) {varyng = 0.6; car.updateTime = 0.03;}
+    else if(speed > 200 && speed <= 250) {varyng = 0.8; car.updateTime = 0.027;}
+    else if(speed > 250 && speed <= 300) {varyng = 0.9; car.updateTime = 0.022;}
+    else if(speed > 300 && speed <= 380) {varyng = 1; car.updateTime = 0.016;}
     float centripetal_force = ((speed/maxSpeed)+varyng) * floatAbs(lines[startPos].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
     float actual_draft_power = draft_power * centripetal_force;
     if (((playerX * roadW) < (roadW + off_road_allowed)) && ((playerX * roadW) > (-roadW-off_road_allowed))

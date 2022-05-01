@@ -307,16 +307,20 @@ struct carSprite{
   int spriteN; //Numero de sprite (columna)[0-7]
   bool car_inv; //false normal, true invertido
   bool colision; //colision detectada
-  Texture texCar[24];
+  int maxTexNoKey = 7;
+  int maxTexUsualTurn = 19;
+  int maxTexDraft = 23;
+  Texture texCar[24]; // los 4 ultimos para el derrape
   int actualTex;
   Texture texCarExp[15];
   IntRect rectSrcSprite; 
   Sprite sprite;
   Clock clock;
   int maxTex;
+  float updateTime = 0.03;
 
   void init(){
-    maxTex = 23;
+    maxTex = maxTexNoKey;
     actualTex = 0;
     car_dir = 0;
     spriteN = 0;
@@ -327,7 +331,7 @@ struct carSprite{
     sprite.setScale(3,3);
   }
   void reinit(){
-    maxTex = 23;
+    maxTex = maxTexNoKey;
     actualTex = 0;
     car_dir = 0;
     spriteN = 0;
@@ -343,7 +347,7 @@ struct carSprite{
       vel_refresco = 1.0f;
     else
       vel_refresco = 0.3f;*/
-    if(clock.getElapsedTime().asSeconds() > 0.03f){
+    if(clock.getElapsedTime().asSeconds() > updateTime){
       if(colision){
         if(rectSrcSprite.top < 3*car_height){
           car_width = 61;
@@ -448,6 +452,8 @@ struct carSprite{
               
               if(actualTex < maxTex){
                 actualTex++;
+              }else if(actualTex > maxTex+1){
+                actualTex--;
               }
               else{
                 actualTex = maxTex-1;
@@ -465,9 +471,12 @@ struct carSprite{
               if(actualTex < maxTex){
                 if(actualTex == 0) car_inv = true;
                 actualTex++;
+              }else if(actualTex > maxTex+1){
+                actualTex--;
               }
-              else
+              else{
                 actualTex = maxTex-1;
+              }
             }
             
           }
