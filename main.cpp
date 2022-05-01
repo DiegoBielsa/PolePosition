@@ -190,8 +190,7 @@ int main() {
 
     setMaps(maps, object);
 
-    // eleccion del mapa
-    lines = maps[mapa];
+  
 
 
     int N = lines.size();
@@ -204,7 +203,6 @@ int main() {
         case 0://clasificacion
             terminar = false;
             tiempoparafin.restart();
-
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
@@ -238,8 +236,9 @@ int main() {
 
                 int startPos, camH, maxy;
                 float x, dx;
-                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
 
+                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
+               
                 sf::Time elapsed = clock.getElapsedTime();
             
                 comprobarMeta(startPos, goalPosIni, metacruz);
@@ -255,7 +254,6 @@ int main() {
                 }
                 antmetacruz = metacruz;
                 calcularScore(score, speed, lim, limite, gameOver);
-
 
 
                 drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
@@ -480,6 +478,9 @@ int main() {
                 drawCircuito(app, color,mapa);
                 if (terminar == true) {
                     estado = 0;
+                    // eleccion del mapa
+                    lines = maps[mapa];
+                     N = lines.size();
                 }
 
                 
