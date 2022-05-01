@@ -8,7 +8,7 @@ using namespace sf;
 
 void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2, int w2);
 
-void manageKeys(float &playerX, int &speed, int &H, carSprite &car);
+void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<Line>& lines, int &startPos,  std::vector<Sound>& sounds);
 
 void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vector<Line>& lines, float &playerX , int &maxy, float& x, float& dx, int& speed, int N, int H, Sprite& sBackground);
 

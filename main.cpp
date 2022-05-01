@@ -183,6 +183,13 @@ int main() {
     }
     sound6.setBuffer(buffer6);
     sounds.push_back(sound6);
+    SoundBuffer buffer7;
+    Sound sound7;
+    if(!buffer7.loadFromFile("audio/skidding.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound7.setBuffer(buffer7);
+    sounds.push_back(sound7);
 
     sounds[5].setPitch(1.0f);
     sounds[5].setLoop(true);
@@ -228,7 +235,7 @@ int main() {
                     // Update state of current key:
                     keyState[e.key.code] = false;
                 }
-                manageKeys(playerX, speed, H, car);
+                
 
 
                 updateSound(speed, sounds);
@@ -236,9 +243,8 @@ int main() {
 
                 int startPos, camH, maxy;
                 float x, dx;
-
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
-               
+                manageKeys(playerX, speed, H, car, lines, startPos, sounds);
                 sf::Time elapsed = clock.getElapsedTime();
             
                 comprobarMeta(startPos, goalPosIni, metacruz);
@@ -329,13 +335,13 @@ int main() {
                     // Update state of current key:
                     keyState[e.key.code] = false;
                 }
-                manageKeys(playerX, speed, H, car);
+                
 
 
                 int startPos, camH, maxy;
                 float x, dx;
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
-
+                manageKeys(playerX, speed, H, car, lines, startPos, sounds);
                 sf::Time elapsed = clock.getElapsedTime();
                 bool metacruz = false;
                 comprobarMeta(startPos, goalPosIni, metacruz);
