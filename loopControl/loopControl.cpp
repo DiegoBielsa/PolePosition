@@ -281,7 +281,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
-    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    std::this_thread::sleep_for (std::chrono::milliseconds(1s/*int((1/speeds)*1000)*/));
 
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
     
@@ -344,6 +344,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
             }
         }
     }
+    std::cout << "diff " << carsXpos - drivingCarXPos << " " << carsYpos - drivingCarYPos << std::endl;
     
 
     clock.restart();

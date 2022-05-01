@@ -161,7 +161,8 @@ struct carSprite{
       vel_refresco = 0.3f;*/
     if(clock.getElapsedTime().asSeconds() > updateTime){
       if(colision){
-        updateTime = 0.07;
+        if(colisionSprite == 0) updateTime = 0.17;
+        else updateTime-= 0.01;
         if(colisionSprite < 11){
           colisionSprite++;
         }
