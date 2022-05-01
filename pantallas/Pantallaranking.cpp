@@ -216,7 +216,7 @@ void manageKeysCircuito(int& mapa,bool& terminar) {
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Left)) {
-            //mapa =fuji;
+            mapa =1;
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Up)) {
@@ -224,7 +224,7 @@ void manageKeysCircuito(int& mapa,bool& terminar) {
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Down)) {
-           // mapa=seaside
+            mapa = 2;
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Enter)) {
@@ -244,49 +244,49 @@ void manageKeysCircuito(int& mapa,bool& terminar) {
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Down)) {
-            //mapa=suzuka;
+            mapa=3;
         }
         if (Keyboard::isKeyPressed(Keyboard::Enter)) {
             terminar = true;
         }
     }
-    else if (mapa == 2) {//suzuka
+    else if (mapa == 3) {//suzuka
         if (Keyboard::isKeyPressed(Keyboard::Right)) {
-            //mapa=seaside
+            mapa = 2;
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Left)) {
-            mapa = 2;
-
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Up)) {
-            //mapa=fuji
-
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Down)) {
-            mapa = 2;
-
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-            terminar = true;
-
-        }
-    }
-    else if (mapa == 3) {//seaside
-        if (Keyboard::isKeyPressed(Keyboard::Right)) {
             mapa = 3;
 
         }
-        if (Keyboard::isKeyPressed(Keyboard::Left)) {
-            //mapa=suzuka
-
-        }
         if (Keyboard::isKeyPressed(Keyboard::Up)) {
-            //mapa=test
+            mapa = 1;
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Down)) {
-            mapa = true;
+            mapa = 3;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            terminar = true;
+
+        }
+    }
+    else if (mapa == 2) {//seaside
+        if (Keyboard::isKeyPressed(Keyboard::Right)) {
+            mapa = 2;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Left)) {
+            mapa = 3;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Up)) {
+            mapa = 0;
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Down)) {
+            mapa = 2;
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Enter)) {
@@ -317,7 +317,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
     texto2.setString("-TEST-");
     texto3.setString("-SUZUKA-");
     texto4.setString("-SEASIDE-");
-    titulo.setString("SELEECT ");
+    titulo.setString("SELECT CIRCUIT");
 
 
     texto1.setFillColor(Color(219,224,142));
@@ -325,15 +325,18 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
     texto3.setFillColor(Color(219, 224, 142));
     texto4.setFillColor(Color(219, 224, 142));
 
+
     texto1.setCharacterSize(55);
     texto2.setCharacterSize(55);
     texto3.setCharacterSize(55);
     texto4.setCharacterSize(55);
+    titulo.setCharacterSize(60);
 
     texto1.setPosition(227, 145);
     texto2.setPosition(630, 145);
     texto3.setPosition(200, 360);
     texto4.setPosition(595, 360);
+    titulo.setPosition(300, 30);
 
 
     Texture fuj;
@@ -387,7 +390,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
             color = 0;
         }
     }
-    else if (mapa == 1) {//suzuka
+    else if (mapa == 3) {//suzuka
         if (color == 0 || color == 1) {
             suzu.setColor(sf::Color::Blue);
  
@@ -406,7 +409,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
             color = 0;
         }
     }
-    else if (mapa == 3) {//seaside
+    else if (mapa == 2) {//seaside
         if (color == 0 || color == 1) {
             sea.setColor(sf::Color::Blue);
             color++;
@@ -441,6 +444,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
     app.draw(texto2);
     app.draw(texto3);
     app.draw(texto4);
+    app.draw(titulo);
 }
 
 
