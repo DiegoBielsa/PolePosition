@@ -76,7 +76,9 @@ void setConfig(){
       }else if(var == "iaMode"){
         iaMode = value;
       }else if(var == "off_road_allowed_cars"){
-        off_road_allowed_cars = value;
+        off_road_allowed_cars = value; 
+      }else if(var == "carPosition"){
+        carPosition = value; 
       }else{
         std::cout << "No existe la variable de configuracion " << var << std::endl;
       }

@@ -54,6 +54,7 @@ int numCars;
 int mediumSpeed;
 int iaMode;
 float off_road_allowed_cars;
+int carPosition;
 
 
 Time tiempoconseguido;
@@ -152,6 +153,7 @@ int main() {
     int linePos[8];
     std::thread threads[8];
     for(int i = 0; i < numCars; i++){
+        if(i == carPosition) i++;
         int k = 0;
         
         for(int j = 0; j <= 11; j++){

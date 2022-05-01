@@ -70,7 +70,9 @@ struct carSpriteIA{
           
           if(actualTex < maxTex){
             actualTex++;
-          }
+          }else if(actualTex > maxTex+1){
+                actualTex--;
+              }
           else{
             actualTex = maxTex-1;
           }
@@ -87,6 +89,8 @@ struct carSpriteIA{
           if(actualTex < maxTex){
             if(actualTex == 0) car_inv = true;
             actualTex++;
+          }else if(actualTex > maxTex+1){
+                actualTex--;
           }
           else
             actualTex = maxTex-1;
