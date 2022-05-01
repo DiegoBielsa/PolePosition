@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 4;
+int estado = 3;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -190,10 +190,30 @@ int main() {
     }
     sound7.setBuffer(buffer7);
     sounds.push_back(sound7);
+    SoundBuffer buffer8;
+    Sound sound8;
+    if(!buffer8.loadFromFile("audio/eleccion.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound8.setBuffer(buffer8);
+    sounds.push_back(sound8);
+    SoundBuffer buffer9;
+    Sound sound9;
+    if(!buffer9.loadFromFile("audio/carga.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound9.setBuffer(buffer9);
+    sounds.push_back(sound9);
+    SoundBuffer buffer10;
+    Sound sound10;
+    if(!buffer10.loadFromFile("audio/qualify.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound10.setBuffer(buffer10);
+    sounds.push_back(sound10);
+    
 
-    sounds[5].setPitch(1.0f);
-    sounds[5].setLoop(true);
-    sounds[5].play();
+    
 
     setMaps(maps, object);
 
@@ -208,6 +228,10 @@ int main() {
         switch (estado)
         {
         case 0://clasificacion
+            sounds[9].play();
+            sounds[5].setPitch(1.0f);
+            sounds[5].setLoop(true);
+            sounds[5].play();
             terminar = false;
             tiempoparafin.restart();
             while (app.isOpen() && !terminar) {
@@ -430,6 +454,7 @@ int main() {
             }
             break;
         case 3: //pantalla inicio
+            sounds[8].play();
             terminar = false;
             tiempoparafin.restart();
             color = 0; //color de los sprites
@@ -453,13 +478,15 @@ int main() {
                     
                 }
                 else {
-                    estado = 1;
+                    cout<<"pasamos"<<endl;
+                    estado = 4;
                     terminar = true;
                 }
                 app.display();
             }
             break;
         case 4: //pantalla eleccioncircuito
+            sounds[7].play();
             terminar = false;
             tiempoparafin.restart();
             color = 0; //color de los sprites
