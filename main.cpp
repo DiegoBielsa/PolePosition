@@ -150,8 +150,9 @@ int main() {
     float XPos[8];
     int linePos[8];
     std::thread threads[8];
+    int posIA = 0;
     for (int i = 0; i < numCars; i++) {
-        if (i == carPosition) i++;
+        if (i == carPosition) posIA++;
         int k = 0;
 
         for (int j = 0; j <= 11; j++) {
@@ -164,9 +165,17 @@ int main() {
             car_arr[i].texCarExp[j].loadFromFile("sprites/coches/Crash/crash" + std::to_string(j) + ".png");
         }
         car_arr[i].init();
-        if (i % 2 == 0) XPos[i] = -0.7;
-        else XPos[i] = 0.4;
+        if (posIA % 2 == 0) {
+            XPos[i] = -0.7;
+            car_arr[i].car_dir = 1;
+        }
+        else {
+            XPos[i] = 0.4;
+            car_arr[i].car_dir = -1;
+            car_arr[i].car_inv = true;
+        }
         linePos[i] = goalPosIni - i * 6;
+        posIA++;
     }
 
     IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
