@@ -33,6 +33,7 @@ extern int mediumSpeed;
 extern int iaMode; // 0 --> easy, 1 --> normal, 2 --> hard
 extern float off_road_allowed_cars;
 extern int carPosition;
+extern int startPos;
 
 extern sf::Time tiempoconseguido;
 extern bool ultimotiempo;

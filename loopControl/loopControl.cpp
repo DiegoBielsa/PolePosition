@@ -227,9 +227,6 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     
 
 
-  //std::cout<<"car: "<<car.getPosition().x<<std::endl;
-  //std::cout<<"spr: "<<lines[(startPos+10)%N].localBounds.height<<std::endl;
-
   car.updateCarSprite();
   if(!car.sprite.getGlobalBounds().intersects(lines[(startPos+10)%N].localBounds)){//no choca
       //actualizar sprite
@@ -286,6 +283,13 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    int diff = linePos[i] - startPos;
+    if(diff < 0){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
+        linePos[i] += 400;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        continue;
+    }
+
 
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
     float carsYpos = lines[linePos[i]-1].carsYPos[i];
@@ -346,7 +350,6 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           cars[i].maxTex = 7;
         }
       }else if(lines[linePos[i]].curve < 0){
-        //std::cout << "aquiI" << std::endl;
         cars[i].car_dir = -1;
         if(lines[linePos[i]].curve < -2.5){ 
           cars[i].maxTex = 23;
@@ -415,6 +418,12 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    int diff = linePos[i] - startPos;
+    if(diff < 0){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
+        linePos[i] += 400;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        continue;
+    }
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
     float carsYpos = lines[linePos[i]-2].carsYPos[i];
     float carsXpos = lines[linePos[i]-2].carsXPos[i];
@@ -474,7 +483,6 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
           cars[i].maxTex = 7;
         }
       }else if(lines[linePos[i]].curve < 0){
-        //std::cout << "aquiI" << std::endl;
         cars[i].car_dir = -1;
         if(lines[linePos[i]].curve < -2.5){ 
           cars[i].maxTex = 23;
@@ -556,6 +564,12 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    int diff = linePos[i] - startPos;
+    if(diff < 0){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
+        linePos[i] += 400;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        continue;
+    }
 
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
     float carsYpos = lines[linePos[i]-2].carsYPos[i];
@@ -615,7 +629,6 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           cars[i].maxTex = 7;
         }
       }else if(lines[linePos[i]].curve < 0){
-        //std::cout << "aquiI" << std::endl;
         cars[i].car_dir = -1;
         if(lines[linePos[i]].curve < -2.5){ 
           cars[i].maxTex = 23;

@@ -55,6 +55,7 @@ int mediumSpeed;
 int iaMode;
 float off_road_allowed_cars;
 int carPosition;
+int startPos;
 
 
 Time tiempoconseguido;
@@ -239,7 +240,7 @@ int main() {
                 manageKeys(playerX, speed, H, car);
 
 
-                int startPos, camH, maxy;
+                int camH, maxy;
                 float x, dx;
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
 
