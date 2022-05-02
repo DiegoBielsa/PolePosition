@@ -151,8 +151,19 @@ int main() {
     int linePos[8];
     std::thread threads[8];
     int posIA = 0;
+    float playerX = 0;
+    int N = lines.size();
+    int pos = 0;
+    
+    int H = 1500;
     for (int i = 0; i < numCars; i++) {
-        if (i == carPosition) posIA++;
+        if (i == carPosition) {
+            if (posIA % 2 == 0) playerX = -0.5;
+            else playerX = 0.6;
+            pos = segL * (goalPosIni-20 - carPosition*7);
+            posIA++;
+
+        }
         int k = 0;
 
         for (int j = 0; j <= 11; j++) {
@@ -167,24 +178,33 @@ int main() {
         car_arr[i].init();
         if (posIA % 2 == 0) {
             XPos[i] = -0.7;
-            car_arr[i].car_dir = 1;
+            if(carPosition < 8 && carPosition%2 == 0) {
+                car_arr[i].car_dir = 0;
+                car_arr[i].actualTex = 0;
+            }else{
+                car_arr[i].car_dir = 1;
+            }
+            
         }
         else {
             XPos[i] = 0.4;
-            car_arr[i].car_dir = -1;
-            car_arr[i].car_inv = true;
+            if(carPosition < 8 && carPosition%2 != 0) {
+                car_arr[i].car_dir = 0;
+                car_arr[i].actualTex = 0;
+            }else{
+                car_arr[i].car_dir = -1;
+                car_arr[i].car_inv = true;
+            }
+            
         }
-        linePos[i] = goalPosIni - i * 6;
+        linePos[i] = (goalPosIni-2) - i * 7;
         posIA++;
     }
 
     IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
 
 
-    int N = lines.size();
-    float playerX = 0;
-    int pos = 0;
-    int H = 1500;
+    
     while (true) {
         switch (estado)
         {

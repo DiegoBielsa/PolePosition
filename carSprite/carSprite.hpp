@@ -160,7 +160,9 @@ struct carSprite{
     else
       vel_refresco = 0.3f;*/
     if(clock.getElapsedTime().asSeconds() > updateTime){
+      
       if(colision){
+        std::cout << colisionSprite << std::endl;
         if(colisionSprite == 0) updateTime = 0.17;
         else updateTime-= 0.01;
         if(colisionSprite < 11){
