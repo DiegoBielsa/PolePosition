@@ -281,51 +281,86 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
-    std::this_thread::sleep_for (std::chrono::milliseconds(1s/*int((1/speeds)*1000)*/));
+    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
 
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+    float carsYpos = lines[linePos[i]-1].carsYPos[i];
+    float carsXpos = lines[linePos[i]-1].carsXPos[i];
     
-    //std::cout << "aqui " << lines[linePos[i]].curve << std::endl;
 
-    cars[i].maxTex = 23;
-    if(lines[linePos[i]].curve > 0){
-      //std::cout << "aquiD" << std::endl;
-      cars[i].car_dir = 1;
-      if(lines[linePos[i]].curve > 2.5){ 
-        cars[i].maxTex = 23;
+    float diffX = carsXpos - drivingCarXPos;
+    float diffY = carsYpos - drivingCarYPos;
+    if((diffY > -200 && diffY < -0.1) || (diffY > 0.1 && diffY < 150) ){ // si no es un valor residual
+      if(lines[linePos[i]].curve == 0){ // si es una recta hacemos perspectiva
+        if(diffY < -150){ // lejos
+          if(diffX < 20){
+              cars[i].car_dir = 1;
+              cars[i].maxTex = 5;
+          }else if(diffX > 100){
+            cars[i].car_dir = -1;
+            cars[i].maxTex = 5;
+          }else{
+            cars[i].maxTex = 23;
+            cars[i].car_dir = 0;
+          }
+        }else if(diffY < -100){ // medio lejos
+          if(diffX < -10){
+              cars[i].car_dir = 1;
+              cars[i].maxTex = 9;
+          }
+          else if(diffX > 130){
+            cars[i].car_dir = -1;
+            cars[i].maxTex = 9;
+          }else{
+            cars[i].maxTex = 23;
+            cars[i].car_dir = 0;
+          }
+
+        }else{ // medio cerca
+            if(diffX < -50){
+                cars[i].car_dir = 1;
+                cars[i].maxTex = 13;
+            }
+            else if(diffX > 160){
+              cars[i].car_dir = -1;
+              cars[i].maxTex = 13;
+            }else{
+            cars[i].maxTex = 23;
+            cars[i].car_dir = 0;
+          }
+
+        }
+      }else if(lines[linePos[i]].curve > 0){
+        cars[i].car_dir = 1;
+        if(lines[linePos[i]].curve > 2.5){ 
+          cars[i].maxTex = 23;
+        }
+        else if(lines[linePos[i]].curve > 1.5){ 
+          cars[i].maxTex = 13;
+        }else{
+          cars[i].maxTex = 7;
+        }
+      }else if(lines[linePos[i]].curve < 0){
+        //std::cout << "aquiI" << std::endl;
+        cars[i].car_dir = -1;
+        if(lines[linePos[i]].curve < -2.5){ 
+          cars[i].maxTex = 23;
+        }
+        else if(lines[linePos[i]].curve < -1.5){ 
+          cars[i].maxTex = 13;
+        }else{
+          cars[i].maxTex = 7;
+        }
       }
-      else if(lines[linePos[i]].curve > 1.5){ 
-        cars[i].maxTex = 13;
-      }else{
-        cars[i].maxTex = 7;
-      }
-    }else if(lines[linePos[i]].curve < 0){
-      //std::cout << "aquiI" << std::endl;
-      cars[i].car_dir = -1;
-      if(lines[linePos[i]].curve < -2.5){ 
-        cars[i].maxTex = 23;
-      }
-      else if(lines[linePos[i]].curve < -1.5){ 
-        cars[i].maxTex = 13;
-      }else{
-        cars[i].maxTex = 7;
-      }
-    }else{
-      //std::cout << "aquiR" << std::endl;
-      cars[i].car_dir = 0;
     }
-    cars[i].updateCarSprite();
-    lines[linePos[i] -1].cars[i] = sf::Sprite();
-    lines[linePos[i]].cars[i] = cars[i].sprite;
-    lines[linePos[i]].carsX[i] = XPos[i];
-    linePos[i]++;
     
     if(speeds >= 0 && speeds <= maxSpeeds/3)  speeds += 2;
     else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
     else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
 
-    float carsYpos = lines[linePos[i]-2].carsYPos[i];
-    float carsXpos = lines[linePos[i]-2].carsXPos[i];
+    
+    
+
     if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
         if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
             if(rebase == 0){
@@ -344,7 +379,12 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
             }
         }
     }
-    std::cout << "diff " << carsXpos - drivingCarXPos << " " << carsYpos - drivingCarYPos << std::endl;
+    
+    cars[i].updateCarSprite();
+    lines[linePos[i] -1].cars[i] = sf::Sprite();
+    lines[linePos[i]].cars[i] = cars[i].sprite;
+    lines[linePos[i]].carsX[i] = XPos[i];
+    linePos[i]++;
     
 
     clock.restart();
@@ -371,39 +411,76 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+    float carsYpos = lines[linePos[i]-2].carsYPos[i];
+    float carsXpos = lines[linePos[i]-2].carsXPos[i];
 
-    cars[i].maxTex = 23;
-    if(lines[linePos[i]].curve > 0){
-      //std::cout << "aquiD" << std::endl;
-      cars[i].car_dir = 1;
-      if(lines[linePos[i]].curve > 2.5){ 
-        cars[i].maxTex = 23;
+    
+    
+    float diffX = carsXpos - drivingCarXPos;
+    float diffY = carsYpos - drivingCarYPos;
+    if((diffY > -200 && diffY < -0.1) || (diffY > 0.1 && diffY < 150) ){ // si no es un valor residual
+      if(lines[linePos[i]].curve == 0){ // si es una recta hacemos perspectiva
+        if(diffY < -150){ // lejos
+          if(diffX < 20){
+              cars[i].car_dir = 1;
+              cars[i].maxTex = 5;
+          }else if(diffX > 100){
+            cars[i].car_dir = -1;
+            cars[i].maxTex = 5;
+          }else{
+            cars[i].maxTex = 23;
+            cars[i].car_dir = 0;
+          }
+        }else if(diffY < -100){ // medio lejos
+          if(diffX < -10){
+              cars[i].car_dir = 1;
+              cars[i].maxTex = 9;
+          }
+          else if(diffX > 130){
+            cars[i].car_dir = -1;
+            cars[i].maxTex = 9;
+          }else{
+            cars[i].maxTex = 23;
+            cars[i].car_dir = 0;
+          }
+
+        }else{ // medio cerca
+            if(diffX < -50){
+                cars[i].car_dir = 1;
+                cars[i].maxTex = 13;
+            }
+            else if(diffX > 160){
+              cars[i].car_dir = -1;
+              cars[i].maxTex = 13;
+            }else{
+            cars[i].maxTex = 23;
+            cars[i].car_dir = 0;
+          }
+
+        }
+      }else if(lines[linePos[i]].curve > 0){
+        cars[i].car_dir = 1;
+        if(lines[linePos[i]].curve > 2.5){ 
+          cars[i].maxTex = 23;
+        }
+        else if(lines[linePos[i]].curve > 1.5){ 
+          cars[i].maxTex = 13;
+        }else{
+          cars[i].maxTex = 7;
+        }
+      }else if(lines[linePos[i]].curve < 0){
+        //std::cout << "aquiI" << std::endl;
+        cars[i].car_dir = -1;
+        if(lines[linePos[i]].curve < -2.5){ 
+          cars[i].maxTex = 23;
+        }
+        else if(lines[linePos[i]].curve < -1.5){ 
+          cars[i].maxTex = 13;
+        }else{
+          cars[i].maxTex = 7;
+        }
       }
-      else if(lines[linePos[i]].curve > 1.5){ 
-        cars[i].maxTex = 13;
-      }else{
-        cars[i].maxTex = 7;
-      }
-    }else if(lines[linePos[i]].curve < 0){
-      //std::cout << "aquiI" << std::endl;
-      cars[i].car_dir = -1;
-      if(lines[linePos[i]].curve < -2.5){ 
-        cars[i].maxTex = 23;
-      }
-      else if(lines[linePos[i]].curve < -1.5){ 
-        cars[i].maxTex = 13;
-      }else{
-        cars[i].maxTex = 7;
-      }
-    }else{
-      //std::cout << "aquiR" << std::endl;
-      cars[i].car_dir = 0;
     }
-    cars[i].updateCarSprite();
-    lines[linePos[i] -1].cars[i] = sf::Sprite();
-    lines[linePos[i]].cars[i] = cars[i].sprite;
-    lines[linePos[i]].carsX[i] = XPos[i];
-
     
     
 
@@ -427,8 +504,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
     else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
 
-    float carsYpos = lines[linePos[i]-2].carsYPos[i];
-    float carsXpos = lines[linePos[i]-2].carsXPos[i];
+    
     if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
         if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
             if(rebase == 0){
@@ -448,8 +524,11 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
         }
     }
 
-
-clock.restart();
+    cars[i].updateCarSprite();
+    lines[linePos[i] -1].cars[i] = sf::Sprite();
+    lines[linePos[i]].cars[i] = cars[i].sprite;
+    lines[linePos[i]].carsX[i] = XPos[i];
+    clock.restart();
     
     
   }
@@ -474,9 +553,65 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
 
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
-    cars[i].maxTex = 23;
-      if(lines[linePos[i]].curve > 0){
-        //std::cout << "aquiD" << std::endl;
+    float carsYpos = lines[linePos[i]-2].carsYPos[i];
+    float carsXpos = lines[linePos[i]-2].carsXPos[i];
+    
+    float diffX = carsXpos - drivingCarXPos;
+    float diffY = carsYpos - drivingCarYPos;
+    if((diffY > -200 && diffY < -0.1) || (diffY > 0.1 && diffY < 150) ){ // si no es un valor residual
+      if(lines[linePos[i]].curve == 0){ // si es una recta hacemos perspectiva
+        if(diffY < -150){ // lejos
+          if(diffX < 20){
+              cars[i].car_dir = 1;
+              cars[i].maxTex = 5;
+          }else if(diffX > 100){
+            cars[i].car_dir = -1;
+            cars[i].maxTex = 5;
+          }else{
+            cars[i].maxTex = 23;
+            cars[i].car_dir = 0;
+          }
+        }else if(diffY < -100){ // medio lejos
+          if(diffX < -10){
+              cars[i].car_dir = 1;
+              cars[i].maxTex = 9;
+          }
+          else if(diffX > 130){
+            cars[i].car_dir = -1;
+            cars[i].maxTex = 9;
+          }else{
+            cars[i].maxTex = 23;
+            cars[i].car_dir = 0;
+          }
+
+        }else{ // medio cerca
+            if(diffX < -50){
+                cars[i].car_dir = 1;
+                cars[i].maxTex = 13;
+            }
+            else if(diffX > 160){
+              cars[i].car_dir = -1;
+              cars[i].maxTex = 13;
+            }else{
+            cars[i].maxTex = 23;
+            cars[i].car_dir = 0;
+          }
+
+        }
+        if(carsYpos > 460 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
+          // tratas de igualar las X para molestar lo máximo posible
+          if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.02 > -off_road_allowed_cars-0.2){ 
+              XPos[i] -= 0.02;
+              if(lines[linePos[i]].curve == 0) cars[i].car_dir = -1;
+              cars[i].maxTex += 4;
+          }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.02 < off_road_allowed_cars){  
+              XPos[i] += 0.02;
+              if(lines[linePos[i]].curve == 0) cars[i].car_dir = 1;
+              cars[i].maxTex += 4;
+          }
+
+        }
+      }else if(lines[linePos[i]].curve > 0){
         cars[i].car_dir = 1;
         if(lines[linePos[i]].curve > 2.5){ 
           cars[i].maxTex = 23;
@@ -497,14 +632,9 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
         }else{
           cars[i].maxTex = 7;
         }
-      }else{
-        //std::cout << "aquiR" << std::endl;
-        cars[i].car_dir = 0;
       }
-      
-    lines[linePos[i] -1].cars[i] = sf::Sprite();
-    lines[linePos[i]].cars[i] = cars[i].sprite;
-    lines[linePos[i]].carsX[i] = XPos[i];
+    }
+    
 
     centripetal_force = ((speeds/(mediumSpeed-60))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
     actual_draft_power = draft_power * centripetal_force; 
@@ -526,23 +656,10 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
     else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
 
-    float carsYpos = lines[linePos[i]-2].carsYPos[i];
-    float carsXpos = lines[linePos[i]-2].carsXPos[i];
-    if(carsYpos > 460 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
-      // tratas de igualar las X para molestar lo máximo posible
-      if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.02 > -off_road_allowed_cars-0.2){ 
-          XPos[i] -= 0.02;
-          if(lines[linePos[i]].curve == 0) cars[i].car_dir = -1;
-          cars[i].maxTex = 7;
-      }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.02 < off_road_allowed_cars){  
-          XPos[i] += 0.02;
-          if(lines[linePos[i]].curve == 0) cars[i].car_dir = 1;
-          cars[i].maxTex = 7;
-      }
+    
+    
 
-    }
-
-    cars[i].updateCarSprite();
+    
     carsYpos = lines[linePos[i]-2].carsYPos[i];
     carsXpos = lines[linePos[i]-2].carsXPos[i];
     if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
@@ -563,6 +680,12 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
             }
         }
     }
+
+
+    lines[linePos[i] -1].cars[i] = sf::Sprite();
+    lines[linePos[i]].cars[i] = cars[i].sprite;
+    lines[linePos[i]].carsX[i] = XPos[i];
+    cars[i].updateCarSprite();
     clock.restart();
       
       
