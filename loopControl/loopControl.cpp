@@ -59,7 +59,10 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
       car.car_status = 1;
       if(!enHierba){
         if(marchaBaja){
-          if(speed < mediumSpeed){
+          if(speed < 50){
+            speed += 1;
+          }
+          else if(speed < mediumSpeed){
             speed += 2;
           }else if(speed > mediumSpeed){
             speed -= 8;
@@ -282,7 +285,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
-    std::this_thread::sleep_for (std::chrono::milliseconds(1s/*int((1/speeds)*1000)*/));
+    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
 
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
     float carsYpos = lines[linePos[i]-1].carsYPos[i];
