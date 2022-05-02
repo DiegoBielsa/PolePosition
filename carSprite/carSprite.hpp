@@ -168,6 +168,7 @@ struct carSprite{
         }
       }
       else{
+        updateTime = 0.03;
         colisionSprite = 0;
         if(car_status == 0){
           //Quieto

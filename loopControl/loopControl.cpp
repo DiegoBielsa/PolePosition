@@ -276,6 +276,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float drivingCarYPos = 600;
   float drivingCarXPos = width/2-car_width*1.5;
   float rebase = 0;
+  bool moved = false;
 
   speeds = 1.0f;
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
@@ -291,6 +292,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     float diffX = carsXpos - drivingCarXPos;
     float diffY = carsYpos - drivingCarYPos;
     if((diffY > -200 && diffY < -0.1) || (diffY > 0.1 && diffY < 150) ){ // si no es un valor residual
+      
       if(lines[linePos[i]].curve == 0){ // si es una recta hacemos perspectiva
         if(diffY < -150){ // lejos
           if(diffX < 20){
@@ -598,19 +600,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           }
 
         }
-        if(carsYpos > 460 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
-          // tratas de igualar las X para molestar lo máximo posible
-          if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.02 > -off_road_allowed_cars-0.2){ 
-              XPos[i] -= 0.02;
-              if(lines[linePos[i]].curve == 0) cars[i].car_dir = -1;
-              cars[i].maxTex += 4;
-          }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.02 < off_road_allowed_cars){  
-              XPos[i] += 0.02;
-              if(lines[linePos[i]].curve == 0) cars[i].car_dir = 1;
-              cars[i].maxTex += 4;
-          }
-
-        }
+        
       }else if(lines[linePos[i]].curve > 0){
         cars[i].car_dir = 1;
         if(lines[linePos[i]].curve > 2.5){ 
@@ -633,6 +623,27 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           cars[i].maxTex = 7;
         }
       }
+      if(carsYpos > 460 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
+          // tratas de igualar las X para molestar lo máximo posible
+          if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.02 > -off_road_allowed_cars-0.2){ 
+              XPos[i] -= 0.03;
+              if(lines[linePos[i]].curve == 0) {
+                cars[i].car_dir = -1;
+                cars[i].maxTex += 4;
+              }else{
+                cars[i].maxTex -= 4;
+              }
+          }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.02 < off_road_allowed_cars){  
+              XPos[i] += 0.03;
+              if(lines[linePos[i]].curve == 0) {
+                cars[i].car_dir = 1;
+                cars[i].maxTex += 4;
+              }else{
+                cars[i].maxTex -= 4;
+              }
+          }
+
+        }
     }
     
 
