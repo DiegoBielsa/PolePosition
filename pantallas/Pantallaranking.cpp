@@ -297,6 +297,57 @@ void manageKeysCircuito(int& mapa,bool& terminar) {
 
 }
 
+void manageKeysIa(int& iaMode, bool& terminar, Clock& clock) {
+    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+        clock.restart();
+        if (iaMode == 0) {//facil
+
+            if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                iaMode = 2;
+
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                iaMode = 1;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                terminar = true;
+            }
+        }
+        else if (iaMode == 1) {//medio
+
+            if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                iaMode = 0;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                iaMode = 2;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                terminar = true;
+            }
+        }
+        else if (iaMode == 2) {//dificil
+
+            if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                iaMode = 1;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                iaMode = 0;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                terminar = true;
+            }
+        }
+    }
+    
+
+}
+
 void drawCircuito(RenderWindow& app, int& color, int mapa) {
     sf::Text texto1;
     sf::Text texto2;
@@ -306,6 +357,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
 
     sf::Font font;
     font.loadFromFile("letra.ttf");
+
     // select the font
     texto1.setFont(font); // font is a sf::Font
     texto2.setFont(font);
@@ -447,4 +499,104 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
     app.draw(titulo);
 }
 
+
+void drawIa(RenderWindow& app, int& color, int iaMode) {
+
+    sf::Text texto1;
+    sf::Text texto2;
+    sf::Text texto3;
+    sf::Text titulo;
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    sf::Font font2;
+    font2.loadFromFile("retro.ttf");
+    // select the font
+    texto1.setFont(font2); // font is a sf::Font
+    texto2.setFont(font2);
+    texto3.setFont(font2);
+    titulo.setFont(font);
+
+    texto1.setString("-EASY-");
+    texto2.setString("-MEDIUM-");
+    texto3.setString("-HARD-");
+    titulo.setString("SELECT LEVEL");
+
+
+
+    texto1.setCharacterSize(55);
+    texto2.setCharacterSize(55);
+    texto3.setCharacterSize(55);
+    titulo.setCharacterSize(80);
+
+    texto1.setPosition(400, 200);
+    texto2.setPosition(380, 350);
+    texto3.setPosition(400, 500);
+    titulo.setPosition(280, 30);
+
+    if (iaMode == 0) {//test
+        if (color == 0 || color == 1) {
+            texto1.setFillColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            texto1.setFillColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            texto1.setFillColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            color = 0;
+        }
+    }
+    else  if (iaMode == 1) {//medium
+        if (color == 0 || color == 1) {
+            texto2.setFillColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            texto2.setFillColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            texto2.setFillColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            color = 0;
+        }
+    }
+    else  if (iaMode == 2) {//hard
+        if (color == 0 || color == 1) {
+            texto3.setFillColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            texto3.setFillColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            texto3.setFillColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            color = 0;
+        }
+    }
+    
+
+
+
+    app.draw(texto1);
+    app.draw(texto2);
+    app.draw(texto3);
+    app.draw(titulo);
+
+
+}
 
