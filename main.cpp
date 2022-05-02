@@ -54,6 +54,7 @@ bool gameOver = false;
 bool perderControl = false;
 bool charco = false;
 int animColision = 0;
+Clock actualizar;
 
 
 Time tiempoconseguido;
@@ -62,8 +63,10 @@ int score = 0;
 bool esPrimeravez = true; //para saber si hemos pasado la meta por primera vez
 bool metacruz = false;
 bool antmetacruz = false; //para ver si estamos parados en la meta
+bool pulsada = 0; //letra pulsada
 
 int mapa; //mapa a elegir
+int iaMode = 0; //ia a elegir
 
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
@@ -514,6 +517,39 @@ int main() {
                     // eleccion del mapa
                     lines = maps[mapa];
                      N = lines.size();
+                }
+
+                
+                app.display();
+            }
+
+            break;
+        case 5: //pantalla eleccion ia
+            sounds[7].play();
+            terminar = false;
+            tiempoparafin.restart();
+            color = 0; //color de los sprites
+            iaMode = 0;
+            pulsada = 0;
+            while (app.isOpen() && !terminar) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                app.clear(Color(44, 76, 116));
+                manageKeysIa(iaMode,terminar,actualizar);
+
+                drawIa(app, color,iaMode);
+                if (terminar == true) {
+                    estado = 0;
                 }
 
                 
