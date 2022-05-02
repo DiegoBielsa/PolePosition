@@ -19,7 +19,7 @@ struct carSpriteIA{
 
   void init(){
     maxTex = 23;
-    actualTex = 0;
+    actualTex = 5;
     car_dir = 0;
     spriteN = 0;
     car_inv = false;
@@ -30,7 +30,7 @@ struct carSpriteIA{
   }
   void reinit(){
     maxTex = 23;
-    actualTex = 0;
+    actualTex = 5;
     car_width = 56;
     car_height = 33;
     car_dir = 0;
