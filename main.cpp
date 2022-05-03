@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 3;
+int estado = 5;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -64,9 +64,13 @@ bool esPrimeravez = true; //para saber si hemos pasado la meta por primera vez
 bool metacruz = false;
 bool antmetacruz = false; //para ver si estamos parados en la meta
 bool pulsada = 0; //letra pulsada
+int posicionPuntuacion = 0; // posicion de nuestra puntuacion
 
 int mapa; //mapa a elegir
 int iaMode = 0; //ia a elegir
+
+string nombre[] = { "A","A","A" };
+string key[] = {"A","B","C","D", "E","F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
 
@@ -94,12 +98,16 @@ int main() {
     bool restart = false;
 
     string puntuaciones[7];
-    leerPuntuaciones(puntuaciones, mapa);
+    string nombres[7];
+
+  
+    int letra = 0; //para saber en que letra estamos
+    int iterador = 0; //para saber en que posicion de AAA estamos
     int limite = 0;
 
 
-    leerLimite(limite, mapa);
-    int lim = limite; //variable que iremos restando para no tener que volver a leer el fichero cuando hacemos vuelta
+    
+    int lim = 0; //variable que iremos restando para no tener que volver a leer el fichero cuando hacemos vuelta
 
     Texture t[50];
     Sprite object[50];
@@ -237,6 +245,7 @@ int main() {
             sounds[5].play();
             terminar = false;
             tiempoparafin.restart();
+            posicionPuntuacion = 0;
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
@@ -309,7 +318,7 @@ int main() {
 
                 if (gameOver == true && restart == false) {
                     tiempoparafin.restart();
-                    escribirPuntuaciones(puntuaciones, score, mapa);
+                    escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion,iaMode);
                     restart = true;
                 }
                 else if (gameOver == true && restart == true) {
@@ -409,16 +418,13 @@ int main() {
 
                 if (gameOver == true && restart == false) {
                     tiempoparafin.restart();
-                    escribirPuntuaciones(puntuaciones, score, mapa);
+                    escribirPuntuaciones(puntuaciones, score, mapa,posicionPuntuacion,iaMode);
                     restart = true;
                 }
                 else if (gameOver == true && restart == true) {
                     estado = 2;
                     if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
-                        app.clear(Color(0, 0, 180));
-
-                        drawRanking(app, puntuaciones, lim, score);
-
+                        terminar = true;
                     }
                 }
 
@@ -431,6 +437,8 @@ int main() {
         case 2: //resultados clas
             terminar = false;
             tiempoparafin.restart();
+            letra = 0;
+            color = 0;
             while (app.isOpen()&& !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
@@ -444,12 +452,21 @@ int main() {
                     view = getLetterboxView(view, e.size.width, e.size.height);
                     app.setView(view);
                 }
-                if (tiempoparafin.getElapsedTime().asSeconds() < 5) {//esperamos 10 segundos para terminar
-                    app.clear(Color(0, 0, 180));
+                    app.clear(Color(44, 76, 116));
+                    bool haCambiado = 0;
+                    selectName(nombre,key,letra,iterador,terminar,haCambiado,actualizar);
+                    nombres[posicionPuntuacion] = nombre[0]+nombre[1]+nombre[2];
 
-                    drawRanking(app, puntuaciones, lim, score);
-                }
-                else {
+                    if (haCambiado == 1) {
+
+                        escribirNombres(nombres, mapa,iaMode);
+                        leerNombres(nombres, mapa,iaMode);
+                        haCambiado = 0;
+                    }
+
+                    drawRanking(app, puntuaciones,nombres ,lim, score,posicionPuntuacion,color);
+                
+                if(terminar==true) {
                     estado = 1;
                     terminar = true;
                 }
@@ -513,7 +530,7 @@ int main() {
 
                 drawCircuito(app, color,mapa);
                 if (terminar == true) {
-                    estado = 0;
+                    estado = 5;
                     // eleccion del mapa
                     lines = maps[mapa];
                      N = lines.size();
@@ -549,7 +566,13 @@ int main() {
 
                 drawIa(app, color,iaMode);
                 if (terminar == true) {
-                    estado = 0;
+                    estado = 2;
+                    leerPuntuaciones(puntuaciones, mapa,iaMode);
+
+                    leerNombres(nombres, mapa,iaMode);
+                    leerLimite(limite, mapa);
+                    lim = limite;
+
                 }
 
                 
