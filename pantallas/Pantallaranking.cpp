@@ -1,8 +1,39 @@
 #include "Pantallaranking.hpp"
 
+void selectName(string name[], string key[],int& letra,int& iterador, bool& terminar, bool& haCambiado,Clock& clock) {
+
+    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+        clock.restart();
+        if (Keyboard::isKeyPressed(Keyboard::Up)) {
+            if (letra != 0) {
+                letra = letra - 1;
+                haCambiado = 1;
+            }
 
 
-void drawRanking(RenderWindow& app,string puntuaciones[],int lim,int scoreentero) {
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Down)) {
+            if (letra != 25) {
+                letra = letra + 1;
+                haCambiado = 1;
+            }
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (iterador != 2) {
+                iterador = iterador + 1;
+            }
+            else {
+                terminar = true;
+            }
+        }
+        name[iterador] = key[letra];
+    }
+    
+}
+
+
+void drawRanking(RenderWindow& app,string puntuaciones[], string nombres[],int lim,int scoreentero, int posicionPuntuacion,int& color) {
     sf::Text score;
     sf::Text scorenumber;
     sf::Text timenumber;
@@ -129,7 +160,7 @@ void drawRanking(RenderWindow& app,string puntuaciones[],int lim,int scoreentero
         j.setString(numero);
         s.setString(puntuaciones[i]);
         t.setString("0");
-        n.setString("Juan");
+        n.setString(nombres[i]);
 
         j.setCharacterSize(50);
         s.setCharacterSize(50);
@@ -143,10 +174,36 @@ void drawRanking(RenderWindow& app,string puntuaciones[],int lim,int scoreentero
         n.setPosition(630, altura);
 
         // set the color
-        j.setFillColor(sf::Color::White);
-        s.setFillColor(sf::Color::White);
-        t.setFillColor(sf::Color::White);
-        n.setFillColor(sf::Color::White);
+        if (i != posicionPuntuacion) {
+            j.setFillColor(sf::Color::White);
+            s.setFillColor(sf::Color::White);
+            t.setFillColor(sf::Color::White);
+            n.setFillColor(sf::Color::White);
+        }
+        else if(i== posicionPuntuacion &&(color==0 || color ==1)) {
+            j.setFillColor(sf::Color::Yellow);
+            s.setFillColor(sf::Color::Yellow);
+            t.setFillColor(sf::Color::Yellow);
+            n.setFillColor(sf::Color::Yellow);
+             color++;
+        }
+        else if (i == posicionPuntuacion && (color == 2)) {
+            j.setFillColor(sf::Color::Red);
+            s.setFillColor(sf::Color::Red);
+            t.setFillColor(sf::Color::Red);
+            n.setFillColor(sf::Color::Red);
+            color++;
+        }
+        else if (i == posicionPuntuacion && (color == 3 || color == 4)) {
+            j.setFillColor(sf::Color::White);
+            s.setFillColor(sf::Color::White);
+            t.setFillColor(sf::Color::White);
+            n.setFillColor(sf::Color::White);
+            if (color == 4) {
+                color = 0;
+            }
+            else { color++; }
+        }
 
 
         app.draw(j);
