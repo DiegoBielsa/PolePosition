@@ -232,7 +232,8 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
       //actualizar sprite
     
     app.draw(car.sprite);
-  }else if(lines[(startPos+10)%N].sprite_type == 0){
+  }else if(lines[(startPos+10)%N].sprite_type == 0){ // valla
+    app.draw(car.sprite);
     car.colision = true;
     perderControl = true;
   }else if(lines[(startPos+10)%N].sprite_type == 2){//meta

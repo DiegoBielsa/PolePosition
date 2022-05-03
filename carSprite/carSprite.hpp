@@ -162,9 +162,8 @@ struct carSprite{
     if(clock.getElapsedTime().asSeconds() > updateTime){
       
       if(colision){
-        std::cout << colisionSprite << std::endl;
         if(colisionSprite == 0) updateTime = 0.17;
-        else updateTime-= 0.01;
+        else updateTime-= 0.005;
         if(colisionSprite < 11){
           colisionSprite++;
         }
