@@ -26,25 +26,37 @@ sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip )
 
 
 
-void leerPuntuaciones(string puntuaciones[], int numero) {
-
+void leerPuntuaciones(string puntuaciones[], int numero,int iaMode) {
+    int j = iaMode;
     fstream f;
     string number = inttostring(numero);
     f.open("ficheros/puntuaciones"+number+".txt");
     if (f.is_open()) {
-        int i = 0;
         string cadena;
-        getline(f, cadena, '\n');
+        while (j > 0) {
+            getline(f, cadena, '\n');       //leemos las anteriores ias
+            j--;
+        }
+        int i = 0;
+        
+        getline(f, cadena, ' ');
         while (!f.eof() && i < 7) {
             puntuaciones[i] = cadena;
             i++;
-            getline(f, cadena, '\n');
+            getline(f, cadena, ' ');
         }
         if (i < 7) {
             while (i < 7) {
                 puntuaciones[i] = "0";
+                f << "0000";
+                if (i == 6) {
+                    f << '\n';
+                }
+                else {
+                    f << ' ';
+                }
                 i++;
-                f << "0000" << endl;
+               
             }
         }
         f.close();
@@ -55,6 +67,8 @@ void leerPuntuaciones(string puntuaciones[], int numero) {
     }
 
 }
+
+
 
 
 String inttostring(int entero) {
@@ -313,7 +327,7 @@ void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver) {
         score = score * multi;
     }
 }
-void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero) {
+void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero,int& posicionPuntuacion,int iaMode) {
     string number = inttostring(numero);
     bool esMejor = false;
     int i = 0;
@@ -321,6 +335,7 @@ void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero) {
         int c = stringtoint(puntuaciones[i]);
         if (puntuacion > c) {
             esMejor = true;
+            posicionPuntuacion = i;
         }
         else {
             i++;
@@ -331,13 +346,24 @@ void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero) {
             puntuaciones[j] = puntuaciones[j - 1];
         }
         puntuaciones[i] = inttostring(puntuacion);
+        int j = iaMode;
         fstream f;
         f.open("ficheros/puntuaciones" + number + ".txt");
         if (f.is_open()) {
+            string cadena = "";
+            while (j > 0) {
+                getline(f, cadena, '\n');       //leemos las anteriores ias
+                j--;
+            }
             int z = 0;
             while ( z < 7) {
                 f << puntuaciones[z];
-                f << '\n';
+                if (z == 6) {
+                    //f << '\n';
+                }
+                else {
+                    f << ' ';
+                }
                 z++;
             }
             
@@ -350,5 +376,71 @@ void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero) {
         }
     }
    
+
+}
+
+void escribirNombres(string nombres[], int numero,int iaMode) {
+    int j = iaMode;
+    std::vector<std::string> copia;
+    string number = inttostring(numero);
+        fstream f;
+        f.open("ficheros/nombres" + number + ".txt",ios::in | ios::out);
+        if (f.is_open()) {
+            string cadena = "";
+                getline(f, cadena, '\n');
+                while (!f.eof()) {
+                    copia.push_back(cadena);
+                    getline(f, cadena, '\n');
+                }
+
+            f.close();
+            //copia[2]=
+
+        }
+        else {
+            cerr << "no se ha podido abrir fichero nombres" << endl;
+        }
+
+
+}
+
+void leerNombres(string nombres[], int numero,int iaMode) {
+    int j = iaMode;
+    fstream f;
+    string number = inttostring(numero);
+    f.open("ficheros/nombres" + number + ".txt");
+    if (f.is_open()) {
+        int i = 0;
+        string cadena;
+        while (j > 0) {
+            getline(f, cadena, '\n');       //leemos las anteriores ias
+            j--;
+        }
+        getline(f, cadena, ' ');
+        while (!f.eof() && i < 7) {
+            nombres[i] = cadena;
+            i++;
+            getline(f, cadena, ' ');
+        }
+        if (i < 7) {
+            while (i < 7) {
+                nombres[i] = "AAA";
+                
+                f << "AAA";
+                if (i == 6) {
+                    f << '\n';
+                }
+                else {
+                    f << ' ';
+                }
+                i++;
+            }
+        }
+        f.close();
+
+    }
+    else {
+        cerr << "no se ha podido abrir fichero nombres" << endl;
+    }
 
 }
