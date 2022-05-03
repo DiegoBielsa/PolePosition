@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 5;
+int estado = 4;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -65,6 +65,7 @@ bool metacruz = false;
 bool antmetacruz = false; //para ver si estamos parados en la meta
 bool pulsada = 0; //letra pulsada
 int posicionPuntuacion = 0; // posicion de nuestra puntuacion
+bool prepare = true;
 
 int mapa; //mapa a elegir
 int iaMode = 0; //ia a elegir
@@ -132,6 +133,12 @@ int main() {
     t[15].loadFromFile("sprites/entorno/charcogrande.png");
     t[15].setSmooth(true);
     object[15].setTexture(t[15]);
+    t[16].loadFromFile("sprites/entorno/prepareto.png");
+    t[16].setSmooth(true);
+    object[16].setTexture(t[16]);
+    object[16].setPosition(width,200);
+    object[16].setScale(2,2);
+
 
 
 
@@ -280,7 +287,11 @@ int main() {
                 int startPos, camH, maxy;
                 float x, dx;
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground);
-                manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                if(prepare){
+                    drawPrepare(app,object, prepare);
+                }else{
+                    manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                }
                 sf::Time elapsed = clock.getElapsedTime();
             
                 comprobarMeta(startPos, goalPosIni, metacruz);
@@ -544,6 +555,7 @@ int main() {
         case 5: //pantalla eleccion ia
             sounds[7].play();
             terminar = false;
+            actualizar.restart();
             tiempoparafin.restart();
             color = 0; //color de los sprites
             iaMode = 0;
@@ -566,7 +578,7 @@ int main() {
 
                 drawIa(app, color,iaMode);
                 if (terminar == true) {
-                    estado = 2;
+                    estado = 0;
                     leerPuntuaciones(puntuaciones, mapa,iaMode);
 
                     leerNombres(nombres, mapa,iaMode);

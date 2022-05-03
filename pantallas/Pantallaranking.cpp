@@ -263,6 +263,18 @@ void drawInicio(RenderWindow& app,int& color){
 
 }
 
+void drawPrepare(RenderWindow& app,Sprite object[], bool& prepare){
+    object[16].move(sf::Vector2f(-16,0));
+
+    if(object[16].getPosition().x > -1000){
+        app.draw(object[16]);
+    }else{
+        prepare = false;
+    }
+    //app.draw(globo);
+
+}
+
 
 void manageKeysCircuito(int& mapa,bool& terminar) {
 
