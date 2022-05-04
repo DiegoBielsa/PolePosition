@@ -294,15 +294,18 @@ int main() {
                 }
                 sf::Time elapsed = clock.getElapsedTime();
             
-                comprobarMeta(startPos, goalPosIni, metacruz);
+                comprobarMeta(startPos, goalPosIni, metacruz,speed);
+                cout <<"startPos"<< startPos << endl;
+                cout << "antmetacruz" << antmetacruz << endl;
+                cout << "metacruz" << metacruz << endl;
+
+                
                 if (metacruz == true && antmetacruz==false) {
                     if (esPrimeravez==true) {
                         esPrimeravez = false;
                     }
                     else {
-                        clock.restart();  //cuando hagamos vuelta
-                        elapsed = clock.getElapsedTime();
-                        lim = limite;
+                        gameOver = true;
                     }
                 }
                 antmetacruz = metacruz;
@@ -313,9 +316,9 @@ int main() {
                 drawObjects(app, startPos, lines, N, car, sounds);
                 drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
                 //std::cout<<startPos<<std::endl;
-                if (startPos >= 3500 && startPos <= 3550) {
-                    gameOver = true;
-                }
+                //if (startPos >= 3500 && startPos <= 3550) {
+                  //  gameOver = true;
+                //}
                 drawGear(app, marchaBaja, marcha);
 
                 if (speed < 0) speed = 0;
@@ -333,7 +336,7 @@ int main() {
                     restart = true;
                 }
                 else if (gameOver == true && restart == true) {
-                    estado = 2;
+                    estado = 1;
                     if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
                         terminar = true;
                     }
@@ -391,7 +394,7 @@ int main() {
                 manageKeys(playerX, speed, H, car, lines, startPos, sounds);
                 sf::Time elapsed = clock.getElapsedTime();
                 bool metacruz = false;
-                comprobarMeta(startPos, goalPosIni, metacruz);
+                comprobarMeta(startPos, goalPosIni, metacruz,speed);
                 if (metacruz == true && antmetacruz == false) {
                     if (esPrimeravez==true) {
                         esPrimeravez = false;
@@ -478,7 +481,7 @@ int main() {
                     drawRanking(app, puntuaciones,nombres ,lim, score,posicionPuntuacion,color);
                 
                 if(terminar==true) {
-                    estado = 1;
+                    estado = 2;
                     terminar = true;
                 }
                 app.display();
