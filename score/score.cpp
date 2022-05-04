@@ -32,33 +32,26 @@ void leerPuntuaciones(string puntuaciones[], int numero,int iaMode) {
     string number = inttostring(numero);
     f.open("ficheros/puntuaciones"+number+".txt");
     if (f.is_open()) {
+        int i = 0;
         string cadena;
         while (j > 0) {
             getline(f, cadena, '\n');       //leemos las anteriores ias
             j--;
         }
-        int i = 0;
-        
         getline(f, cadena, ' ');
-        while (!f.eof() && i < 7) {
+        while (!f.eof() && i < 6) {
             puntuaciones[i] = cadena;
-            i++;
-            getline(f, cadena, ' ');
-        }
-        if (i < 7) {
-            while (i < 7) {
-                puntuaciones[i] = "0";
-                f << "0000";
-                if (i == 6) {
-                    f << '\n';
-                }
-                else {
-                    f << ' ';
-                }
-                i++;
-               
+            if (i == 5) {
+                getline(f, cadena, '\n');
+
             }
+            else {
+                getline(f, cadena, ' ');
+            }
+            i++;
+
         }
+        puntuaciones[6] = cadena;
         f.close();
 
     }
@@ -167,7 +160,7 @@ void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int pu
     }
     else {
         timenumber.setString("0");
-        //gameOver = true;
+        gameOver = true;
     }
 
     Time tiempo;
@@ -329,6 +322,7 @@ void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver) {
 }
 void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero,int& posicionPuntuacion,int iaMode) {
     string number = inttostring(numero);
+    std::vector<std::string> copia;
     bool esMejor = false;
     int i = 0;
     while(!esMejor && i<7) {
@@ -351,22 +345,13 @@ void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero,int& p
         f.open("ficheros/puntuaciones" + number + ".txt");
         if (f.is_open()) {
             string cadena = "";
-            while (j > 0) {
-                getline(f, cadena, '\n');       //leemos las anteriores ias
-                j--;
+            getline(f, cadena, '\n');
+            while (!f.eof()) {
+                copia.push_back(cadena);
+                getline(f, cadena, '\n');
             }
-            int z = 0;
-            while ( z < 7) {
-                f << puntuaciones[z];
-                if (z == 6) {
-                    //f << '\n';
-                }
-                else {
-                    f << ' ';
-                }
-                z++;
-            }
-            
+            copia.push_back(cadena);
+
 
             f.close();
 
@@ -374,6 +359,28 @@ void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero,int& p
         else {
             cerr << "no se ha podido abrir fichero puntuaciones" << endl;
         }
+
+        copia.size();
+        copia[iaMode] = puntuaciones[0] + " " + puntuaciones[1] + " " + puntuaciones[2] + " " + puntuaciones[3] + " " + puntuaciones[4] + " " + puntuaciones[5] + " " + puntuaciones[6];
+
+        ofstream ofs;
+        ofs.open("ficheros/puntuaciones" + number + ".txt", std::ofstream::out | std::ofstream::trunc);
+        ofs.close();
+
+        fstream f2;
+        f2.open("ficheros/puntuaciones" + number + ".txt");
+        if (f2.is_open()) {
+
+            f2 << copia[0] << "\n";
+            f2 << copia[1] << "\n";
+            f2 << copia[2] << "\n";
+
+
+
+            f2.close();
+        }
+        else { cerr << "no se ha podido abrir fichero puntuaciones" << endl; }
+ 
     }
    
 
@@ -384,7 +391,7 @@ void escribirNombres(string nombres[], int numero,int iaMode) {
     std::vector<std::string> copia;
     string number = inttostring(numero);
         fstream f;
-        f.open("ficheros/nombres" + number + ".txt",ios::in | ios::out);
+        f.open("ficheros/nombres" + number + ".txt");
         if (f.is_open()) {
             string cadena = "";
                 getline(f, cadena, '\n');
@@ -392,14 +399,36 @@ void escribirNombres(string nombres[], int numero,int iaMode) {
                     copia.push_back(cadena);
                     getline(f, cadena, '\n');
                 }
+                copia.push_back(cadena);
 
+               
             f.close();
-            //copia[2]=
-
+            
         }
         else {
             cerr << "no se ha podido abrir fichero nombres" << endl;
         }
+      
+        copia.size();
+        copia[iaMode] = nombres[0] + " " + nombres[1] + " " + nombres[2] + " " + nombres[3] + " " + nombres[4] + " " + nombres[5] + " " + nombres[6];
+    
+        ofstream ofs;
+        ofs.open("ficheros/nombres" + number + ".txt", std::ofstream::out | std::ofstream::trunc);
+        ofs.close();
+
+        fstream f2;
+        f2.open("ficheros/nombres" + number + ".txt");
+        if (f2.is_open()) {
+            
+            f2 << copia[0] << "\n";
+            f2 << copia[1] << "\n";
+            f2 << copia[2] << "\n";
+
+
+
+            f2.close();
+        }
+        else { cerr << "no se ha podido abrir fichero nombres2" << endl; }
 
 
 }
@@ -417,30 +446,25 @@ void leerNombres(string nombres[], int numero,int iaMode) {
             j--;
         }
         getline(f, cadena, ' ');
-        while (!f.eof() && i < 7) {
+        while (!f.eof() && i < 6) {
             nombres[i] = cadena;
-            i++;
-            getline(f, cadena, ' ');
-        }
-        if (i < 7) {
-            while (i < 7) {
-                nombres[i] = "AAA";
-                
-                f << "AAA";
-                if (i == 6) {
-                    f << '\n';
-                }
-                else {
-                    f << ' ';
-                }
-                i++;
+            if (i == 5) {
+                getline(f, cadena, '\n');
+
             }
+            else{
+                getline(f, cadena, ' ');
+            }
+            i++;
+            
         }
+        nombres[6] = cadena;
+       
         f.close();
 
     }
     else {
-        cerr << "no se ha podido abrir fichero nombres" << endl;
+        cerr << "no se ha podido abrir fichero nombres3" << endl;
     }
 
 }
