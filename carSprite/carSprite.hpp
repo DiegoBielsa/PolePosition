@@ -9,19 +9,23 @@ struct carSpriteIA{
   int spriteN; //Numero de sprite (columna)[0-7]
   bool car_inv; //false normal, true invertido
   bool colision; //colision detectada
+  int colisionSprite;
   Texture texCar[24];
   int actualTex;
-  Texture texCarExp[18];
+  Texture texCarExp[11];
   IntRect rectSrcSprite; 
   Sprite sprite;
   Clock clock;
   int maxTex;
+  float updateTime = 0.03;
+
 
   void init(){
     maxTex = 23;
     actualTex = 5;
     car_dir = 0;
     spriteN = 0;
+    colisionSprite = 0;
     car_inv = false;
     colision = false;
     sprite.setTexture(texCar[actualTex]);
@@ -35,6 +39,7 @@ struct carSpriteIA{
     car_height = 33;
     car_dir = 0;
     spriteN = 0;
+    colisionSprite = 0;
     car_inv = false;
     colision = false;
     sprite.setTexture(texCar[actualTex]);
@@ -42,72 +47,95 @@ struct carSpriteIA{
     sprite.setScale(3,3);
   }
   void updateCarSprite(){
-    if(clock.getElapsedTime().asSeconds() > 0.06f){
-      if(car_dir == 0){ //Movimiento recto
-        if(actualTex > 1){ //si estaba girando recuperamos 
-          if(car_inv){ //girando a izquierdas
-            if(actualTex - 1 == 1){ // si estamos terminando de girar dejamos de invertir
+    //if(clock.getElapsedTime().asSeconds() > updateTime){
+      if(colision){
+        if(colisionSprite == 0) updateTime = 0.17;
+        else updateTime-= 0.005;
+        if(colisionSprite < 10){
+          colisionSprite++;
+        }else{
+          colisionSprite = 0;
+          colision = false;
+        }
+      }
+      else{
+        updateTime = 0.03;
+        if(car_dir == 0){ //Movimiento recto
+          if(actualTex > 1){ //si estaba girando recuperamos 
+            if(car_inv){ //girando a izquierdas
+              if(actualTex - 1 == 1){ // si estamos terminando de girar dejamos de invertir
+                car_inv = false;
+              }
+            }
+            actualTex--;
+          } // si no estaba girando hacemos que tenga la sensación de acelerar
+          else{
+            if(actualTex == 1) actualTex = 0;
+            else actualTex = 1;
+          }
+            
+        }
+        if(car_dir == 1){ //Movimiento dcha
+          if(car_inv && actualTex > 1){  //Si estabamos girando a izquierdas tenemos que recuperar
+            
+            if(actualTex - 1 == 1){
               car_inv = false;
             }
-          }
-          actualTex--;
-        } // si no estaba girando hacemos que tenga la sensación de acelerar
-        else{
-          if(actualTex == 1) actualTex = 0;
-          else actualTex = 1;
+            else
+              actualTex--;
+          }else{ // si no tenemos que girar a derechas
+            
+            if(actualTex < maxTex){
+              actualTex++;
+            }else if(actualTex > maxTex+1){
+                  actualTex--;
+                }
+            else{
+              actualTex = maxTex-1;
+            }
+          } 
         }
+        if(car_dir == -1){ //Movimiento a izq
+          if(!car_inv && actualTex > 1){ //Recuperando direccion del coche
+            if(actualTex - 1 == 1){
+              car_inv = true;
+            }
+            else
+              actualTex--;
+          }else{
+            if(actualTex < maxTex){
+              if(actualTex == 0) car_inv = true;
+              actualTex++;
+            }else if(actualTex > maxTex+1){
+                  actualTex--;
+            }
+            else
+              actualTex = maxTex-1;
+          }
           
-      }
-      if(car_dir == 1){ //Movimiento dcha
-        if(car_inv && actualTex > 1){  //Si estabamos girando a izquierdas tenemos que recuperar
-          
-          if(actualTex - 1 == 1){
-            car_inv = false;
-          }
-          else
-            actualTex--;
-        }else{ // si no tenemos que girar a derechas
-          
-          if(actualTex < maxTex){
-            actualTex++;
-          }else if(actualTex > maxTex+1){
-                actualTex--;
-              }
-          else{
-            actualTex = maxTex-1;
-          }
-        } 
-      }
-      if(car_dir == -1){ //Movimiento a izq
-        if(!car_inv && actualTex > 1){ //Recuperando direccion del coche
-          if(actualTex - 1 == 1){
-            car_inv = true;
-          }
-          else
-            actualTex--;
-        }else{
-          if(actualTex < maxTex){
-            if(actualTex == 0) car_inv = true;
-            actualTex++;
-          }else if(actualTex > maxTex+1){
-                actualTex--;
-          }
-          else
-            actualTex = maxTex-1;
         }
-        
       }
-
-      clock.restart();
+      //clock.restart();
       sprite = sf::Sprite();
-      sprite.setTexture(texCar[actualTex]);
-      if(car_inv){
-        sprite.setTextureRect(sf::IntRect(texCar[actualTex].getSize().x, 0, -texCar[actualTex].getSize().x, texCar[actualTex].getSize().y));    
+      if(!colision){
+        sprite.setTexture(texCar[actualTex]);
+        if(car_inv){
+          sprite.setTextureRect(sf::IntRect(texCar[actualTex].getSize().x, 0, -texCar[actualTex].getSize().x, texCar[actualTex].getSize().y));    
+        }
+        sprite.setPosition(width/2-car_width*1.5,600);
+      }else{
+        sprite.setTexture(texCarExp[colisionSprite]);
+        if(colisionSprite >= 3){
+            sprite.setPosition((width/2-car_width) -225,400);
+          }else{
+            sprite.setPosition(width/2-car_width*1.5,600);
+          }
       }
-      sprite.setPosition(width/2-car_width*1.5,600);
+      
+      
       sprite.setScale(3,3); 
       
-    }
+    //}
   }
 };
 
@@ -164,7 +192,7 @@ struct carSprite{
       if(colision){
         if(colisionSprite == 0) updateTime = 0.17;
         else updateTime-= 0.005;
-        if(colisionSprite < 11){
+        if(colisionSprite < 10){
           colisionSprite++;
         }
       }
