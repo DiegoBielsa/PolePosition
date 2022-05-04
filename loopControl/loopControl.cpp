@@ -175,9 +175,9 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   maxy = height;
   x = 0, dx = 0;
 
-  if (startPos == 3500){//será goalposend
-    gameOver = true;
-  }
+  //if (startPos == 3500){//será goalposend
+    //gameOver = true;
+  //}
 }
 
 /**
@@ -288,13 +288,31 @@ void drawGear(RenderWindow& app, bool marcha_baja, Texture& marcha) {
     app.draw(march);
 
 }
-void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
-    if ( startPos == goalPosIni) {
-        metacruz = true;
+void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz,int vel) {
+    if (vel > 50) {
+        bool encontrado = false;
+        int i = 0;
+        while (!encontrado && i < 11) {
+            if (startPos+i == goalPosIni && startPos+i <= goalPosIni) {
+                metacruz = true;
+                encontrado = true;
+            }
+            else {
+                metacruz = false;
 
+
+            }
+            i++;
+        }
     }
     else {
-        metacruz = false;
+        if (startPos >= goalPosIni && startPos <= goalPosIni) {
+            metacruz = true;
 
+        }
+        else {
+            metacruz = false;
+
+        }
     }
 }

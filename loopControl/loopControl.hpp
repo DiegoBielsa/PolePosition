@@ -16,4 +16,4 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 
 void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car, std::vector<Sound>& sounds);
 void drawGear(RenderWindow& app, bool marcha_baja, Texture& marcha);
-void comprobarMeta(int& startPos,  float& goalPosIni, bool& metacruz);
+void comprobarMeta(int& startPos,  float& goalPosIni, bool& metacruz,int vel);
