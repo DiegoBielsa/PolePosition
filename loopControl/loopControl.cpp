@@ -216,13 +216,12 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 }
 
 void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car){
-  ////////draw objects////////
+  ////////draw objects//////// hay que hacer 2 bucles para que dibuje los coches siempre encima
   for (int n = startPos + draw_distance; n > startPos; n--){
     lines[n % N].drawSprite(app);
+  }
+  for (int n = startPos + draw_distance; n > startPos; n--){ 
     for(int i = 0; i < numCars; i++) lines[n % N].drawCars(app, i);
-    
-
-    
   }
     
 
@@ -283,7 +282,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
-    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    std::this_thread::sleep_for (std::chrono::milliseconds(1s/*int((1/speeds)*1000)*/));
     int diff = linePos[i] - startPos;
     if(diff < 0){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         linePos[i] += 400;

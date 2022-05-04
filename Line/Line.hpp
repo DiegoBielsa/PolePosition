@@ -15,7 +15,6 @@ struct Line {
   int sprite_type; // 0 valla, 1 coche ia, 2 meta, 3 charco
   int last_sprite_type;
   Sprite cars[8];
-  bool cars[8];
   float carsX[8];
   float carsYPos[8];
   float carsXPos[8];
