@@ -146,7 +146,7 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   startPos = pos / segL;
   camH = lines[startPos].y + H;
   if (speed != 0){
-    float varyng;
+    float varyng=0;
     if(speed >= 0 && speed <= 50) varyng = 0;
     else if(speed > 50 && speed <= 100) varyng = 0.2;
     else if(speed > 100 && speed <= 150) varyng = 0.4;
