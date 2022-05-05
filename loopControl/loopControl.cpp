@@ -282,13 +282,13 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
-
     int diff = linePos[i] - startPos;
     
 
     if(linePos[i]+1 >= lines.size()){
-      lines[linePos[i]-1].cars[i] = sf::Sprite();
-      linePos[i] = 0;
+      lines[lines.size()-2].cars[i] = sf::Sprite();
+      linePos[i] = 1;
+      continue;
     } 
     float carsYpos = lines[linePos[i]-1].carsYPos[i];
     float carsXpos = lines[linePos[i]-1].carsXPos[i];
@@ -305,7 +305,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
       if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
       cars[i].updateCarSprite();
       continue;
-    }else if(diff < -20){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
+    }else if(diff < -20 && diff > -60){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
         lines[linePos[i] -1].cars[i] = sf::Sprite();
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
@@ -316,7 +316,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     if(speeds-20 > 0) speeds -= 20;
       
     }else{
-      if(diff < -20){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
+      if(diff < -20 && diff > -60){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         lines[linePos[i] -1].cars[i] = sf::Sprite();
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
@@ -397,7 +397,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
       
       
 
-      if(diff < 0){ //está detras tuyo se prepara para adelantar sin chocarte
+      if(diff < 0 && diff > -20){ //está detras tuyo se prepara para adelantar sin chocarte
           if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
               if(rebase == 0){
                     if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
@@ -449,7 +449,11 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
 
     int diff = linePos[i] - startPos;
-    if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+    if(linePos[i]+1 >= lines.size()){
+      lines[lines.size()-2].cars[i] = sf::Sprite();
+      linePos[i] = 1;
+      continue;
+    } 
     float carsYpos = lines[linePos[i]-2].carsYPos[i];
     float carsXpos = lines[linePos[i]-2].carsXPos[i];
 
@@ -465,7 +469,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
       if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
       cars[i].updateCarSprite();
       continue;
-    }else if(diff < -20){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
+    }else if(diff < -20 && diff > -60){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
         lines[linePos[i] -1].cars[i] = sf::Sprite();
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
@@ -476,7 +480,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     if(speeds-20 > 0) speeds -= 20;
       
     }else{
-      if(diff < -20){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
+      if(diff < -20 && diff > -60){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         lines[linePos[i] -1].cars[i] = sf::Sprite();
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
@@ -572,7 +576,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
       else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
 
       
-      if(diff < 0){ //está detras tuyo se prepara para adelantar sin chocarte
+      if(diff < 0 && diff > -20){ //está detras tuyo se prepara para adelantar sin chocarte
           if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
               if(rebase == 0){
                     if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
@@ -625,13 +629,16 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     int diff = linePos[i] - startPos;
     
 
-    if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+    if(linePos[i]+1 >= lines.size()){
+      lines[lines.size()-2].cars[i] = sf::Sprite();
+      linePos[i] = 1;
+      continue;
+    } 
     float carsYpos = lines[linePos[i]-2].carsYPos[i];
     float carsXpos = lines[linePos[i]-2].carsXPos[i];
     
     float diffX = carsXpos - drivingCarXPos;
     float diffY = carsYpos - drivingCarYPos;
-    std::cout << diff << std::endl;
     if(cars[i].colision){ // si ha colisionado, gestionamos
       lines[linePos[i]].carExplosion[i] = true;
       if(cars[i].colisionSprite == 8){ // acaba de colisionar lo mandamos lejos
@@ -640,7 +647,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
       if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
       cars[i].updateCarSprite();
       continue;
-    }else if(diff < -20){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
+    }else if(diff < -20 && diff > -60){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
         lines[linePos[i] -1].cars[i] = sf::Sprite();
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
@@ -651,7 +658,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     if(speeds-20 > 0) speeds -= 20;
       
     }else{
-      if(diff < -20){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
+      if(diff < -20 && diff > -60){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         lines[linePos[i] -1].cars[i] = sf::Sprite();
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
@@ -785,7 +792,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
     
       
-      if(diff < 0){ //está detras tuyo se prepara para adelantar sin chocarte
+      if(diff < 0 && diff > -20){ //está detras tuyo se prepara para adelantar sin chocarte
           if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
               if(rebase == 0){
                     if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
