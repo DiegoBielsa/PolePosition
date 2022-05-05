@@ -178,7 +178,7 @@ int main() {
         }
         car_arr[i].init();
         if (posIA % 2 == 0) {
-            XPos[i] = -0.7;
+            XPos[i] = 0.7;
             if(carPosition < 8 && carPosition%2 == 0) {
                 car_arr[i].car_dir = 0;
                 car_arr[i].actualTex = 0;

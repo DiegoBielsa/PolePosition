@@ -301,13 +301,13 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
       lines[linePos[i]].carExplosion[i] = true;
       if(cars[i].colisionSprite == 8){ // acaba de colisionar lo mandamos lejos
       lines[linePos[i]-1].cars[i] = sf::Sprite();
-      linePos[i] += 400;
+      linePos[i] += 500;
       if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
       cars[i].updateCarSprite();
       continue;
     }else if(diff < -20){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
         lines[linePos[i] -1].cars[i] = sf::Sprite();
-        linePos[i] += 400;
+        linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
         cars[i].colisionSprite = 8;
         cars[i].updateCarSprite();
@@ -318,7 +318,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     }else{
       if(diff < -20){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         lines[linePos[i] -1].cars[i] = sf::Sprite();
-        linePos[i] += 100;
+        linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
         continue;
       }
@@ -446,12 +446,9 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   
 
   while(!gameOver){
+    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+
     int diff = linePos[i] - startPos;
-    if(diff < 0){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
-        linePos[i] += 400;
-        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
-        continue;
-    }
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
     float carsYpos = lines[linePos[i]-2].carsYPos[i];
     float carsXpos = lines[linePos[i]-2].carsXPos[i];
@@ -460,116 +457,147 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     
     float diffX = carsXpos - drivingCarXPos;
     float diffY = carsYpos - drivingCarYPos;
-    if((diffY > -200 && diffY < -0.1) || (diffY > 0.1 && diffY < 150) ){ // si no es un valor residual
-      if(lines[linePos[i]].curve == 0){ // si es una recta hacemos perspectiva
-        if(diffY < -150){ // lejos
-          if(diffX < 20){
-              cars[i].car_dir = 1;
-              cars[i].maxTex = 5;
-          }else if(diffX > 100){
-            cars[i].car_dir = -1;
-            cars[i].maxTex = 5;
-          }else{
-            cars[i].maxTex = 23;
-            cars[i].car_dir = 0;
-          }
-        }else if(diffY < -100){ // medio lejos
-          if(diffX < -10){
-              cars[i].car_dir = 1;
-              cars[i].maxTex = 9;
-          }
-          else if(diffX > 130){
-            cars[i].car_dir = -1;
-            cars[i].maxTex = 9;
-          }else{
-            cars[i].maxTex = 23;
-            cars[i].car_dir = 0;
-          }
-
-        }else{ // medio cerca
-            if(diffX < -50){
+    if(cars[i].colision){ // si ha colisionado, gestionamos
+      lines[linePos[i]].carExplosion[i] = true;
+      if(cars[i].colisionSprite == 8){ // acaba de colisionar lo mandamos lejos
+      lines[linePos[i]-1].cars[i] = sf::Sprite();
+      linePos[i] += 500;
+      if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+      cars[i].updateCarSprite();
+      continue;
+    }else if(diff < -20){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
+        lines[linePos[i] -1].cars[i] = sf::Sprite();
+        linePos[i] += 500;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        cars[i].colisionSprite = 8;
+        cars[i].updateCarSprite();
+        continue;
+      }
+    if(speeds-20 > 0) speeds -= 20;
+      
+    }else{
+      if(diff < -20){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
+        lines[linePos[i] -1].cars[i] = sf::Sprite();
+        linePos[i] += 500;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        continue;
+      }
+      if(diffX > -82 && diffX < 111 && diffY < 68 && diffY > -48){  //antes de nada comprobamos colision
+        cars[i].colision = true;
+        continue;
+      }
+      if((diffY > -200 && diffY < -0.1) || (diffY > 0.1 && diffY < 150) ){ // si no es un valor residual
+        if(lines[linePos[i]].curve == 0){ // si es una recta hacemos perspectiva
+          if(diffY < -150){ // lejos
+            if(diffX < 20){
                 cars[i].car_dir = 1;
-                cars[i].maxTex = 13;
-            }
-            else if(diffX > 160){
+                cars[i].maxTex = 5;
+            }else if(diffX > 100){
               cars[i].car_dir = -1;
-              cars[i].maxTex = 13;
+              cars[i].maxTex = 5;
             }else{
-            cars[i].maxTex = 23;
-            cars[i].car_dir = 0;
-          }
-
-        }
-      }else if(lines[linePos[i]].curve > 0){
-        cars[i].car_dir = 1;
-        if(lines[linePos[i]].curve > 2.5){ 
-          cars[i].maxTex = 23;
-        }
-        else if(lines[linePos[i]].curve > 1.5){ 
-          cars[i].maxTex = 13;
-        }else{
-          cars[i].maxTex = 7;
-        }
-      }else if(lines[linePos[i]].curve < 0){
-        cars[i].car_dir = -1;
-        if(lines[linePos[i]].curve < -2.5){ 
-          cars[i].maxTex = 23;
-        }
-        else if(lines[linePos[i]].curve < -1.5){ 
-          cars[i].maxTex = 13;
-        }else{
-          cars[i].maxTex = 7;
-        }
-      }
-    }
-    
-    
-
-    centripetal_force = ((speeds/(mediumSpeed-70))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
-    actual_draft_power = draft_power * centripetal_force; 
-
-
-    
-
-    if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars -0.2)){
-      if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
-          XPos[i] += actual_draft_power;
-      }
-      if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars-0.2)){
-          XPos[i] -= actual_draft_power;
-      }
-    }
-
-    linePos[i]++;
-    if(speeds >= 0 && speeds <= maxSpeeds/3)  speeds += 2;
-    else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
-    else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
-
-    
-    if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
-        if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
-            if(rebase == 0){
-                  if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
-                      XPos[i] -= 0.5;
-                  }else{
-                    rebase = 1; //si no puede lo intentará a derechas
-                  }
-            }else{
-                  if((XPos[i] + 0.5 < off_road_allowed_cars)){ // intenta adelantar por la derecha
-                    XPos[i] += 0.5;
-                  }else{
-                    rebase = 0; //si no puede lo intentará a izquierdas
-                  }
-              
+              cars[i].maxTex = 23;
+              cars[i].car_dir = 0;
             }
+          }else if(diffY < -100){ // medio lejos
+            if(diffX < -10){
+                cars[i].car_dir = 1;
+                cars[i].maxTex = 9;
+            }
+            else if(diffX > 130){
+              cars[i].car_dir = -1;
+              cars[i].maxTex = 9;
+            }else{
+              cars[i].maxTex = 23;
+              cars[i].car_dir = 0;
+            }
+
+          }else{ // medio cerca
+              if(diffX < -50){
+                  cars[i].car_dir = 1;
+                  cars[i].maxTex = 13;
+              }
+              else if(diffX > 160){
+                cars[i].car_dir = -1;
+                cars[i].maxTex = 13;
+              }else{
+              cars[i].maxTex = 23;
+              cars[i].car_dir = 0;
+            }
+
+          }
+        }else if(lines[linePos[i]].curve > 0){
+          cars[i].car_dir = 1;
+          if(lines[linePos[i]].curve > 2.5){ 
+            cars[i].maxTex = 23;
+          }
+          else if(lines[linePos[i]].curve > 1.5){ 
+            cars[i].maxTex = 13;
+          }else{
+            cars[i].maxTex = 7;
+          }
+        }else if(lines[linePos[i]].curve < 0){
+          cars[i].car_dir = -1;
+          if(lines[linePos[i]].curve < -2.5){ 
+            cars[i].maxTex = 23;
+          }
+          else if(lines[linePos[i]].curve < -1.5){ 
+            cars[i].maxTex = 13;
+          }else{
+            cars[i].maxTex = 7;
+          }
         }
+      }
+    
+    
+
+      centripetal_force = ((speeds/(mediumSpeed-70))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
+      actual_draft_power = draft_power * centripetal_force; 
+
+
+      
+
+      if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars -0.2)){
+        if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
+            XPos[i] += actual_draft_power;
+        }
+        if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars-0.2)){
+            XPos[i] -= actual_draft_power;
+        }
+      }
+
+      
+      if(speeds >= 0 && speeds <= maxSpeeds/3)  speeds += 2;
+      else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
+      else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
+
+      
+      if(diff < 0){ //está detras tuyo se prepara para adelantar sin chocarte
+          if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
+              if(rebase == 0){
+                    if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
+                        XPos[i] -= 0.5;
+                    }else{
+                      rebase = 1; //si no puede lo intentará a derechas
+                    }
+              }else{
+                    if((XPos[i] + 0.5 < off_road_allowed_cars)){ // intenta adelantar por la derecha
+                      XPos[i] += 0.5;
+                    }else{
+                      rebase = 0; //si no puede lo intentará a izquierdas
+                    }
+                
+              }
+          }
+      }
     }
 
     cars[i].updateCarSprite();
+    lines[linePos[i] -1].carExplosion[i] = false;
     lines[linePos[i] -1].cars[i] = sf::Sprite();
     lines[linePos[i]].cars[i] = cars[i].sprite;
     lines[linePos[i]].carsX[i] = XPos[i];
-    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    linePos[i]++;
     clock.restart();
     
     
@@ -592,12 +620,10 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed- 70) - (i * 7);
 
   while(!gameOver){
+    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+
     int diff = linePos[i] - startPos;
-    if(diff < 0){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
-        linePos[i] += 400;
-        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
-        continue;
-    }
+    
 
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
     float carsYpos = lines[linePos[i]-2].carsYPos[i];
@@ -605,143 +631,186 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     
     float diffX = carsXpos - drivingCarXPos;
     float diffY = carsYpos - drivingCarYPos;
-    if((diffY > -200 && diffY < -0.1) || (diffY > 0.1 && diffY < 150) ){ // si no es un valor residual
-      if(lines[linePos[i]].curve == 0){ // si es una recta hacemos perspectiva
-        if(diffY < -150){ // lejos
-          if(diffX < 20){
-              cars[i].car_dir = 1;
-              cars[i].maxTex = 5;
-          }else if(diffX > 100){
-            cars[i].car_dir = -1;
-            cars[i].maxTex = 5;
-          }else{
-            cars[i].maxTex = 23;
-            cars[i].car_dir = 0;
-          }
-        }else if(diffY < -100){ // medio lejos
-          if(diffX < -10){
-              cars[i].car_dir = 1;
-              cars[i].maxTex = 9;
-          }
-          else if(diffX > 130){
-            cars[i].car_dir = -1;
-            cars[i].maxTex = 9;
-          }else{
-            cars[i].maxTex = 23;
-            cars[i].car_dir = 0;
-          }
-
-        }else{ // medio cerca
-            if(diffX < -50){
+    std::cout << diff << std::endl;
+    if(cars[i].colision){ // si ha colisionado, gestionamos
+      lines[linePos[i]].carExplosion[i] = true;
+      if(cars[i].colisionSprite == 8){ // acaba de colisionar lo mandamos lejos
+      lines[linePos[i]-1].cars[i] = sf::Sprite();
+      linePos[i] += 500;
+      if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+      cars[i].updateCarSprite();
+      continue;
+    }else if(diff < -20){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
+        lines[linePos[i] -1].cars[i] = sf::Sprite();
+        linePos[i] += 500;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        cars[i].colisionSprite = 8;
+        cars[i].updateCarSprite();
+        continue;
+      }
+    if(speeds-20 > 0) speeds -= 20;
+      
+    }else{
+      if(diff < -20){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
+        lines[linePos[i] -1].cars[i] = sf::Sprite();
+        linePos[i] += 500;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        continue;
+      }
+      if(diffX > -82 && diffX < 111 && diffY < 68 && diffY > -48){  //antes de nada comprobamos colision
+        cars[i].colision = true;
+        continue;
+      }
+      if((diffY > -200 && diffY < -0.1) || (diffY > 0.1 && diffY < 150) ){ // si no es un valor residual
+        if(lines[linePos[i]].curve == 0){ // si es una recta hacemos perspectiva
+          if(diffY < -150){ // lejos
+            if(diffX < 20){
                 cars[i].car_dir = 1;
-                cars[i].maxTex = 13;
-            }
-            else if(diffX > 160){
+                cars[i].maxTex = 5;
+            }else if(diffX > 100){
               cars[i].car_dir = -1;
-              cars[i].maxTex = 13;
+              cars[i].maxTex = 5;
             }else{
-            cars[i].maxTex = 23;
-            cars[i].car_dir = 0;
-          }
-
-        }
-        
-      }else if(lines[linePos[i]].curve > 0){
-        cars[i].car_dir = 1;
-        if(lines[linePos[i]].curve > 2.5){ 
-          cars[i].maxTex = 23;
-        }
-        else if(lines[linePos[i]].curve > 1.5){ 
-          cars[i].maxTex = 13;
-        }else{
-          cars[i].maxTex = 7;
-        }
-      }else if(lines[linePos[i]].curve < 0){
-        cars[i].car_dir = -1;
-        if(lines[linePos[i]].curve < -2.5){ 
-          cars[i].maxTex = 23;
-        }
-        else if(lines[linePos[i]].curve < -1.5){ 
-          cars[i].maxTex = 13;
-        }else{
-          cars[i].maxTex = 7;
-        }
-      }
-      if(carsYpos > 460 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
-          // tratas de igualar las X para molestar lo máximo posible
-          if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.02 > -off_road_allowed_cars-0.2){ 
-              XPos[i] -= 0.03;
-              if(lines[linePos[i]].curve == 0) {
-                cars[i].car_dir = -1;
-                cars[i].maxTex += 4;
-              }else{
-                cars[i].maxTex -= 4;
-              }
-          }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.02 < off_road_allowed_cars){  
-              XPos[i] += 0.03;
-              if(lines[linePos[i]].curve == 0) {
-                cars[i].car_dir = 1;
-                cars[i].maxTex += 4;
-              }else{
-                cars[i].maxTex -= 4;
-              }
-          }
-
-        }
-    }
-    
-
-    centripetal_force = ((speeds/(mediumSpeed-60))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
-    actual_draft_power = draft_power * centripetal_force; 
-
-
-    
-
-    if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars-0.2)){
-      if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
-          XPos[i] += actual_draft_power;
-      }
-      if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars-0.2)){
-          XPos[i] -= actual_draft_power;
-      }
-    }
-
-    linePos[i]++;
-    if(speeds >= 0 && speeds <= maxSpeeds/3)  speeds += 2;
-    else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
-    else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
-
-    
-    
-
-    
-    carsYpos = lines[linePos[i]-2].carsYPos[i];
-    carsXpos = lines[linePos[i]-2].carsXPos[i];
-    if(carsYpos > 600){ //está detras tuyo se prepara para adelantar sin chocarte
-        if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
-            if(rebase == 0){
-                  if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
-                      XPos[i] -= 0.5;
-                  }else{
-                    rebase = 1; //si no puede lo intentará a derechas
-                  }
-            }else{
-                  if((XPos[i] + 0.5 < off_road_allowed_cars)){ // intenta adelantar por la derecha
-                    XPos[i] += 0.5;
-                  }else{
-                    rebase = 0; //si no puede lo intentará a izquierdas
-                  }
-              
+              cars[i].maxTex = 23;
+              cars[i].car_dir = 0;
             }
+          }else if(diffY < -100){ // medio lejos
+            if(diffX < -10){
+                cars[i].car_dir = 1;
+                cars[i].maxTex = 9;
+            }
+            else if(diffX > 130){
+              cars[i].car_dir = -1;
+              cars[i].maxTex = 9;
+            }else{
+              cars[i].maxTex = 23;
+              cars[i].car_dir = 0;
+            }
+
+          }else{ // medio cerca
+              if(diffX < -50){
+                  cars[i].car_dir = 1;
+                  cars[i].maxTex = 13;
+              }
+              else if(diffX > 160){
+                cars[i].car_dir = -1;
+                cars[i].maxTex = 13;
+              }else{
+              cars[i].maxTex = 23;
+              cars[i].car_dir = 0;
+            }
+
+          }
+          
+        }else if(lines[linePos[i]].curve > 0){
+          cars[i].car_dir = 1;
+          if(lines[linePos[i]].curve > 2.5){ 
+            cars[i].maxTex = 23;
+          }
+          else if(lines[linePos[i]].curve > 1.5){ 
+            cars[i].maxTex = 13;
+          }else{
+            cars[i].maxTex = 7;
+          }
+        }else if(lines[linePos[i]].curve < 0){
+          cars[i].car_dir = -1;
+          if(lines[linePos[i]].curve < -2.5){ 
+            cars[i].maxTex = 23;
+          }
+          else if(lines[linePos[i]].curve < -1.5){ 
+            cars[i].maxTex = 13;
+          }else{
+            cars[i].maxTex = 7;
+          }
         }
+        if(carsYpos > 460 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
+            // tratas de igualar las X para molestar lo máximo posible
+            if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.02 > -off_road_allowed_cars-0.2){ 
+                XPos[i] -= 0.03;
+                if(lines[linePos[i]].curve == 0) {
+                  cars[i].car_dir = -1;
+                  if(cars[i].maxTex + 4 <= 23){
+                    cars[i].maxTex += 4;
+                  }else if(cars[i].maxTex + 1 <= 23){
+                    cars[i].maxTex += 1;
+                  } 
+                }else{
+                  if(cars[i].maxTex - 4 >= 0){
+                    cars[i].maxTex -= 4;
+                  }else if(cars[i].maxTex - 1 >= 0){
+                    cars[i].maxTex -= 1;
+                  } 
+                }
+            }else if(carsXpos  < drivingCarXPos - (car_width-10) && XPos[i] + 0.02 < off_road_allowed_cars){  
+                XPos[i] += 0.03;
+                if(lines[linePos[i]].curve == 0) {
+                  cars[i].car_dir = 1;
+                  if(cars[i].maxTex + 4 <= 23){
+                    cars[i].maxTex += 4;
+                  }else if(cars[i].maxTex + 1 <= 23){
+                    cars[i].maxTex += 1;
+                  } 
+                }else{
+                  if(cars[i].maxTex - 4 >= 0){
+                    cars[i].maxTex -= 4;
+                  }else if(cars[i].maxTex - 1 >= 0){
+                    cars[i].maxTex -= 1;
+                  } 
+                }
+            }
+
+          }
+      }
+      
+
+      centripetal_force = ((speeds/(mediumSpeed-60))) * floatAbs(lines[linePos[i]].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
+      actual_draft_power = draft_power * centripetal_force; 
+
+
+      
+
+      if ((XPos[i] < off_road_allowed_cars) && (XPos[i]> -off_road_allowed_cars-0.2)){
+        if(lines[linePos[i]].curve > 0 && (XPos[i] + actual_draft_power < off_road_allowed_cars)){
+            XPos[i] += actual_draft_power;
+        }
+        if(lines[linePos[i]].curve < 0 && (XPos[i] - actual_draft_power > -off_road_allowed_cars-0.2)){
+            XPos[i] -= actual_draft_power;
+        }
+      }
+
+      
+      if(speeds >= 0 && speeds <= maxSpeeds/3)  speeds += 2;
+      else if(speeds > maxSpeeds/3 && speeds <= maxSpeeds/2)  speeds += 2;
+      else if(speeds > maxSpeeds/2 && speeds <= maxSpeeds)  speeds += 3;
+
+    
+      
+      if(diff < 0){ //está detras tuyo se prepara para adelantar sin chocarte
+          if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
+              if(rebase == 0){
+                    if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
+                        XPos[i] -= 0.5;
+                    }else{
+                      rebase = 1; //si no puede lo intentará a derechas
+                    }
+              }else{
+                    if((XPos[i] + 0.5 < off_road_allowed_cars)){ // intenta adelantar por la derecha
+                      XPos[i] += 0.5;
+                    }else{
+                      rebase = 0; //si no puede lo intentará a izquierdas
+                    }
+                
+              }
+          }
+      }
     }
 
-
+    cars[i].updateCarSprite();
+    lines[linePos[i] -1].carExplosion[i] = false;
     lines[linePos[i] -1].cars[i] = sf::Sprite();
     lines[linePos[i]].cars[i] = cars[i].sprite;
     lines[linePos[i]].carsX[i] = XPos[i];
-    cars[i].updateCarSprite();
-    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    linePos[i]++;
     clock.restart();
       
       
