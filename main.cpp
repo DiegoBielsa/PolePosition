@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 4;
+int estado = 3;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -554,7 +554,7 @@ int main() {
                     
                 }
                 else {
-                    cout<<"pasamos"<<endl;
+                   
                     estado = 4;
                     terminar = true;
                 }
