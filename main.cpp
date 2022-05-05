@@ -55,6 +55,11 @@ bool perderControl = false;
 bool charco = false;
 int animColision = 0;
 Clock actualizar;
+Time tiempoFinal;
+int posicionSalida = 0;//posicion desde la que saldremos
+int bonus = 0;
+bool noClasifica = false;
+
 
 
 Time tiempoconseguido;
@@ -100,6 +105,9 @@ int main() {
 
     string puntuaciones[7];
     string nombres[7];
+    string clasificaciones[8];
+
+  
 
   
     int letra = 0; //para saber en que letra estamos
@@ -253,6 +261,7 @@ int main() {
             terminar = false;
             tiempoparafin.restart();
             posicionPuntuacion = 0;
+            color = 0;
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
@@ -295,9 +304,6 @@ int main() {
                 sf::Time elapsed = clock.getElapsedTime();
             
                 comprobarMeta(startPos, goalPosIni, metacruz,speed);
-                cout <<"startPos"<< startPos << endl;
-                cout << "antmetacruz" << antmetacruz << endl;
-                cout << "metacruz" << metacruz << endl;
 
                 
                 if (metacruz == true && antmetacruz==false) {
@@ -309,12 +315,13 @@ int main() {
                     }
                 }
                 antmetacruz = metacruz;
-                calcularScore(score, speed, lim, limite, gameOver);
+                calcularScore(score, speed, lim, limite, gameOver,iaMode);
 
 
                 drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
                 drawObjects(app, startPos, lines, N, car, sounds);
-                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
+                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver,tiempoFinal,noClasifica);
+                
                 //std::cout<<startPos<<std::endl;
                 //if (startPos >= 3500 && startPos <= 3550) {
                   //  gameOver = true;
@@ -330,13 +337,32 @@ int main() {
                 }
 
 
-                if (gameOver == true && restart == false) {
+                if (gameOver == true && restart == false ) {
                     tiempoparafin.restart();
-                    escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion,iaMode);
+                    //escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion,iaMode);
+                    calcularPosclasificacion(clasificaciones, tiempoFinal, posicionSalida,noClasifica);
+                    calcularBonusExtra(posicionSalida, iaMode,bonus);
                     restart = true;
                 }
                 else if (gameOver == true && restart == true) {
-                    estado = 1;
+                    if (posicionSalida > 7 ) {
+                        estado = 2;
+                    }else{
+                        estado = 1;
+                    }
+                    
+                    if (tiempoparafin.getElapsedTime().asSeconds() < 3) {
+                        drawResultadosClas(app, tiempoFinal, posicionSalida,bonus, color,0);
+                    }
+                    else if (tiempoparafin.getElapsedTime().asSeconds() < 6) {
+                        drawResultadosClas(app, tiempoFinal, posicionSalida,bonus, color,1);
+
+                    }
+                    else if(tiempoparafin.getElapsedTime().asSeconds() < 9) {
+                        drawResultadosClas(app, tiempoFinal, posicionSalida,bonus, color, 2);
+                    }
+                    
+                    
                     if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
                         terminar = true;
                     }
@@ -355,12 +381,14 @@ int main() {
             int lap;
             lap = 0;
             gameOver = false;
+            restart = false;
             clock.restart();
             esPrimeravez = true;
             pos = 0;
             playerX = 0;
             speed = 0;
-            while (app.isOpen()) {
+            terminar = false;
+            while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
                     if (e.type == Event::Closed)
@@ -402,7 +430,7 @@ int main() {
                     else {
                         clock.restart();  //cuando hagamos vuelta
                         elapsed = clock.getElapsedTime();
-                        lim = limite;
+                        lim = lim+limite;
                         lap++;
                         if (lap == 3) {
                             gameOver = true;
@@ -410,13 +438,13 @@ int main() {
                     }
                 }
                 antmetacruz = metacruz;
-                calcularScore(score, speed, lim, limite, gameOver);
+                calcularScore(score, speed, lim, limite, gameOver,iaMode);
 
 
 
                 drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
                 drawObjects(app, startPos, lines, N, car, sounds);
-                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
+                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver,tiempoFinal,noClasifica);
                 //std::cout<<startPos<<std::endl;
                
                 drawGear(app, marchaBaja, marcha);
@@ -433,11 +461,16 @@ int main() {
                 if (gameOver == true && restart == false) {
                     tiempoparafin.restart();
                     escribirPuntuaciones(puntuaciones, score, mapa,posicionPuntuacion,iaMode);
+                    cout << "posicionPuntuacion " << posicionPuntuacion << endl;
                     restart = true;
                 }
+     
+                
+                
                 else if (gameOver == true && restart == true) {
                     estado = 2;
-                    if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
+ 
+                    if (tiempoparafin.getElapsedTime().asSeconds() > 5) {//esperamos 10 segundos para terminar
                         terminar = true;
                     }
                 }
@@ -449,11 +482,14 @@ int main() {
 
             break;
         case 2: //resultados clas
+           
             terminar = false;
             tiempoparafin.restart();
             letra = 0;
             color = 0;
+            actualizar.restart();
             while (app.isOpen()&& !terminar) {
+ 
                 Event e;
                 while (app.pollEvent(e)) {
                     if (e.type == Event::Closed)
@@ -468,21 +504,27 @@ int main() {
                 }
                     app.clear(Color(44, 76, 116));
                     bool haCambiado = 0;
-                    selectName(nombre,key,letra,iterador,terminar,haCambiado,actualizar);
-                    nombres[posicionPuntuacion] = nombre[0]+nombre[1]+nombre[2];
 
-                    if (haCambiado == 1) {
+                    if (posicionPuntuacion >= 0 && posicionPuntuacion < 7) {
+                        selectName(nombre, key, letra, iterador, terminar, haCambiado, actualizar);
 
-                        escribirNombres(nombres, mapa,iaMode);
-                        leerNombres(nombres, mapa,iaMode);
-                        haCambiado = 0;
+
+                        nombres[posicionPuntuacion] = nombre[0] + nombre[1] + nombre[2];
+
+
+                        if (haCambiado == 1) {
+                            escribirNombres(nombres, mapa, iaMode);
+                            leerNombres(nombres, mapa, iaMode);
+                            haCambiado = 0;
+
+                        }
                     }
-
                     drawRanking(app, puntuaciones,nombres ,lim, score,posicionPuntuacion,color);
                 
                 if(terminar==true) {
                     estado = 2;
                     terminar = true;
+                    escribirNombres(nombres, mapa, iaMode);
                 }
                 app.display();
             }
@@ -583,7 +625,7 @@ int main() {
                 if (terminar == true) {
                     estado = 0;
                     leerPuntuaciones(puntuaciones, mapa,iaMode);
-
+                    leerClasificaciones(clasificaciones, mapa, iaMode);
                     leerNombres(nombres, mapa,iaMode);
                     leerLimite(limite, mapa);
                     lim = limite;
