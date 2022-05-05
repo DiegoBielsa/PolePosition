@@ -173,8 +173,8 @@ int main() {
             car_arr[i].texCar[k].loadFromFile("sprites/coches/IACar" + std::to_string(i) + "/tile" + std::to_string(j) + std::to_string(1) + ".png");
             k++;
         }
-        for (int j = 0; j < 18; j++) {
-            car_arr[i].texCarExp[j].loadFromFile("sprites/coches/Crash/crash" + std::to_string(j) + ".png");
+        for (int j = 3; j <= 11; j++) {
+            car_arr[i].texCarExp[j-3].loadFromFile("sprites/coches/Crash/crash" + std::to_string(j) + ".png");
         }
         car_arr[i].init();
         if (posIA % 2 == 0) {

@@ -18,8 +18,15 @@ struct Line {
   float carsX[8];
   float carsYPos[8];
   float carsXPos[8];
+  bool carExplosion[8];
 
-  Line() { spriteX = curve = x = y = z = 0; isGoal = false; }
+  Line() { 
+    spriteX = curve = x = y = z = 0; 
+    isGoal = false; 
+    for(int i = 0; i < 8; i++){
+      carExplosion[i] = 0;
+    }
+  }
 
   // decide las screen cord dependiendo de dónde está la cámara
   void project(int camX, int camY, int camZ) {
@@ -87,8 +94,11 @@ struct Line {
 
       //cars[i].setTextureRect(IntRect(0, 0, car_width, car_height));
       cars[i].setScale(destW*1.6 / w, destH*1.6 / h);
-      cars[i].setPosition(destX, destY);
-      //std::cout << destY << std::endl;
+      if(carExplosion[i]){
+        cars[i].setPosition(destX -160,destY -65);
+      }else{
+        cars[i].setPosition(destX, destY);
+      }
 
       if(!std::isnan(cars[i].getGlobalBounds().height)){
         localBounds = cars[i].getGlobalBounds();

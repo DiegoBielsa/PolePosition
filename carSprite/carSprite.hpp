@@ -12,7 +12,7 @@ struct carSpriteIA{
   int colisionSprite;
   Texture texCar[24];
   int actualTex;
-  Texture texCarExp[11];
+  Texture texCarExp[9];
   IntRect rectSrcSprite; 
   Sprite sprite;
   Clock clock;
@@ -47,11 +47,10 @@ struct carSpriteIA{
     sprite.setScale(3,3);
   }
   void updateCarSprite(){
-    //if(clock.getElapsedTime().asSeconds() > updateTime){
       if(colision){
         if(colisionSprite == 0) updateTime = 0.17;
         else updateTime-= 0.005;
-        if(colisionSprite < 10){
+        if(colisionSprite < 8){
           colisionSprite++;
         }else{
           colisionSprite = 0;
@@ -115,27 +114,17 @@ struct carSpriteIA{
           
         }
       }
-      //clock.restart();
       sprite = sf::Sprite();
       if(!colision){
         sprite.setTexture(texCar[actualTex]);
         if(car_inv){
           sprite.setTextureRect(sf::IntRect(texCar[actualTex].getSize().x, 0, -texCar[actualTex].getSize().x, texCar[actualTex].getSize().y));    
         }
-        sprite.setPosition(width/2-car_width*1.5,600);
       }else{
         sprite.setTexture(texCarExp[colisionSprite]);
-        if(colisionSprite >= 3){
-            sprite.setPosition((width/2-car_width)*1.5,300);
-          }else{
-            sprite.setPosition(width/2-car_width*1.5,600);
-          }
-      }
+      }      
       
       
-      sprite.setScale(3,3); 
-      
-    //}
   }
 };
 

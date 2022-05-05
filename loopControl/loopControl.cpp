@@ -281,12 +281,15 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
-    std::this_thread::sleep_for (std::chrono::milliseconds(1s/*int((1/speeds)*1000)*/));
+    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
 
     int diff = linePos[i] - startPos;
     
 
-    if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
+    if(linePos[i]+1 >= lines.size()){
+      lines[linePos[i]-1].cars[i] = sf::Sprite();
+      linePos[i] = 0;
+    } 
     float carsYpos = lines[linePos[i]-1].carsYPos[i];
     float carsXpos = lines[linePos[i]-1].carsXPos[i];
     
@@ -295,17 +298,18 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     float diffY = carsYpos - drivingCarYPos;
    
     if(cars[i].colision){ // si ha colisionado, gestionamos
-      if(cars[i].colisionSprite == 10){ // acaba de colisionar lo mandamos lejos
+      lines[linePos[i]].carExplosion[i] = true;
+      if(cars[i].colisionSprite == 8){ // acaba de colisionar lo mandamos lejos
       lines[linePos[i]-1].cars[i] = sf::Sprite();
-      linePos[i] += 100;
+      linePos[i] += 400;
       if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
       cars[i].updateCarSprite();
       continue;
     }else if(diff < -20){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
         lines[linePos[i] -1].cars[i] = sf::Sprite();
-        linePos[i] += 100;
+        linePos[i] += 400;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
-        cars[i].colisionSprite = 10;
+        cars[i].colisionSprite = 8;
         cars[i].updateCarSprite();
         continue;
       }
@@ -415,6 +419,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     
     
     cars[i].updateCarSprite();
+    lines[linePos[i] -1].carExplosion[i] = false;
     lines[linePos[i] -1].cars[i] = sf::Sprite();
     lines[linePos[i]].cars[i] = cars[i].sprite;
     lines[linePos[i]].carsX[i] = XPos[i];
