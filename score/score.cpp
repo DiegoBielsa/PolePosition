@@ -112,7 +112,7 @@ void leerLimite(int &limite, int numero) {
 
 }
 
-void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int puntu, Time& elapsed, int& limite,bool& gameOver) {
+void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int puntu, Time& elapsed, int& limite,bool& gameOver, Time& final, bool& noClasifica) {
     sf::Text top;
     sf::Text topnumber;
     sf::Text score;
@@ -160,6 +160,7 @@ void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int pu
     }
     else {
         timenumber.setString("0");
+        noClasifica = true;
         gameOver = true;
     }
 
@@ -178,6 +179,7 @@ void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int pu
         tiempo = elapsed;
 
     }
+    final = tiempo;
     int seconds2 = tiempo.asSeconds();
     int mili = tiempo.asMilliseconds();
     while (mili > 1000) {
@@ -186,7 +188,7 @@ void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int pu
 
     String minu = inttostring(mili);
     String sec = inttostring(seconds2);
-    lapnumber.setString(sec + "''" + minu);
+    lapnumber.setString(sec + ". " + minu);
     score.setString("SCORE");
     String puntuacion= inttostring(puntu);
     scorenumber.setString(puntuacion);
@@ -302,13 +304,14 @@ sf::View getLetterboxView(sf::View view, int windowWidth, int windowHeight) {
     return view;
 
 }
-void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver) {
+void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver,int iaMode) {
+    int multiIa = iaMode + 1;
     if (gameOver != true) {
         int v = velocidad - 50;
         if (v < 0) {
             v = 0;
         }
-        int punt = 1 * v;
+        int punt = 1 * v/10;
         score = score + punt;
     }
     else if (gameOver == true && control == false) {
@@ -317,7 +320,7 @@ void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver) {
         if (multi < 1.0) {
             multi = 1.0;
         }
-        score = score * multi;
+        score = score * multi * multiIa;
     }
 }
 void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero,int& posicionPuntuacion,int iaMode) {
@@ -329,12 +332,13 @@ void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero,int& p
         int c = stringtoint(puntuaciones[i]);
         if (puntuacion > c) {
             esMejor = true;
-            posicionPuntuacion = i;
+            
         }
         else {
             i++;
         }
     }
+    posicionPuntuacion = i;
     if (esMejor == true) {
         for (int j = 6;j > i;j--) { //desplazamos todos a la derecha
             puntuaciones[j] = puntuaciones[j - 1];
@@ -467,4 +471,88 @@ void leerNombres(string nombres[], int numero,int iaMode) {
         cerr << "no se ha podido abrir fichero nombres3" << endl;
     }
 
+}
+
+
+void leerClasificaciones(string clas[], int numero, int iaMode) {
+    int j = iaMode;
+    fstream f;
+    string number = inttostring(numero);
+    f.open("ficheros/clasificaciones" + number + ".txt");
+    if (f.is_open()) {
+        int i = 0;
+        string cadena;
+        while (j > 0) {
+            getline(f, cadena, '\n');       //leemos las anteriores ias
+            j--;
+        }
+        getline(f, cadena, ' ');
+        while (!f.eof() && i < 7) {
+            clas[i] = cadena;
+            if (i == 6) {
+                getline(f, cadena, '\n');
+
+            }
+            else {
+                getline(f, cadena, ' ');
+            }
+            i++;
+
+        }
+        clas[7] = cadena;
+
+        f.close();
+
+    }
+    else {
+        cerr << "no se ha podido abrir fichero clasificaciones" << endl;
+    }
+
+}
+
+void calcularPosclasificacion(string clas[], Time tiempo, int& posicionClasi, bool noClasifica) {
+    if (noClasifica == true) {
+        posicionClasi = 8;
+    }
+    else {
+        bool esMejor = false;
+        int i = 0;
+        int seconds2 = tiempo.asSeconds();
+        int mili = tiempo.asMilliseconds();
+        while (mili > 1000) {
+            mili = mili - 1000;
+        }
+
+        string minu = inttostring(mili);
+        string sec = inttostring(seconds2);
+        string mix = (sec + "," + minu);
+        int puntuacion = stringtoint(mix);
+        while (!esMejor && i < 7) {
+            int c = stringtoint(clas[i]);
+            if (puntuacion < c) {
+                esMejor = true;
+
+            }
+            else {
+                i++;
+            }
+        }
+        posicionClasi = i;
+
+    }
+}
+
+void calcularBonusExtra(int posicionSalida, int iaMode,int& bonus) {
+    bonus = 0;
+    if (posicionSalida < 7) {
+        int i = posicionSalida;
+        while (i < 7) {
+            bonus = bonus + 1000;
+            i++;
+        }
+        bonus = bonus * (iaMode + 1);
+    }
+    else {
+        bonus = 0;
+    }
 }
