@@ -281,17 +281,11 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
-    
-    int diff = linePos[i] - startPos;
-    if(diff < -20){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
-        lines[linePos[i] -1].cars[i] = sf::Sprite();
-        linePos[i] += 400;
-        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
-        cars[i].colisionSprite = 10;
-        cars[i].updateCarSprite();
-        continue;
-    }
+    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
 
+    int diff = linePos[i] - startPos;
+    std::cout << "diff" <<diff<< std::endl;
+    
 
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
     float carsYpos = lines[linePos[i]-1].carsYPos[i];
@@ -302,8 +296,30 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     float diffY = carsYpos - drivingCarYPos;
    
     if(cars[i].colision){ // si ha colisionado, gestionamos
-      speeds -= 20;
+      if(cars[i].colisionSprite == 10){ // acaba de colisionar lo mandamos lejos
+      std::cout << "lastcol" << std::endl;
+      lines[linePos[i]-1].cars[i] = sf::Sprite();
+      linePos[i] += 100;
+      if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+      cars[i].updateCarSprite();
+      continue;
+    }else if(diff < -20){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
+        lines[linePos[i] -1].cars[i] = sf::Sprite();
+        linePos[i] += 100;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        cars[i].colisionSprite = 10;
+        cars[i].updateCarSprite();
+        continue;
+      }
+    if(speeds-20 > 0) speeds -= 20;
+      
     }else{
+      if(diff < -20){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
+        lines[linePos[i] -1].cars[i] = sf::Sprite();
+        linePos[i] += 100;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        continue;
+      }
       if(diffX > -82 && diffX < 111 && diffY < 68 && diffY > -48){  //antes de nada comprobamos colision
         cars[i].colision = true;
         continue;
@@ -399,19 +415,12 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
       }
     }
     
-    if(cars[i].colisionSprite == 10){ // acaba de colisionar lo mandamos lejos
-      lines[linePos[i]-1].cars[i] = sf::Sprite();
-      linePos[i] += 400;
-      if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
-      cars[i].updateCarSprite();
-      continue;
-    }
+    
     cars[i].updateCarSprite();
     lines[linePos[i] -1].cars[i] = sf::Sprite();
     lines[linePos[i]].cars[i] = cars[i].sprite;
     lines[linePos[i]].carsX[i] = XPos[i];
     linePos[i]++;
-    std::this_thread::sleep_for (std::chrono::milliseconds(1s/*int((1/speeds)*1000)*/));
     clock.restart();
     
     
