@@ -281,10 +281,9 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
 
   while(!gameOver){
-    std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    std::this_thread::sleep_for (std::chrono::milliseconds(1s/*int((1/speeds)*1000)*/));
 
     int diff = linePos[i] - startPos;
-    std::cout << "diff" <<diff<< std::endl;
     
 
     if(linePos[i]+1 >= lines.size()) linePos[i] = 0;
@@ -297,7 +296,6 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
    
     if(cars[i].colision){ // si ha colisionado, gestionamos
       if(cars[i].colisionSprite == 10){ // acaba de colisionar lo mandamos lejos
-      std::cout << "lastcol" << std::endl;
       lines[linePos[i]-1].cars[i] = sf::Sprite();
       linePos[i] += 100;
       if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta

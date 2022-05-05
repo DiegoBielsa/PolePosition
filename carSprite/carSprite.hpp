@@ -126,7 +126,7 @@ struct carSpriteIA{
       }else{
         sprite.setTexture(texCarExp[colisionSprite]);
         if(colisionSprite >= 3){
-            sprite.setPosition((width/2-car_width) -225,400);
+            sprite.setPosition((width/2-car_width)*1.5,300);
           }else{
             sprite.setPosition(width/2-car_width*1.5,600);
           }
