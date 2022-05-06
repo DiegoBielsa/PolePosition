@@ -87,7 +87,7 @@ string key[] = {"A","B","C","D", "E","F", "G", "H", "I", "J", "K", "L", "M", "N"
 
 void updateSound(int& speed,   vector<Sound>& sounds ){
     float pitch = ((float(speed)/maxSpeed));
-    cout<<pitch<<endl;
+    //cout<<pitch<<endl;
     if(pitch < 0.05){
         sounds[5].setPitch(0.05f);
     }
@@ -325,9 +325,9 @@ int main() {
     }
     
 
-    IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
+    //IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
 
-
+    bool doJoin = true;
     
     while (true) {
         switch (estado)
@@ -344,6 +344,8 @@ int main() {
             tiempoparafin.restart();
             posicionPuntuacion = 0;
             color = 0;
+            doJoin = true;
+            IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
@@ -377,11 +379,12 @@ int main() {
 
                 int camH, maxy;
                 float x, dx;
-                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 if(prepare){
+                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                     drawPrepare(app,object, prepare);
                 }else{
                     manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 }
                 sf::Time elapsed = clock.getElapsedTime();
             
@@ -416,6 +419,14 @@ int main() {
 
                 if (gameOver == true) {
                     drawGameOver(app);
+                    // al ser un bucle se ejecuta muchas veces
+                    if(doJoin){
+                        for(int i = 0; i < numCars; i++){
+                            threads[i].join();
+                        }
+                    }
+                    
+                    doJoin = false;
                 }
 
 
@@ -469,7 +480,43 @@ int main() {
             pos = 0;
             playerX = 0;
             speed = 0;
+            doJoin = true;
             terminar = false;
+            for (int i = 0; i < numCars; i++) {
+                if (i == carPosition) {
+                    if (posIA % 2 == 0) playerX = -0.5;
+                    else playerX = 0.6;
+                    pos = segL * (goalPosIni-20 - carPosition*7);
+                    posIA++;
+
+                }
+                int k = 0;
+                car_arr[i].init();
+                if (posIA % 2 == 0) {
+                    XPos[i] = -0.7;
+                    if(carPosition < 8 && carPosition%2 == 0) {
+                        car_arr[i].car_dir = 0;
+                        car_arr[i].actualTex = 0;
+                    }else{
+                        car_arr[i].car_dir = 1;
+                    }
+                    
+                }
+                else {
+                    XPos[i] = 0.4;
+                    if(carPosition < 8 && carPosition%2 != 0) {
+                        car_arr[i].car_dir = 0;
+                        car_arr[i].actualTex = 0;
+                    }else{
+                        car_arr[i].car_dir = -1;
+                        car_arr[i].car_inv = true;
+                    }
+                    
+                }
+                linePos[i] = (goalPosIni-2) - i * 7;
+                posIA++;
+            }
+            IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
@@ -500,8 +547,9 @@ int main() {
 
                 int startPos, camH, maxy;
                 float x, dx;
-                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                //updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 sf::Time elapsed = clock.getElapsedTime();
                 bool metacruz = false;
                 comprobarMeta(startPos, goalPosIni, metacruz,speed);
@@ -537,6 +585,14 @@ int main() {
 
                 if (gameOver == true) {
                     drawGameOver(app);
+                    if(doJoin){
+                        for(int i = 0; i < numCars; i++){
+                            std::cout << "join " << i << std::endl;
+                            threads[i].join();
+                        }
+                    }
+                    
+                    doJoin = false;
                 }
 
 
@@ -630,14 +686,12 @@ int main() {
                     app.setView(view);
                 }
                 if (tiempoparafin.getElapsedTime().asSeconds() < 10) {//esperamos 10 segundos para terminar
-                //std::cout << "a" << std::endl;
                     app.clear(Color(227, 187, 107));
                     
                     drawInicio(app,color);
                     
                 }
                 else {
-                   std::cout << "a" << std::endl;
                     estado = 4;
                     terminar = true;
                 }

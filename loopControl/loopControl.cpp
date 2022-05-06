@@ -50,7 +50,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
         if(speed > 300){
           float centripetal_force = ((speed/maxSpeed)) * floatAbs(lines[startPos].curve);
           float actual_draft_power = draft_power * centripetal_force;
-          std::cout<<"actual "<<actual_draft_power<<std::endl;
+          //std::cout<<"actual "<<actual_draft_power<<std::endl;
           if (actual_draft_power > 0.032){
             playerX += 3 * turn_power * ((float(speed)/maxSpeed));
             sounds[6].play();
@@ -78,7 +78,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
         if(speed > 300){
           float centripetal_force = ((speed/maxSpeed)) * floatAbs(lines[startPos].curve);
           float actual_draft_power = draft_power * centripetal_force;
-          std::cout<<"actual "<<actual_draft_power<<std::endl;
+          //std::cout<<"actual "<<actual_draft_power<<std::endl;
           if (actual_draft_power > 0.032){
             playerX -= 3 * turn_power * ((float(speed)/maxSpeed));
             sounds[6].play();
@@ -499,6 +499,13 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     
     
   }
+  
+  lines[linePos[i] -1].cars[i] = sf::Sprite();
+  lines[linePos[i] +1].cars[i] = sf::Sprite();
+  lines[linePos[i]].cars[i] = sf::Sprite();
+  lines[lines.size()].cars[i] = sf::Sprite();
+  lines[lines.size()-1].cars[i] = sf::Sprite();
+  lines[lines.size()-2].cars[i] = sf::Sprite();
 }
 
 void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], carSpriteIA cars[], int numCars, int i){
@@ -676,6 +683,12 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     
     
   }
+  lines[linePos[i] -1].cars[i] = sf::Sprite();
+  lines[linePos[i] +1].cars[i] = sf::Sprite();
+  lines[linePos[i]].cars[i] = sf::Sprite();
+  lines[lines.size()].cars[i] = sf::Sprite();
+  lines[lines.size()-1].cars[i] = sf::Sprite();
+  lines[lines.size()-2].cars[i] = sf::Sprite();
 }
 
 void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSpriteIA cars[], int numCars, int i){
@@ -897,6 +910,12 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     }
     
     
+  lines[linePos[i] -1].cars[i] = sf::Sprite();
+  lines[linePos[i] +1].cars[i] = sf::Sprite();
+  lines[linePos[i]].cars[i] = sf::Sprite();
+  lines[lines.size()].cars[i] = sf::Sprite();
+  lines[lines.size()-1].cars[i] = sf::Sprite();
+  lines[lines.size()-2].cars[i] = sf::Sprite();
   
 }
 
