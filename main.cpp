@@ -79,7 +79,6 @@ int posicionPuntuacion = 0; // posicion de nuestra puntuacion
 bool prepare = true;
 
 int mapa; //mapa a elegir
-int iaMode = 0; //ia a elegir
 
 string nombre[] = { "A","A","A" };
 string key[] = {"A","B","C","D", "E","F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -172,7 +171,7 @@ int main() {
 
 
 
-
+    
     Texture bg;
     bg.loadFromFile("sprites/entorno/backgroundMountains.png");
     bg.setRepeated(false);
@@ -261,10 +260,12 @@ int main() {
     sound10.setBuffer(buffer10);
     sounds.push_back(sound10);
     
+    
 
     
 
     setMaps(maps, object);
+    
 
   
 
@@ -322,6 +323,7 @@ int main() {
         linePos[i] = (goalPosIni-2) - i * 7;
         posIA++;
     }
+    
 
     IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
 
@@ -331,6 +333,7 @@ int main() {
         switch (estado)
         {
         case 0://clasificacion
+        
 
 
             sounds[9].play();
@@ -627,13 +630,14 @@ int main() {
                     app.setView(view);
                 }
                 if (tiempoparafin.getElapsedTime().asSeconds() < 10) {//esperamos 10 segundos para terminar
+                //std::cout << "a" << std::endl;
                     app.clear(Color(227, 187, 107));
                     
                     drawInicio(app,color);
                     
                 }
                 else {
-                   
+                   std::cout << "a" << std::endl;
                     estado = 4;
                     terminar = true;
                 }
