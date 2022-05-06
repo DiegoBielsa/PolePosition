@@ -420,8 +420,10 @@ int main() {
                 if (gameOver == true) {
                     drawGameOver(app);
                     // al ser un bucle se ejecuta muchas veces
+                    
                     if(doJoin){
                         for(int i = 0; i < numCars; i++){
+                            std::cout << "join " << i << std::endl;
                             threads[i].join();
                         }
                     }

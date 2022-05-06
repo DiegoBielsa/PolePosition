@@ -47,12 +47,13 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
       if(speed>0){
         car.maxTex = car.maxTexUsualTurn;
         if(!car.car_inv) playerX += turn_power * ((float(speed)/maxSpeed));
-        if(speed > 300){
+        if(speed > maxSpeed-50){
           float centripetal_force = ((speed/maxSpeed)) * floatAbs(lines[startPos].curve);
           float actual_draft_power = draft_power * centripetal_force;
           //std::cout<<"actual "<<actual_draft_power<<std::endl;
           if (actual_draft_power > 0.032){
             playerX += 3 * turn_power * ((float(speed)/maxSpeed));
+            car.maxTex = 23;
             sounds[6].play();
           }else{
             playerX += turn_power * ((float(speed)/maxSpeed));
@@ -75,12 +76,13 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
       if(speed > 0){
         car.maxTex = car.maxTexUsualTurn;
         if(car.car_inv) playerX -= turn_power * ((float(speed)/maxSpeed));
-        if(speed > 300){
+        if(speed > maxSpeed-50){
           float centripetal_force = ((speed/maxSpeed)) * floatAbs(lines[startPos].curve);
           float actual_draft_power = draft_power * centripetal_force;
           //std::cout<<"actual "<<actual_draft_power<<std::endl;
           if (actual_draft_power > 0.032){
             playerX -= 3 * turn_power * ((float(speed)/maxSpeed));
+            car.maxTex = 23;
             sounds[6].play();
           }else{
             playerX -= turn_power * ((float(speed)/maxSpeed));
@@ -270,26 +272,29 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
 
 
   car.updateCarSprite();
+  
 
-  bool colisiona = lines[(startPos+10)%N].localBounds.intersects(car.sprite.getGlobalBounds()) || lines[(startPos+11)%N].localBounds.intersects(car.sprite.getGlobalBounds());
+  bool colisiona = lines[(startPos+20)%N].localBounds.intersects(car.sprite.getGlobalBounds()) || lines[(startPos+21)%N].localBounds.intersects(car.sprite.getGlobalBounds());
   int whocol=0;
-  if(lines[(startPos+10)%N].localBounds.intersects(car.sprite.getGlobalBounds())){
+  if(lines[(startPos+20)%N].localBounds.intersects(car.sprite.getGlobalBounds())){
     whocol = 0;
-  }else if(lines[(startPos+11)%N].localBounds.intersects(car.sprite.getGlobalBounds())){
+  }else if(lines[(startPos+21)%N].localBounds.intersects(car.sprite.getGlobalBounds())){
     whocol = 1;
   }
+  std::cout << lines[(startPos+20 + whocol)%N].sprite_type << std::endl;
   if(!colisiona){//no choca
       //actualizar sprite
     
     app.draw(car.sprite);
-  }else if(lines[(startPos+10 + whocol)%N].sprite_type == 0){
+  }else if(lines[(startPos+20 + whocol)%N].sprite_type == 0){
     app.draw(car.sprite);
     car.colision = true;
     perderControl = true;
     sounds[1].play();
-  }else if(lines[(startPos+10 + whocol)%N].sprite_type == 2){//meta
+  }else if(lines[(startPos+20 + whocol)%N].sprite_type == 2){//meta
     app.draw(car.sprite);
-  }else if(lines[(startPos+10 + whocol)%N].sprite_type == 3){//charco
+  }else if(lines[(startPos+20 + whocol)%N].sprite_type == 3){//charco
+  std::cout << "charco" << std::endl;
     charco = true;
     app.draw(car.sprite);
   }
@@ -501,9 +506,8 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   }
   
   lines[linePos[i] -1].cars[i] = sf::Sprite();
-  lines[linePos[i] +1].cars[i] = sf::Sprite();
+  if(linePos[i]+1 < lines.size())lines[linePos[i] +1].cars[i] = sf::Sprite();
   lines[linePos[i]].cars[i] = sf::Sprite();
-  lines[lines.size()].cars[i] = sf::Sprite();
   lines[lines.size()-1].cars[i] = sf::Sprite();
   lines[lines.size()-2].cars[i] = sf::Sprite();
 }
@@ -684,9 +688,8 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     
   }
   lines[linePos[i] -1].cars[i] = sf::Sprite();
-  lines[linePos[i] +1].cars[i] = sf::Sprite();
+  if(linePos[i]+1 < lines.size())lines[linePos[i] +1].cars[i] = sf::Sprite();
   lines[linePos[i]].cars[i] = sf::Sprite();
-  lines[lines.size()].cars[i] = sf::Sprite();
   lines[lines.size()-1].cars[i] = sf::Sprite();
   lines[lines.size()-2].cars[i] = sf::Sprite();
 }
@@ -911,9 +914,8 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     
     
   lines[linePos[i] -1].cars[i] = sf::Sprite();
-  lines[linePos[i] +1].cars[i] = sf::Sprite();
+  if(linePos[i]+1 < lines.size())lines[linePos[i] +1].cars[i] = sf::Sprite();
   lines[linePos[i]].cars[i] = sf::Sprite();
-  lines[lines.size()].cars[i] = sf::Sprite();
   lines[lines.size()-1].cars[i] = sf::Sprite();
   lines[lines.size()-2].cars[i] = sf::Sprite();
   
