@@ -1,8 +1,39 @@
 #include "Pantallaranking.hpp"
 
+void selectName(string name[], string key[],int& letra,int& iterador, bool& terminar, bool& haCambiado,Clock& clock) {
+
+    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+        clock.restart();
+        if (Keyboard::isKeyPressed(Keyboard::Up)) {
+            if (letra != 0) {
+                letra = letra - 1;
+                haCambiado = 1;
+            }
 
 
-void drawRanking(RenderWindow& app,string puntuaciones[],int lim,int scoreentero) {
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Down)) {
+            if (letra != 25) {
+                letra = letra + 1;
+                haCambiado = 1;
+            }
+
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (iterador != 2) {
+                iterador = iterador + 1;
+            }
+            else {
+                terminar = true;
+            }
+        }
+        name[iterador] = key[letra];
+    }
+    
+}
+
+
+void drawRanking(RenderWindow& app,string puntuaciones[], string nombres[],int& lim,int& scoreentero, int& posicionPuntuacion,int& color) {
     sf::Text score;
     sf::Text scorenumber;
     sf::Text timenumber;
@@ -129,7 +160,7 @@ void drawRanking(RenderWindow& app,string puntuaciones[],int lim,int scoreentero
         j.setString(numero);
         s.setString(puntuaciones[i]);
         t.setString("0");
-        n.setString("Juan");
+        n.setString(nombres[i]);
 
         j.setCharacterSize(50);
         s.setCharacterSize(50);
@@ -143,10 +174,36 @@ void drawRanking(RenderWindow& app,string puntuaciones[],int lim,int scoreentero
         n.setPosition(630, altura);
 
         // set the color
-        j.setFillColor(sf::Color::White);
-        s.setFillColor(sf::Color::White);
-        t.setFillColor(sf::Color::White);
-        n.setFillColor(sf::Color::White);
+        if (i != posicionPuntuacion) {
+            j.setFillColor(sf::Color::White);
+            s.setFillColor(sf::Color::White);
+            t.setFillColor(sf::Color::White);
+            n.setFillColor(sf::Color::White);
+        }
+        else if(i== posicionPuntuacion &&(color==0 || color ==1)) {
+            j.setFillColor(sf::Color::Yellow);
+            s.setFillColor(sf::Color::Yellow);
+            t.setFillColor(sf::Color::Yellow);
+            n.setFillColor(sf::Color::Yellow);
+             color++;
+        }
+        else if (i == posicionPuntuacion && (color == 2)) {
+            j.setFillColor(sf::Color::Red);
+            s.setFillColor(sf::Color::Red);
+            t.setFillColor(sf::Color::Red);
+            n.setFillColor(sf::Color::Red);
+            color++;
+        }
+        else if (i == posicionPuntuacion && (color == 3 || color == 4)) {
+            j.setFillColor(sf::Color::White);
+            s.setFillColor(sf::Color::White);
+            t.setFillColor(sf::Color::White);
+            n.setFillColor(sf::Color::White);
+            if (color == 4) {
+                color = 0;
+            }
+            else { color++; }
+        }
 
 
         app.draw(j);
@@ -203,6 +260,18 @@ void drawInicio(RenderWindow& app,int& color){
     app.draw(fondonumdos);
     app.draw(numdos);
     app.draw(letra);
+
+}
+
+void drawPrepare(RenderWindow& app,Sprite object[], bool& prepare){
+    object[16].move(sf::Vector2f(-16,0));
+
+    if(object[16].getPosition().x > -1000){
+        app.draw(object[16]);
+    }else{
+        prepare = false;
+    }
+    //app.draw(globo);
 
 }
 
@@ -600,3 +669,156 @@ void drawIa(RenderWindow& app, int& color, int iaMode) {
 
 }
 
+void colorear(sf::Text& texto, int& color) {
+    if (color == 0 || color == 1) {
+        texto.setFillColor(sf::Color::Blue);
+        color++;
+    }
+
+    else if (color == 2 || color == 3) {
+        texto.setFillColor(sf::Color::Yellow);
+        color++;
+    }
+    else if (color == 4 || color == 5 || color == 6) {
+        texto.setFillColor(sf::Color::Red);
+        color++;
+    }
+    else { //blanco
+        color = 0;
+    }
+
+}
+void drawResultadosClas(RenderWindow& app,Time tiempo, int& posicionSalida,int& bon,int& color,int parpadeo) {
+    sf::Text lapnumber;
+    sf::Text position;
+    sf::Text uno;
+    sf::Text dos;
+    sf::Text tres;
+    sf::Text cuatro;
+    sf::Text cinco;
+    sf::Text seis;
+    sf::Text siete;
+    sf::Text ocho;
+    sf::Text bonus;
+
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    // select the font
+
+    lapnumber.setFont(font);
+    position.setFont(font);
+    uno.setFont(font);
+    dos.setFont(font);
+    tres.setFont(font);
+    cuatro.setFont(font);
+    cinco.setFont(font);
+    seis.setFont(font);
+    siete.setFont(font);
+    ocho.setFont(font);
+    bonus.setFont(font);
+
+
+    int seconds2 = tiempo.asSeconds();
+    int mili = tiempo.asMilliseconds();
+    while (mili > 1000) {
+        mili = mili - 1000;
+    }
+
+    String minu = inttostring(mili);
+    String sec = inttostring(seconds2);
+    lapnumber.setString("LAP TIME "+sec + ". " + minu);
+
+    position.setString("POSITION");
+    uno.setString("1");
+    dos.setString("2");
+    tres.setString("3");
+    cuatro.setString("4");
+    cinco.setString("5");
+    seis.setString("6");
+    siete.setString("7");
+    ocho.setString("8");
+
+    String puntu= inttostring(bon);
+    bonus.setString("BONUS "+puntu);
+
+
+    if (parpadeo == 0) {
+        colorear(lapnumber, color);
+    }
+    else if(parpadeo == 1){
+        colorear(position, color);
+        if (posicionSalida == 0) {
+            colorear(uno, color);
+        }
+        else if (posicionSalida == 1) {
+            colorear(dos, color);
+        }
+        else if (posicionSalida == 2) {
+            colorear(tres, color);
+        }
+        else if (posicionSalida == 3) {
+            colorear(cuatro, color);
+        }
+        else if (posicionSalida == 4) {
+            colorear(cinco, color);
+        }
+        else if (posicionSalida == 5) {
+            colorear(seis, color);
+        }
+        else if (posicionSalida == 6) {
+            colorear(siete, color);
+        }
+        else if (posicionSalida == 7) {
+            colorear(ocho, color);
+        }
+
+    }
+    else if(parpadeo==2) {
+        colorear(bonus, color);
+    }
+
+
+    
+  
+
+
+    lapnumber.setCharacterSize(50);
+    position.setCharacterSize(50);
+    uno.setCharacterSize(50);
+    dos.setCharacterSize(50);
+    tres.setCharacterSize(50);
+    cuatro.setCharacterSize(50);
+    cinco.setCharacterSize(50);
+    seis.setCharacterSize(50);
+    siete.setCharacterSize(50);
+    ocho.setCharacterSize(50);
+    bonus.setCharacterSize(50);
+
+
+    lapnumber.setPosition(350, 450);
+    position.setPosition(230, 500);
+    uno.setPosition(440, 500);
+    dos.setPosition(485, 500);
+    tres.setPosition(530, 500);
+    cuatro.setPosition(575, 500);
+    cinco.setPosition(620, 500);
+    seis.setPosition(665, 500);
+    siete.setPosition(710, 500);
+    ocho.setPosition(755, 500);
+    bonus.setPosition(400, 550);
+
+
+
+    app.draw(lapnumber);
+    app.draw(position);
+    app.draw(uno);
+    app.draw(dos);
+    app.draw(tres);
+    app.draw(cuatro);
+    app.draw(cinco);
+    app.draw(seis);
+    app.draw(siete);
+    app.draw(ocho);
+    app.draw(bonus);
+}

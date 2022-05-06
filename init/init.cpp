@@ -1,6 +1,7 @@
 #include "init.hpp"
 
 
+
 void setConfig(){
   std::string file = "config/config.conf";
   std::ifstream f(file);
@@ -547,3 +548,4 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
 void loadTextures(){
 
 }
+

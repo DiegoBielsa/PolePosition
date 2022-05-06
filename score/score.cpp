@@ -26,27 +26,32 @@ sf::Vector2f scaleToFit( const sf::Vector2f& in, const sf::Vector2f& clip )
 
 
 
-void leerPuntuaciones(string puntuaciones[], int numero) {
-
+void leerPuntuaciones(string puntuaciones[], int numero,int iaMode) {
+    int j = iaMode;
     fstream f;
     string number = inttostring(numero);
     f.open("ficheros/puntuaciones"+number+".txt");
     if (f.is_open()) {
         int i = 0;
         string cadena;
-        getline(f, cadena, '\n');
-        while (!f.eof() && i < 7) {
+        while (j > 0) {
+            getline(f, cadena, '\n');       //leemos las anteriores ias
+            j--;
+        }
+        getline(f, cadena, ' ');
+        while (!f.eof() && i < 6) {
             puntuaciones[i] = cadena;
-            i++;
-            getline(f, cadena, '\n');
-        }
-        if (i < 7) {
-            while (i < 7) {
-                puntuaciones[i] = "0";
-                i++;
-                f << "0000" << endl;
+            if (i == 5) {
+                getline(f, cadena, '\n');
+
             }
+            else {
+                getline(f, cadena, ' ');
+            }
+            i++;
+
         }
+        puntuaciones[6] = cadena;
         f.close();
 
     }
@@ -55,6 +60,8 @@ void leerPuntuaciones(string puntuaciones[], int numero) {
     }
 
 }
+
+
 
 
 String inttostring(int entero) {
@@ -105,7 +112,7 @@ void leerLimite(int &limite, int numero) {
 
 }
 
-void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int puntu, Time& elapsed, int& limite,bool& gameOver) {
+void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int puntu, Time& elapsed, int& limite,bool& gameOver, Time& final, bool& noClasifica) {
     sf::Text top;
     sf::Text topnumber;
     sf::Text score;
@@ -153,6 +160,7 @@ void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int pu
     }
     else {
         timenumber.setString("0");
+        noClasifica = true;
         gameOver = true;
     }
 
@@ -171,6 +179,7 @@ void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int pu
         tiempo = elapsed;
 
     }
+    final = tiempo;
     int seconds2 = tiempo.asSeconds();
     int mili = tiempo.asMilliseconds();
     while (mili > 1000) {
@@ -179,7 +188,7 @@ void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int pu
 
     String minu = inttostring(mili);
     String sec = inttostring(seconds2);
-    lapnumber.setString(sec + "''" + minu);
+    lapnumber.setString(sec + ". " + minu);
     score.setString("SCORE");
     String puntuacion= inttostring(puntu);
     scorenumber.setString(puntuacion);
@@ -295,13 +304,14 @@ sf::View getLetterboxView(sf::View view, int windowWidth, int windowHeight) {
     return view;
 
 }
-void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver) {
+void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver,int iaMode) {
+    int multiIa = iaMode + 1;
     if (gameOver != true) {
         int v = velocidad - 50;
         if (v < 0) {
             v = 0;
         }
-        int punt = 1 * v;
+        int punt = 1 * v/10;
         score = score + punt;
     }
     else if (gameOver == true && control == false) {
@@ -310,37 +320,42 @@ void calcularScore(int& score, int velocidad,int lim,int limite,bool gameOver) {
         if (multi < 1.0) {
             multi = 1.0;
         }
-        score = score * multi;
+        score = score * multi * multiIa;
     }
 }
-void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero) {
+void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero,int& posicionPuntuacion,int iaMode) {
     string number = inttostring(numero);
+    std::vector<std::string> copia;
     bool esMejor = false;
     int i = 0;
     while(!esMejor && i<7) {
         int c = stringtoint(puntuaciones[i]);
         if (puntuacion > c) {
             esMejor = true;
+            
         }
         else {
             i++;
         }
     }
+    posicionPuntuacion = i;
     if (esMejor == true) {
         for (int j = 6;j > i;j--) { //desplazamos todos a la derecha
             puntuaciones[j] = puntuaciones[j - 1];
         }
         puntuaciones[i] = inttostring(puntuacion);
+        int j = iaMode;
         fstream f;
         f.open("ficheros/puntuaciones" + number + ".txt");
         if (f.is_open()) {
-            int z = 0;
-            while ( z < 7) {
-                f << puntuaciones[z];
-                f << '\n';
-                z++;
+            string cadena = "";
+            getline(f, cadena, '\n');
+            while (!f.eof()) {
+                copia.push_back(cadena);
+                getline(f, cadena, '\n');
             }
-            
+            copia.push_back(cadena);
+
 
             f.close();
 
@@ -348,7 +363,196 @@ void escribirPuntuaciones(string puntuaciones[],int puntuacion,int numero) {
         else {
             cerr << "no se ha podido abrir fichero puntuaciones" << endl;
         }
+
+        copia.size();
+        copia[iaMode] = puntuaciones[0] + " " + puntuaciones[1] + " " + puntuaciones[2] + " " + puntuaciones[3] + " " + puntuaciones[4] + " " + puntuaciones[5] + " " + puntuaciones[6];
+
+        ofstream ofs;
+        ofs.open("ficheros/puntuaciones" + number + ".txt", std::ofstream::out | std::ofstream::trunc);
+        ofs.close();
+
+        fstream f2;
+        f2.open("ficheros/puntuaciones" + number + ".txt");
+        if (f2.is_open()) {
+
+            f2 << copia[0] << "\n";
+            f2 << copia[1] << "\n";
+            f2 << copia[2] << "\n";
+
+
+
+            f2.close();
+        }
+        else { cerr << "no se ha podido abrir fichero puntuaciones" << endl; }
+ 
     }
    
 
+}
+
+void escribirNombres(string nombres[], int numero,int iaMode) {
+    int j = iaMode;
+    std::vector<std::string> copia;
+    string number = inttostring(numero);
+        fstream f;
+        f.open("ficheros/nombres" + number + ".txt");
+        if (f.is_open()) {
+            string cadena = "";
+                getline(f, cadena, '\n');
+                while (!f.eof()) {
+                    copia.push_back(cadena);
+                    getline(f, cadena, '\n');
+                }
+                copia.push_back(cadena);
+
+               
+            f.close();
+            
+        }
+        else {
+            cerr << "no se ha podido abrir fichero nombres" << endl;
+        }
+      
+        copia.size();
+        copia[iaMode] = nombres[0] + " " + nombres[1] + " " + nombres[2] + " " + nombres[3] + " " + nombres[4] + " " + nombres[5] + " " + nombres[6];
+    
+        ofstream ofs;
+        ofs.open("ficheros/nombres" + number + ".txt", std::ofstream::out | std::ofstream::trunc);
+        ofs.close();
+
+        fstream f2;
+        f2.open("ficheros/nombres" + number + ".txt");
+        if (f2.is_open()) {
+            
+            f2 << copia[0] << "\n";
+            f2 << copia[1] << "\n";
+            f2 << copia[2] << "\n";
+
+
+
+            f2.close();
+        }
+        else { cerr << "no se ha podido abrir fichero nombres2" << endl; }
+
+
+}
+
+void leerNombres(string nombres[], int numero,int iaMode) {
+    int j = iaMode;
+    fstream f;
+    string number = inttostring(numero);
+    f.open("ficheros/nombres" + number + ".txt");
+    if (f.is_open()) {
+        int i = 0;
+        string cadena;
+        while (j > 0) {
+            getline(f, cadena, '\n');       //leemos las anteriores ias
+            j--;
+        }
+        getline(f, cadena, ' ');
+        while (!f.eof() && i < 6) {
+            nombres[i] = cadena;
+            if (i == 5) {
+                getline(f, cadena, '\n');
+
+            }
+            else{
+                getline(f, cadena, ' ');
+            }
+            i++;
+            
+        }
+        nombres[6] = cadena;
+       
+        f.close();
+
+    }
+    else {
+        cerr << "no se ha podido abrir fichero nombres3" << endl;
+    }
+
+}
+
+
+void leerClasificaciones(string clas[], int numero, int iaMode) {
+    int j = iaMode;
+    fstream f;
+    string number = inttostring(numero);
+    f.open("ficheros/clasificaciones" + number + ".txt");
+    if (f.is_open()) {
+        int i = 0;
+        string cadena;
+        while (j > 0) {
+            getline(f, cadena, '\n');       //leemos las anteriores ias
+            j--;
+        }
+        getline(f, cadena, ' ');
+        while (!f.eof() && i < 7) {
+            clas[i] = cadena;
+            if (i == 6) {
+                getline(f, cadena, '\n');
+
+            }
+            else {
+                getline(f, cadena, ' ');
+            }
+            i++;
+
+        }
+        clas[7] = cadena;
+
+        f.close();
+
+    }
+    else {
+        cerr << "no se ha podido abrir fichero clasificaciones" << endl;
+    }
+
+}
+
+void calcularPosclasificacion(string clas[], Time tiempo, int& posicionClasi, bool noClasifica) {
+    if (noClasifica == true) {
+        posicionClasi = 8;
+    }
+    else {
+        bool esMejor = false;
+        int i = 0;
+        int seconds2 = tiempo.asSeconds();
+        int mili = tiempo.asMilliseconds();
+        while (mili > 1000) {
+            mili = mili - 1000;
+        }
+
+        string minu = inttostring(mili);
+        string sec = inttostring(seconds2);
+        string mix = (sec + "," + minu);
+        int puntuacion = stringtoint(mix);
+        while (!esMejor && i < 7) {
+            int c = stringtoint(clas[i]);
+            if (puntuacion < c) {
+                esMejor = true;
+
+            }
+            else {
+                i++;
+            }
+        }
+        posicionClasi = i;
+
+    }
+}
+
+void calcularBonusExtra(int posicionSalida, int iaMode,int& bonus) {
+    bonus = 0;
+    if (posicionSalida < 7) {
+        int i = posicionSalida;
+        while (i < 7) {
+            bonus = bonus + 1000;
+            i++;
+        }
+        bonus = bonus * (iaMode + 1);
+    }
+    else {
+        bonus = 0;
+    }
 }

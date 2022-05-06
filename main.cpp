@@ -1,7 +1,10 @@
 #pragma once
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Audio.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include <iostream>
@@ -21,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 0;
+int estado = 3;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -38,6 +41,7 @@ float turn_power;
 float draft_power;
 float goalPosIni;
 float goalPosEnd;
+int color = 0;
 
 int speed = 0;
 bool marchaBaja = true;
@@ -56,6 +60,12 @@ int iaMode;
 float off_road_allowed_cars;
 int carPosition;
 int startPos;
+Clock actualizar;
+Time tiempoFinal;
+int posicionSalida = 0;//posicion desde la que saldremos
+int bonus = 0;
+bool noClasifica = false;
+
 
 
 Time tiempoconseguido;
@@ -64,10 +74,28 @@ int score = 0;
 bool esPrimeravez = true; //para saber si hemos pasado la meta por primera vez
 bool metacruz = false;
 bool antmetacruz = false; //para ver si estamos parados en la meta
+bool pulsada = 0; //letra pulsada
+int posicionPuntuacion = 0; // posicion de nuestra puntuacion
+bool prepare = true;
 
 int mapa; //mapa a elegir
+int iaMode = 0; //ia a elegir
+
+string nombre[] = { "A","A","A" };
+string key[] = {"A","B","C","D", "E","F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
 /*------------------------------- FIN FUNCIONES DE CONTROL DEL BUCLE PRINCIPAL -------------------------------*/
+
+void updateSound(int& speed,   vector<Sound>& sounds ){
+    float pitch = ((float(speed)/maxSpeed));
+    cout<<pitch<<endl;
+    if(pitch < 0.05){
+        sounds[5].setPitch(0.05f);
+    }
+    else{
+        sounds[5].setPitch(pitch);
+    }
+}
 
 int main() {
     //INICIALIZANDO EL JUEGO
@@ -82,12 +110,19 @@ int main() {
     bool restart = false;
 
     string puntuaciones[7];
-    leerPuntuaciones(puntuaciones, mapa);
+    string nombres[7];
+    string clasificaciones[8];
+
+  
+
+  
+    int letra = 0; //para saber en que letra estamos
+    int iterador = 0; //para saber en que posicion de AAA estamos
     int limite = 0;
 
 
-    leerLimite(limite, mapa);
-    int lim = limite; //variable que iremos restando para no tener que volver a leer el fichero cuando hacemos vuelta
+    
+    int lim = 0; //variable que iremos restando para no tener que volver a leer el fichero cuando hacemos vuelta
 
     Texture t[50];
     Sprite object[50];
@@ -129,6 +164,12 @@ int main() {
     t[15].loadFromFile("sprites/entorno/charcogrande.png");
     t[15].setSmooth(true);
     object[15].setTexture(t[15]);
+    t[16].loadFromFile("sprites/entorno/prepareto.png");
+    t[16].setSmooth(true);
+    object[16].setTexture(t[16]);
+    object[16].setPosition(width,200);
+    object[16].setScale(2,2);
+
 
 
 
@@ -141,11 +182,91 @@ int main() {
 
     std::vector<std::vector<Line>> maps; // esto es el conjunto de mapas
     std::vector<Line> lines; // esto es el mapa, 
+    vector<Sound> sounds;
+
+    SoundBuffer buffer;
+
+    if(!buffer.loadFromFile("audio/audio2.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    Sound sound;
+    sound.setBuffer(buffer);
+
+    //playSound(sound);
+    sounds.push_back(sound);
+    SoundBuffer buffer2;
+    Sound sound2;
+    if(!buffer2.loadFromFile("audio/crash.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound2.setBuffer(buffer2);
+    sounds.push_back(sound2);
+
+    SoundBuffer buffer3;
+    Sound sound3;
+    if(!buffer3.loadFromFile("audio/prepare.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound3.setBuffer(buffer3);
+    sounds.push_back(sound3);
+
+    SoundBuffer buffer4;
+    Sound sound4;
+    if(!buffer4.loadFromFile("audio/derrape.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound4.setBuffer(buffer4);
+    sounds.push_back(sound4);
+    SoundBuffer buffer5;
+    Sound sound5;
+    if(!buffer5.loadFromFile("audio/carengine.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound5.setBuffer(buffer5);
+    sounds.push_back(sound5);
+
+    SoundBuffer buffer6;
+    Sound sound6;
+    if(!buffer6.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound6.setBuffer(buffer6);
+    sounds.push_back(sound6);
+    SoundBuffer buffer7;
+    Sound sound7;
+    if(!buffer7.loadFromFile("audio/skidding.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound7.setBuffer(buffer7);
+    sounds.push_back(sound7);
+    SoundBuffer buffer8;
+    Sound sound8;
+    if(!buffer8.loadFromFile("audio/eleccion.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound8.setBuffer(buffer8);
+    sounds.push_back(sound8);
+    SoundBuffer buffer9;
+    Sound sound9;
+    if(!buffer9.loadFromFile("audio/carga.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound9.setBuffer(buffer9);
+    sounds.push_back(sound9);
+    SoundBuffer buffer10;
+    Sound sound10;
+    if(!buffer10.loadFromFile("audio/qualify.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound10.setBuffer(buffer10);
+    sounds.push_back(sound10);
+    
+
+    
 
     setMaps(maps, object);
 
-    // eleccion del mapa
-    lines = maps[mapa];
+  
 
     carSpriteIA car_arr[8];
     float XPos[8];
@@ -212,6 +333,14 @@ int main() {
         case 0://clasificacion
 
 
+            sounds[9].play();
+            sounds[5].setPitch(1.0f);
+            sounds[5].setLoop(true);
+            sounds[5].play();
+            terminar = false;
+            tiempoparafin.restart();
+            posicionPuntuacion = 0;
+            color = 0;
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
@@ -237,38 +366,45 @@ int main() {
                     // Update state of current key:
                     keyState[e.key.code] = false;
                 }
-                manageKeys(playerX, speed, H, car);
+                
+
+
+                updateSound(speed, sounds);
 
 
                 int camH, maxy;
                 float x, dx;
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-
+                if(prepare){
+                    drawPrepare(app,object, prepare);
+                }else{
+                    manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                }
                 sf::Time elapsed = clock.getElapsedTime();
+            
+                comprobarMeta(startPos, goalPosIni, metacruz,speed);
 
-                comprobarMeta(startPos, goalPosIni, metacruz);
-                if (metacruz == true && antmetacruz == false) {
-                    if (esPrimeravez == true) {
+                
+                if (metacruz == true && antmetacruz==false) {
+                    if (esPrimeravez==true) {
                         esPrimeravez = false;
                     }
                     else {
-                        clock.restart();  //cuando hagamos vuelta
-                        elapsed = clock.getElapsedTime();
-                        lim = limite;
+                        gameOver = true;
                     }
                 }
                 antmetacruz = metacruz;
-                calcularScore(score, speed, lim, limite, gameOver);
-
+                calcularScore(score, speed, lim, limite, gameOver,iaMode);
 
 
                 drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-                drawObjects(app, startPos, lines, N, car);
-                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
+                drawObjects(app, startPos, lines, N, car, sounds);
+                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver,tiempoFinal,noClasifica);
+                
                 //std::cout<<startPos<<std::endl;
-                if (startPos >= 3500 && startPos <= 3550) {
-                    gameOver = true;
-                }
+                //if (startPos >= 3500 && startPos <= 3550) {
+                  //  gameOver = true;
+                //}
                 drawGear(app, marchaBaja, marcha);
 
                 if (speed < 0) speed = 0;
@@ -280,13 +416,32 @@ int main() {
                 }
 
 
-                if (gameOver == true && restart == false) {
+                if (gameOver == true && restart == false ) {
                     tiempoparafin.restart();
-                    escribirPuntuaciones(puntuaciones, score, mapa);
+                    //escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion,iaMode);
+                    calcularPosclasificacion(clasificaciones, tiempoFinal, posicionSalida,noClasifica);
+                    calcularBonusExtra(posicionSalida, iaMode,bonus);
                     restart = true;
                 }
                 else if (gameOver == true && restart == true) {
-                    estado = 2;
+                    if (posicionSalida > 7 ) {
+                        estado = 2;
+                    }else{
+                        estado = 1;
+                    }
+                    
+                    if (tiempoparafin.getElapsedTime().asSeconds() < 3) {
+                        drawResultadosClas(app, tiempoFinal, posicionSalida,bonus, color,0);
+                    }
+                    else if (tiempoparafin.getElapsedTime().asSeconds() < 6) {
+                        drawResultadosClas(app, tiempoFinal, posicionSalida,bonus, color,1);
+
+                    }
+                    else if(tiempoparafin.getElapsedTime().asSeconds() < 9) {
+                        drawResultadosClas(app, tiempoFinal, posicionSalida,bonus, color, 2);
+                    }
+                    
+                    
                     if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
                         terminar = true;
                     }
@@ -305,12 +460,14 @@ int main() {
             int lap;
             lap = 0;
             gameOver = false;
+            restart = false;
             clock.restart();
             esPrimeravez = true;
             pos = 0;
             playerX = 0;
             speed = 0;
-            while (app.isOpen()) {
+            terminar = false;
+            while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
                     if (e.type == Event::Closed)
@@ -335,16 +492,16 @@ int main() {
                     // Update state of current key:
                     keyState[e.key.code] = false;
                 }
-                manageKeys(playerX, speed, H, car);
+                
 
 
                 int startPos, camH, maxy;
                 float x, dx;
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-
+                manageKeys(playerX, speed, H, car, lines, startPos, sounds);
                 sf::Time elapsed = clock.getElapsedTime();
                 bool metacruz = false;
-                comprobarMeta(startPos, goalPosIni, metacruz);
+                comprobarMeta(startPos, goalPosIni, metacruz,speed);
                 if (metacruz == true && antmetacruz == false) {
                     if (esPrimeravez == true) {
                         esPrimeravez = false;
@@ -352,7 +509,7 @@ int main() {
                     else {
                         clock.restart();  //cuando hagamos vuelta
                         elapsed = clock.getElapsedTime();
-                        lim = limite;
+                        lim = lim+limite;
                         lap++;
                         if (lap == 3) {
                             gameOver = true;
@@ -360,13 +517,13 @@ int main() {
                     }
                 }
                 antmetacruz = metacruz;
-                calcularScore(score, speed, lim, limite, gameOver);
+                calcularScore(score, speed, lim, limite, gameOver,iaMode);
 
 
 
                 drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-                drawObjects(app, startPos, lines, N, car);
-                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver);
+                drawObjects(app, startPos, lines, N, car, sounds);
+                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver,tiempoFinal,noClasifica);
                 //std::cout<<startPos<<std::endl;
 
                 drawGear(app, marchaBaja, marcha);
@@ -382,18 +539,18 @@ int main() {
 
                 if (gameOver == true && restart == false) {
                     tiempoparafin.restart();
-                    escribirPuntuaciones(puntuaciones, score, mapa);
+                    escribirPuntuaciones(puntuaciones, score, mapa,posicionPuntuacion,iaMode);
+                    cout << "posicionPuntuacion " << posicionPuntuacion << endl;
                     restart = true;
                 }
+     
+                
+                
                 else if (gameOver == true && restart == true) {
                     estado = 2;
-                    if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
-                        app.clear(Color(0, 0, 180));
-
-                        drawRanking(app, puntuaciones, lim, score);
-                        for (int i = 0; i < numCars; i++) threads[i].join();
-
-
+ 
+                    if (tiempoparafin.getElapsedTime().asSeconds() > 5) {//esperamos 10 segundos para terminar
+                        terminar = true;
                     }
                 }
 
@@ -404,8 +561,58 @@ int main() {
 
             break;
         case 2: //resultados clas
+           
             terminar = false;
             tiempoparafin.restart();
+            letra = 0;
+            color = 0;
+            actualizar.restart();
+            while (app.isOpen()&& !terminar) {
+ 
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                    app.clear(Color(44, 76, 116));
+                    bool haCambiado = 0;
+
+                    if (posicionPuntuacion >= 0 && posicionPuntuacion < 7) {
+                        selectName(nombre, key, letra, iterador, terminar, haCambiado, actualizar);
+
+
+                        nombres[posicionPuntuacion] = nombre[0] + nombre[1] + nombre[2];
+
+
+                        if (haCambiado == 1) {
+                            escribirNombres(nombres, mapa, iaMode);
+                            leerNombres(nombres, mapa, iaMode);
+                            haCambiado = 0;
+
+                        }
+                    }
+                    drawRanking(app, puntuaciones,nombres ,lim, score,posicionPuntuacion,color);
+                
+                if(terminar==true) {
+                    estado = 2;
+                    terminar = true;
+                    escribirNombres(nombres, mapa, iaMode);
+                }
+                app.display();
+            }
+            break;
+        case 3: //pantalla inicio
+            sounds[8].play();
+            terminar = false;
+            tiempoparafin.restart();
+            color = 0; //color de los sprites
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
@@ -419,15 +626,92 @@ int main() {
                     view = getLetterboxView(view, e.size.width, e.size.height);
                     app.setView(view);
                 }
-                if (tiempoparafin.getElapsedTime().asSeconds() < 5) {//esperamos 10 segundos para terminar
-                    app.clear(Color(0, 0, 180));
-
-                    drawRanking(app, puntuaciones, lim, score);
+                if (tiempoparafin.getElapsedTime().asSeconds() < 10) {//esperamos 10 segundos para terminar
+                    app.clear(Color(227, 187, 107));
+                    
+                    drawInicio(app,color);
+                    
                 }
                 else {
-                    estado = 1;
+                   
+                    estado = 4;
                     terminar = true;
                 }
+                app.display();
+            }
+            break;
+        case 4: //pantalla eleccioncircuito
+            sounds[7].play();
+            terminar = false;
+            tiempoparafin.restart();
+            color = 0; //color de los sprites
+            mapa = 0;
+            while (app.isOpen() && !terminar) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                app.clear(Color(44, 76, 116));
+
+                manageKeysCircuito(mapa,terminar);
+
+                drawCircuito(app, color,mapa);
+                if (terminar == true) {
+                    estado = 5;
+                    // eleccion del mapa
+                    lines = maps[mapa];
+                     N = lines.size();
+                }
+
+                
+                app.display();
+            }
+
+            break;
+        case 5: //pantalla eleccion ia
+            sounds[7].play();
+            terminar = false;
+            actualizar.restart();
+            tiempoparafin.restart();
+            color = 0; //color de los sprites
+            iaMode = 0;
+            pulsada = 0;
+            while (app.isOpen() && !terminar) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                app.clear(Color(44, 76, 116));
+                manageKeysIa(iaMode,terminar,actualizar);
+
+                drawIa(app, color,iaMode);
+                if (terminar == true) {
+                    estado = 0;
+                    leerPuntuaciones(puntuaciones, mapa,iaMode);
+                    leerClasificaciones(clasificaciones, mapa, iaMode);
+                    leerNombres(nombres, mapa,iaMode);
+                    leerLimite(limite, mapa);
+                    lim = limite;
+
+                }
+
+                
                 app.display();
             }
             break;

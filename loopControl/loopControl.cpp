@@ -18,8 +18,10 @@ void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
   w.draw(shape);
 }
 
-void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
+void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<Line>& lines,  int &startPos,  std::vector<Sound>& sounds){
   car.maxTex = car.maxTexNoKey;
+  static int contadorDer;
+  static int contadorIzq;
   car.car_status = 0;
   car.car_dir = 0;
   if(perderControl){
@@ -45,15 +47,56 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car){
       if(speed>0){
         car.maxTex = car.maxTexUsualTurn;
         if(!car.car_inv) playerX += turn_power * ((float(speed)/maxSpeed));
+        if(speed > 300){
+          float centripetal_force = ((speed/maxSpeed)) * floatAbs(lines[startPos].curve);
+          float actual_draft_power = draft_power * centripetal_force;
+          std::cout<<"actual "<<actual_draft_power<<std::endl;
+          if (actual_draft_power > 0.032){
+            playerX += 3 * turn_power * ((float(speed)/maxSpeed));
+            sounds[6].play();
+          }else{
+            playerX += turn_power * ((float(speed)/maxSpeed));
+          }
+          
+        }else{
+          playerX += turn_power * ((float(speed)/maxSpeed));
+        }
+        contadorDer = 30;
       }
       car.car_dir = 1;
+    }else{
+      if (contadorDer > 0) {
+        playerX += turn_power * sqrt((contadorDer) / (30*1.8));
+        contadorDer--;
+      }
+      
     }
     if (Keyboard::isKeyPressed(Keyboard::Left) && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - turn_power) * roadW) > (-roadW-off_road_allowed))){
       if(speed > 0){
         car.maxTex = car.maxTexUsualTurn;
         if(car.car_inv) playerX -= turn_power * ((float(speed)/maxSpeed));
+        if(speed > 300){
+          float centripetal_force = ((speed/maxSpeed)) * floatAbs(lines[startPos].curve);
+          float actual_draft_power = draft_power * centripetal_force;
+          std::cout<<"actual "<<actual_draft_power<<std::endl;
+          if (actual_draft_power > 0.032){
+            playerX -= 3 * turn_power * ((float(speed)/maxSpeed));
+            sounds[6].play();
+          }else{
+            playerX -= turn_power * ((float(speed)/maxSpeed));
+          }
+          
+        }else{
+          playerX -= turn_power * ((float(speed)/maxSpeed));
+        }
+        contadorIzq = 30;
       }
       car.car_dir = -1;
+    }else{
+      if (contadorIzq > 0) {
+        playerX -= turn_power * sqrt((contadorIzq) / (30*1.8));
+        contadorIzq--;
+      }
     }
     if (Keyboard::isKeyPressed(Keyboard::Up)){
       car.car_status = 1;
@@ -149,9 +192,9 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   maxy = height;
   x = 0, dx = 0;
 
-  if (startPos == 3500){//será goalposend
-    gameOver = true;
-  }
+  //if (startPos == 3500){//será goalposend
+    //gameOver = true;
+  //}
 }
 
 /**
@@ -215,7 +258,7 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 
 }
 
-void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car){
+void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car, std::vector<Sound>& sounds){
   ////////draw objects//////// hay que hacer 2 bucles para que dibuje los coches siempre encima
   for (int n = startPos + draw_distance; n > startPos; n--){
     lines[n % N].drawSprite(app);
@@ -227,17 +270,26 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
 
 
   car.updateCarSprite();
-  if(!car.sprite.getGlobalBounds().intersects(lines[(startPos+10)%N].localBounds)){//no choca
+
+  bool colisiona = lines[(startPos+10)%N].localBounds.intersects(car.sprite.getGlobalBounds()) || lines[(startPos+11)%N].localBounds.intersects(car.sprite.getGlobalBounds());
+  int whocol=0;
+  if(lines[(startPos+10)%N].localBounds.intersects(car.sprite.getGlobalBounds())){
+    whocol = 0;
+  }else if(lines[(startPos+11)%N].localBounds.intersects(car.sprite.getGlobalBounds())){
+    whocol = 1;
+  }
+  if(!colisiona){//no choca
       //actualizar sprite
     
     app.draw(car.sprite);
-  }else if(lines[(startPos+10)%N].sprite_type == 0){ // valla
+  }else if(lines[(startPos+10 + whocol)%N].sprite_type == 0){
     app.draw(car.sprite);
     car.colision = true;
     perderControl = true;
-  }else if(lines[(startPos+10)%N].sprite_type == 2){//meta
+    sounds[1].play();
+  }else if(lines[(startPos+10 + whocol)%N].sprite_type == 2){//meta
     app.draw(car.sprite);
-  }else if(lines[(startPos+10)%N].sprite_type == 3){//charco
+  }else if(lines[(startPos+10 + whocol)%N].sprite_type == 3){//charco
     charco = true;
     app.draw(car.sprite);
   }
@@ -257,14 +309,32 @@ void drawGear(RenderWindow& app, bool marcha_baja, Texture& marcha) {
     app.draw(march);
 
 }
-void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz) {
-    if ( startPos == goalPosIni) {
-        metacruz = true;
+void comprobarMeta(int& startPos, float& goalPosIni, bool& metacruz,int vel) {
+    if (vel > 50) {
+        bool encontrado = false;
+        int i = 0;
+        while (!encontrado && i < 11) {
+            if (startPos+i == goalPosIni && startPos+i <= goalPosIni) {
+                metacruz = true;
+                encontrado = true;
+            }
+            else {
+                metacruz = false;
 
+
+            }
+            i++;
+        }
     }
     else {
-        metacruz = false;
+        if (startPos >= goalPosIni && startPos <= goalPosIni) {
+            metacruz = true;
 
+        }
+        else {
+            metacruz = false;
+
+        }
     }
 }
 

@@ -12,7 +12,7 @@ CFLAGS = -Wall -pthread -g ${DIRS}
 
 
 main: ${objects}
-	$(CC) ${CFLAGS} ${objects} -o pole-position -L$(ruta) -lsfml-graphics -lsfml-window -lsfml-system
+	$(CC) ${CFLAGS} ${objects} -o pole-position -L$(ruta) -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 #---------------------------------------------------------
 # The main.o target can be written more simply
 main.o: main.cpp 
