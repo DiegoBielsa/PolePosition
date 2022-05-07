@@ -156,9 +156,9 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   app.clear(Color(105, 205, 4));
   app.draw(sBackground);
   startPos = pos / segL;
-  if(car.car_dir == 0 && lines[startPos+20].curve != 0){
-    if(lines[startPos+20].curve > 0) car.car_dir = 1;
-    else if(lines[startPos+20].curve < 0) {
+  if(car.car_dir == 0 && lines[(startPos+20)%segL].curve != 0){
+    if(lines[(startPos+20)%segL].curve > 0) car.car_dir = 1;
+    else if(lines[(startPos+20)%segL].curve < 0) {
       car.car_dir = -1;
     }
   }
