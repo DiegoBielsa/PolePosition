@@ -58,11 +58,10 @@ int numCars;
 int mediumSpeed;
 int iaMode;
 float off_road_allowed_cars;
-int carPosition;
+int carPosition=8;
 int startPos;
 Clock actualizar;
 Time tiempoFinal;
-int posicionSalida = 0;//posicion desde la que saldremos
 int bonus = 0;
 bool noClasifica = false;
 
@@ -328,13 +327,11 @@ int main() {
     //IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
 
     bool doJoin = true;
-    
-    while (true) {
+    while (app.isOpen()) {
         switch (estado)
         {
         case 0://clasificacion
         
-
 
             sounds[9].play();
             sounds[5].setPitch(1.0f);
@@ -342,6 +339,7 @@ int main() {
             sounds[5].play();
             terminar = false;
             tiempoparafin.restart();
+            clock.restart();
             posicionPuntuacion = 0;
             color = 0;
             doJoin = true;
@@ -435,26 +433,30 @@ int main() {
                 if (gameOver == true && restart == false ) {
                     tiempoparafin.restart();
                     //escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion,iaMode);
-                    calcularPosclasificacion(clasificaciones, tiempoFinal, posicionSalida,noClasifica);
-                    calcularBonusExtra(posicionSalida, iaMode,bonus);
+                    calcularPosclasificacion(clasificaciones, tiempoFinal, carPosition,noClasifica);
+                    if (noClasifica == true) {
+                        posicionPuntuacion = 10;
+                    }
+                    calcularBonusExtra(carPosition, iaMode,bonus);
+                    score = score + bonus;
                     restart = true;
                 }
                 else if (gameOver == true && restart == true) {
-                    if (posicionSalida > 7 ) {
+                    if (carPosition > 7 ) {
                         estado = 2;
                     }else{
                         estado = 1;
                     }
                     
                     if (tiempoparafin.getElapsedTime().asSeconds() < 3) {
-                        drawResultadosClas(app, tiempoFinal, posicionSalida,bonus, color,0);
+                        drawResultadosClas(app, tiempoFinal, carPosition,bonus, color,0);
                     }
                     else if (tiempoparafin.getElapsedTime().asSeconds() < 6) {
-                        drawResultadosClas(app, tiempoFinal, posicionSalida,bonus, color,1);
+                        drawResultadosClas(app, tiempoFinal, carPosition,bonus, color,1);
 
                     }
                     else if(tiempoparafin.getElapsedTime().asSeconds() < 9) {
-                        drawResultadosClas(app, tiempoFinal, posicionSalida,bonus, color, 2);
+                        drawResultadosClas(app, tiempoFinal, carPosition,bonus, color, 2);
                     }
                     
                     
