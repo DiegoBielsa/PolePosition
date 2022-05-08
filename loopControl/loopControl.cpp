@@ -19,10 +19,11 @@ void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
 }
 
 void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<Line>& lines,  int &startPos,  std::vector<Sound>& sounds){
+  static int n = 0;
   car.maxTex = car.maxTexNoKey;
   static int contadorDer;
   static int contadorIzq;
-  car.car_status = 0;
+  if(speed == 0) car.car_status = 0;
   car.car_dir = 0;
   if(perderControl){
     speed = 50;
@@ -103,34 +104,108 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
     if (Keyboard::isKeyPressed(Keyboard::Up)){
       car.car_status = 1;
       if(!enHierba){
-        if(marchaBaja){
-          if(speed < 50){
-            speed += 1;
+        if(speed >= 0 && speed < 50){
+
+          if(marchaBaja){
+            speed+=2;
+          }else{
+            if(n%2 == 0){
+              speed+=1;
+            }
           }
-          else if(speed < mediumSpeed){
-            speed += 2;
-          }else if(speed > mediumSpeed){
-            speed -= 8;
+
+        }else if(speed >= 50 && speed < 100){
+          
+          if(marchaBaja){
+            speed+=3;
+          }else{
+            if(n%2 == 0){
+              speed+=1;
+            }
           }
-        }else{//marcha alta
-          if(speed < mediumSpeed){
-            speed += 1;
-          }else if(speed < maxSpeed){
-            speed += 3;
+
+        }else if(speed >= 100 && speed < 150){
+          if(marchaBaja){
+            speed+=4;
+          }else{
+            if(n%2 == 0){
+              speed+=1;
+            }
+          }
+
+        }else if(speed >= 150 && speed < mediumSpeed){
+          if(marchaBaja){
+            speed+=4;
+          }else{
+            speed+=1;
+          }
+
+        }else if(speed >= mediumSpeed && speed < 250){
+          if(marchaBaja){
+            if(n%5 == 0){
+              speed+=2;
+            }
+          }else{
+              speed+=1;
+          }
+
+        }else if(speed >= 250 && speed < 320){
+          if(marchaBaja){
+            if(n%5 == 0){
+              speed+=1;
+            }
+          }else{
+            if(n%2 == 0){
+              speed+=1;
+            }
+          }
+
+        }else if(speed >= 320 && speed < 430){
+          if(marchaBaja){
+            speed-=3;
+          }else{
+            if(n%3 == 0){
+              speed+=1;
+            }
+          }
+
+        }else if(speed >= 430 && speed < maxSpeed){
+          if(marchaBaja){
+            speed-=3;
+          }else{
+            if(n%10 == 0){
+              speed+=1;
+            }
+          }
+
+        }else if(speed >= maxSpeed){
+          if(marchaBaja){
+            speed-=3;
           }
         }
       }else{
         if (speed > 100) {
-          speed -= 20;
+          if(speed-20 > 100){
+            speed -= 20;
+          }else{
+            speed -= 1;
+          }
         }else{
-          speed += 5;
+          speed += 1;
         }
       }
+      
     }else{
-      if(speed == 5){
-        speed = 0;
-      }else if(speed>0){
+      if(speed> 200){
         speed-=5;
+      }else if(speed > 100){
+        speed-=3;
+      }else if(speed > 20){
+        speed-=2;
+      }else if(speed > 0){
+        speed -=1;
+      }else{
+        speed = 0;
       }
     }
     
@@ -144,10 +219,11 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
       }
     }
   }
+  n++;
 }
 
 void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vector<Line>& lines, float &playerX , int &maxy, float& x, float& dx, int& speed, int N, int H, Sprite& sBackground, carSprite &car){
-  pos += speed;
+  pos += speed/2;
   while (pos >= N * segL)
     pos -= N * segL;
   while (pos < 0)
@@ -173,6 +249,8 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
       else if(speed > 200 && speed <= 250) {varyng = 0.8; car.updateTime = 0.027;}
       else if(speed > 250 && speed <= 300) {varyng = 0.9; car.updateTime = 0.024;}
       else if(speed > 300 && speed <= 380) {varyng = 1; car.updateTime = 0.02;}
+      else if(speed > 380 && speed <= 440) {varyng = 1; car.updateTime = 0.02;}
+      else if(speed > 440 && speed <= maxSpeed) {varyng = 1; car.updateTime = 0.02;}
     }
     float centripetal_force = ((speed/maxSpeed)+varyng) * floatAbs(lines[startPos].curve);//((speed * floatAbs(lines[startPos].curve)) / maxSpeed);
     float actual_draft_power = draft_power * centripetal_force;
@@ -255,6 +333,7 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
     drawQuad(app, white, p.X, p.Y, p.W*0.93, l.X, l.Y, l.W*0.93);
     drawQuad(app, road, p.X, p.Y, p.W*0.9, l.X, l.Y, l.W*0.9);
     drawQuad(app, whiteLine, p.X, p.Y, p.W * 0.05, l.X, l.Y, l.W * 0.05);
+    
 
   } 
 
