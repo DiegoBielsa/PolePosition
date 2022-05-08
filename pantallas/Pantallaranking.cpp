@@ -20,7 +20,8 @@ void selectName(string name[], string key[],int& letra,int& iterador, bool& term
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-            if (iterador != 2) {
+            
+            if (iterador < 2) {
                 iterador = iterador + 1;
             }
             else {
