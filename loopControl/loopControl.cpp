@@ -281,7 +281,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   }else if(lines[(startPos+21)%N].localBounds.intersects(car.sprite.getGlobalBounds())){
     whocol = 1;
   }
-  std::cout << lines[(startPos+20 + whocol)%N].sprite_type << std::endl;
+  //std::cout << lines[(startPos+20 + whocol)%N].sprite_type << std::endl;
   if(!colisiona){//no choca
       //actualizar sprite
     
@@ -290,7 +290,12 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     app.draw(car.sprite);
     car.colision = true;
     perderControl = true;
-    sounds[1].play();
+    sf::SoundSource::Status status = sounds[1].getStatus();
+    if(status != sf::Music::Playing){
+      sounds[1].play();
+    }
+    
+    
   }else if(lines[(startPos+20 + whocol)%N].sprite_type == 2){//meta
     app.draw(car.sprite);
   }else if(lines[(startPos+20 + whocol)%N].sprite_type == 3){//charco

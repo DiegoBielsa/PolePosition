@@ -473,7 +473,10 @@ int main() {
             break;
 
         case 1://carrera
-
+            sounds[9].play();
+            sounds[5].setPitch(1.0f);
+            sounds[5].setLoop(true);
+            sounds[5].play();
             //inicializamos todo
             int lap;
             lap = 0;
@@ -551,6 +554,7 @@ int main() {
 
                 int startPos, camH, maxy;
                 float x, dx;
+                updateSound(speed, sounds);
                 //updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 manageKeys(playerX, speed, H, car, lines, startPos, sounds);
                 updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
