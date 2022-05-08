@@ -271,6 +271,23 @@ void drawPrepare(RenderWindow& app,Sprite object[], bool& prepare){
 }
 
 
+
+void drawSemaphore(RenderWindow& app,Sprite object[],  int& contadorSem){
+    contadorSem++;
+    if(contadorSem <50){
+        app.draw(object[18]);
+    }else if(contadorSem >= 50 && contadorSem < 65){
+        app.draw(object[18]);
+    }else if(contadorSem >= 65 && contadorSem < 130){
+        app.draw(object[19]);
+    }else if(contadorSem >= 130 && contadorSem < 200){
+        app.draw(object[20]);
+    }else{
+        app.draw(object[21]);
+    }
+}
+
+
 void manageKeysCircuito(int& mapa,bool& terminar) {
 
 

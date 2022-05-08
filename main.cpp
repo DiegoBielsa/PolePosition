@@ -76,6 +76,8 @@ bool antmetacruz = false; //para ver si estamos parados en la meta
 bool pulsada = 0; //letra pulsada
 int posicionPuntuacion = 0; // posicion de nuestra puntuacion
 bool prepare = true;
+int semaforo = 0;
+
 
 int mapa; //mapa a elegir
 
@@ -168,6 +170,14 @@ int main() {
     object[16].setPosition(width,200);
     object[16].setScale(2,2);
 
+    for (int i=0; i<5; i++) {
+        t[17+i].loadFromFile("sprites/entorno/sema"+to_string(i)+".png");
+        t[17+i].setSmooth(true);
+        object[17+i].setTexture(t[17+i]);
+        object[17+i].setPosition((width/2)-85,100);
+        object[17+i].setScale(3,3);
+    }
+
 
 
     
@@ -258,6 +268,20 @@ int main() {
     }
     sound10.setBuffer(buffer10);
     sounds.push_back(sound10);
+    SoundBuffer buffer11;
+    Sound sound11;
+    if(!buffer11.loadFromFile("audio/semaforo.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound11.setBuffer(buffer11);
+    sounds.push_back(sound11);
+    SoundBuffer buffer12;
+    Sound sound12;
+    if(!buffer12.loadFromFile("audio/semaquali.wav")) {
+        std::cout<<"error en audio"<<std::endl;
+    }
+    sound12.setBuffer(buffer12);
+    sounds.push_back(sound12);
     
     
 
@@ -377,13 +401,27 @@ int main() {
 
                 int camH, maxy;
                 float x, dx;
-                if(prepare){
+                if(prepare ){
                     updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                     drawPrepare(app,object, prepare);
-                }else{
+                }else if(semaforo < 50)
+                {
+                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                    if(semaforo==0){sounds[11].play();}
+                    semaforo++;
+                    if(semaforo <25){
+                        app.draw(object[17]);
+                    }else{
+                        app.draw(object[21]);
+                    }
+                }
+                else{
+                    
                     manageKeys(playerX, speed, H, car, lines, startPos, sounds);
                     updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 }
+
+                
                 sf::Time elapsed = clock.getElapsedTime();
             
                 comprobarMeta(startPos, goalPosIni, metacruz,speed);
@@ -473,7 +511,7 @@ int main() {
             break;
 
         case 1://carrera
-            sounds[9].play();
+            semaforo=0;
             sounds[5].setPitch(1.0f);
             sounds[5].setLoop(true);
             sounds[5].play();
@@ -556,8 +594,14 @@ int main() {
                 float x, dx;
                 updateSound(speed, sounds);
                 //updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-                manageKeys(playerX, speed, H, car, lines, startPos, sounds);
-                updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                if(semaforo < 250){
+                    if(semaforo==0){sounds[10].play();}
+                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                    drawSemaphore(app,object, semaforo);
+                }else{
+                    manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                }
                 sf::Time elapsed = clock.getElapsedTime();
                 bool metacruz = false;
                 comprobarMeta(startPos, goalPosIni, metacruz,speed);
