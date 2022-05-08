@@ -10,7 +10,7 @@ int stringtoint(string s);
 
 void leerLimite(int &limite, int numero);
 
-void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int puntu, Time& elapsed, int &limite,bool &gameOver, Time& tiempoFinal, bool& noClasifica);
+void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int puntu, Time& elapsed, int &limite,bool &gameOver, Time& tiempoFinal, bool& noClasifica,bool primeravez);
 
 void drawGameOver(RenderWindow& app);
 

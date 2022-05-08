@@ -112,7 +112,7 @@ void leerLimite(int &limite, int numero) {
 
 }
 
-void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int puntu, Time& elapsed, int& limite,bool& gameOver, Time& final, bool& noClasifica) {
+void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int puntu, Time& elapsed, int& limite,bool& gameOver, Time& final, bool& noClasifica,bool primeravez) {
     sf::Text top;
     sf::Text topnumber;
     sf::Text score;
@@ -240,7 +240,12 @@ void drawLetters(RenderWindow& app, string puntuaciones[], int velocidad, int pu
     speed.setFillColor(sf::Color::White);
     speednumber.setFillColor(sf::Color::White);
     // set the text style
+    if (primeravez == true) {
+        lapnumber.setString("0. 0");
+        String cadena = inttostring(limite);
+        timenumber.setString(cadena);
 
+    }
 
 
 
