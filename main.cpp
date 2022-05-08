@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 3;
+int estado = 4;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -58,7 +58,7 @@ int numCars;
 int mediumSpeed;
 int iaMode;
 float off_road_allowed_cars;
-int carPosition=8;
+int carPosition;
 int startPos;
 Clock actualizar;
 Time tiempoFinal;
@@ -77,6 +77,7 @@ bool pulsada = 0; //letra pulsada
 int posicionPuntuacion = 0; // posicion de nuestra puntuacion
 bool prepare = true;
 int semaforo = 0;
+bool go = false;
 
 
 int mapa; //mapa a elegir
@@ -306,7 +307,7 @@ int main() {
         if (i == carPosition) {
             if (posIA % 2 == 0) playerX = -0.5;
             else playerX = 0.6;
-            pos = segL * (goalPosIni-20 - carPosition*7);
+            pos = segL * (goalPosIni-27 - carPosition*7);
             posIA++;
 
         }
@@ -343,7 +344,7 @@ int main() {
             }
             
         }
-        linePos[i] = (goalPosIni-2) - i * 7;
+        linePos[i] = 300 + 50*i;
         posIA++;
     }
     
@@ -367,6 +368,7 @@ int main() {
             posicionPuntuacion = 0;
             color = 0;
             doJoin = true;
+            go = false;
             IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
                 Event e;
@@ -416,7 +418,7 @@ int main() {
                     }
                 }
                 else{
-                    
+                    go = true;
                     manageKeys(playerX, speed, H, car, lines, startPos, sounds);
                     updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 }
@@ -459,7 +461,7 @@ int main() {
                     
                     if(doJoin){
                         for(int i = 0; i < numCars; i++){
-                            std::cout << "join " << i << std::endl;
+                            //std::cout << "join " << i << std::endl;
                             threads[i].join();
                         }
                     }
@@ -511,6 +513,7 @@ int main() {
             break;
 
         case 1://carrera
+            go = false;
             semaforo=0;
             sounds[5].setPitch(1.0f);
             sounds[5].setLoop(true);
@@ -531,7 +534,7 @@ int main() {
                 if (i == carPosition) {
                     if (posIA % 2 == 0) playerX = -0.5;
                     else playerX = 0.6;
-                    pos = segL * (goalPosIni-20 - carPosition*7);
+                    pos = segL * (goalPosIni-27 - carPosition*7);
                     posIA++;
 
                 }
@@ -558,7 +561,7 @@ int main() {
                     }
                     
                 }
-                linePos[i] = (goalPosIni-2) - i * 7;
+                linePos[i] = (goalPosIni-10) - i * 7;
                 posIA++;
             }
             IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
@@ -599,6 +602,7 @@ int main() {
                     updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                     drawSemaphore(app,object, semaforo);
                 }else{
+                    go = true;
                     manageKeys(playerX, speed, H, car, lines, startPos, sounds);
                     updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 }
@@ -639,7 +643,7 @@ int main() {
                     drawGameOver(app);
                     if(doJoin){
                         for(int i = 0; i < numCars; i++){
-                            std::cout << "join " << i << std::endl;
+                            //std::cout << "join " << i << std::endl;
                             threads[i].join();
                         }
                     }

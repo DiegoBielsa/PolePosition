@@ -156,9 +156,9 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
   app.clear(Color(105, 205, 4));
   app.draw(sBackground);
   startPos = pos / segL;
-  if(car.car_dir == 0 && lines[(startPos+20)%segL].curve != 0){
-    if(lines[(startPos+20)%segL].curve > 0) car.car_dir = 1;
-    else if(lines[(startPos+20)%segL].curve < 0) {
+  if(car.car_dir == 0 && lines[(startPos+20)%N].curve != 0){
+    if(lines[(startPos+20)%N].curve > 0) car.car_dir = 1;
+    else if(lines[(startPos+20)%N].curve < 0) {
       car.car_dir = -1;
     }
   }
@@ -299,7 +299,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   }else if(lines[(startPos+20 + whocol)%N].sprite_type == 2){//meta
     app.draw(car.sprite);
   }else if(lines[(startPos+20 + whocol)%N].sprite_type == 3){//charco
-  std::cout << "charco" << std::endl;
+  //std::cout << "charco" << std::endl;
     charco = true;
     app.draw(car.sprite);
   }
@@ -357,11 +357,13 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float drivingCarXPos = width/2-car_width*1.5;
   float rebase = 0;
 
-  speeds = 1.0f;
+  speeds = 5.0f;
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
+
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    //if(!go) continue;
     int diff = linePos[i] - startPos;
     
 
@@ -477,7 +479,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
       
       
 
-      if(diff < 0 && diff > -20){ //está detras tuyo se prepara para adelantar sin chocarte
+      if(diff < 20 && diff > -20){ //está detras tuyo se prepara para adelantar sin chocarte
           if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
               if(rebase == 0){
                     if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
@@ -505,6 +507,10 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     lines[linePos[i]].carsX[i] = XPos[i];
     linePos[i]++;
     clock.restart();
+    while(!go){
+      std::this_thread::sleep_for (std::chrono::milliseconds(20ms));
+      clock.restart();
+    }
     
     
     
@@ -527,7 +533,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   float drivingCarXPos = width/2-car_width*1.5;
   int rebase = 0; // 0 rebasa por izquierda 1 por derecha
   
-  speeds = 1.0f;
+  speeds = 5.0f;
   maxSpeeds = (mediumSpeed - 70) - (i * 7);
   
 
@@ -689,6 +695,10 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     lines[linePos[i]].carsX[i] = XPos[i];
     linePos[i]++;
     clock.restart();
+    while(!go){
+      std::this_thread::sleep_for (std::chrono::milliseconds(20ms));
+      clock.restart();
+    }
     
     
   }
@@ -711,7 +721,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   
   // sabes que el coche que controlas siempre está en la misma posición, X = 0, Y = nose
   // cuando estes cerca de esa Y siendo la tuya más arriba te acercas poco a poco a esa X = 0
-  speeds = 1.0f;
+  speeds = 5.0f;
   maxSpeeds = (mediumSpeed- 70) - (i * 7);
 
   while(!gameOver){
@@ -883,7 +893,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
     
       
-      if(diff < 0 && diff > -20){ //está detras tuyo se prepara para adelantar sin chocarte
+      if(diff < 10 && diff > -20){ //está detras tuyo se prepara para adelantar sin chocarte
           if((carsXpos >= drivingCarXPos - (car_width*3)) && (carsXpos <= drivingCarXPos + (car_width*2))){ // si se puede chocar conmigo
               if(rebase == 0){
                     if((XPos[i] - 0.5 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
@@ -910,6 +920,10 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     lines[linePos[i]].carsX[i] = XPos[i];
     linePos[i]++;
     clock.restart();
+    while(!go){
+      std::this_thread::sleep_for (std::chrono::milliseconds(20ms));
+      clock.restart();
+    }
       
       
       
