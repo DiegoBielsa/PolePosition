@@ -35,6 +35,7 @@ extern float off_road_allowed_cars;
 extern int carPosition;
 extern int startPos;
 extern bool go;
+extern bool derrape;
 
 extern sf::Time tiempoconseguido;
 extern bool ultimotiempo;

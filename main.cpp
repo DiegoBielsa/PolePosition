@@ -64,6 +64,7 @@ Clock actualizar;
 Time tiempoFinal;
 int bonus = 0;
 bool noClasifica = false;
+bool derrape = false;
 
 
 
@@ -344,7 +345,7 @@ int main() {
             }
             
         }
-        linePos[i] = (goalPosIni-10) - i * 7;//300 + 50*i;
+        linePos[i] = 250 + 50*i;
         posIA++;
     }
     

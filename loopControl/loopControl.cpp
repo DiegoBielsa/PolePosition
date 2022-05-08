@@ -20,12 +20,15 @@ void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
 
 void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<Line>& lines,  int &startPos,  std::vector<Sound>& sounds){
   static int n = 0;
+  static int contadorDerrape = 0;
+  static int dirDerrape = 0; // 0 derecha, 1 izquierda
   car.maxTex = car.maxTexNoKey;
   static int contadorDer;
   static int contadorIzq;
   if(speed == 0) car.car_status = 0;
   car.car_dir = 0;
   if(perderControl){
+    contadorDerrape = 0;
     speed = 50;
     animColision++;
     if(animColision == 150){
@@ -34,10 +37,30 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
       animColision = 0;
       car.reinit();
     }
+  }else if(derrape){
+    std::cout << contadorDerrape << std::endl;
+    car.maxTex = 23;
+    speed -= 3;
+    float gone = 1.2 * turn_power * ((float(speed)/maxSpeed));
+    if(dirDerrape == 0 && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - gone) * roadW) > (-roadW-off_road_allowed))){ // derrape a derechas
+      playerX += gone;
+      
+      
+    }else if(dirDerrape == 1 && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - gone) * roadW) > (-roadW-off_road_allowed))){ // derrape a izquierdas
+      playerX -= gone;
+    }
+
+    contadorDerrape++;
+    if(contadorDerrape == 80){ // paras de derrapar
+      derrape = false;
+      contadorDerrape = 0;
+    }
   }else if(charco){
+    contadorDerrape = 0;
     speed = 50;
     charco = false;
   }else{
+    contadorDerrape = 0;
     if(((playerX * roadW) > (roadW + road_limit)) || ((playerX * roadW) < (-roadW-road_limit)) || (((playerX + turn_power) * roadW) > (roadW + road_limit)) || (((playerX - turn_power) * roadW) < (-roadW-road_limit)))
     {
       enHierba = true;
@@ -48,14 +71,15 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
       if(speed>0){
         car.maxTex = car.maxTexUsualTurn;
         if(!car.car_inv) playerX += turn_power * ((float(speed)/maxSpeed));
-        if(speed > maxSpeed-50){
-          float centripetal_force = ((speed/maxSpeed)) * floatAbs(lines[startPos].curve);
+        if(speed > maxSpeed-150){
+          float centripetal_force = ((float(speed)/float(maxSpeed))) * floatAbs(lines[startPos].curve);
           float actual_draft_power = draft_power * centripetal_force;
-          //std::cout<<"actual "<<actual_draft_power<<std::endl;
-          if (actual_draft_power > 0.032){
-            playerX += 3 * turn_power * ((float(speed)/maxSpeed));
-            car.maxTex = 23;
+          if (actual_draft_power > 0.012){
             sounds[6].play();
+            derrape = true;
+            dirDerrape = 0;
+            playerX += 1.5 * turn_power * ((float(speed)/maxSpeed));
+            car.maxTex = 23;
           }else{
             playerX += turn_power * ((float(speed)/maxSpeed));
           }
@@ -77,14 +101,15 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
       if(speed > 0){
         car.maxTex = car.maxTexUsualTurn;
         if(car.car_inv) playerX -= turn_power * ((float(speed)/maxSpeed));
-        if(speed > maxSpeed-50){
-          float centripetal_force = ((speed/maxSpeed)) * floatAbs(lines[startPos].curve);
+        if(speed > maxSpeed-150){
+          float centripetal_force = ((float(speed)/float(maxSpeed))) * floatAbs(lines[startPos].curve);
           float actual_draft_power = draft_power * centripetal_force;
-          //std::cout<<"actual "<<actual_draft_power<<std::endl;
-          if (actual_draft_power > 0.032){
-            playerX -= 3 * turn_power * ((float(speed)/maxSpeed));
-            car.maxTex = 23;
+          if (actual_draft_power > 0.012){
             sounds[6].play();
+            derrape = true;
+            dirDerrape = 1;
+            playerX -= 1.5 * turn_power * ((float(speed)/maxSpeed));
+            car.maxTex = 23;
           }else{
             playerX -= turn_power * ((float(speed)/maxSpeed));
           }
@@ -239,7 +264,7 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
     }
   }
   camH = lines[startPos].y + H;
-  if (speed != 0){
+  if (speed != 0 && !derrape){
     float varyng = 0;
     if(!car.colision){
       if(speed >= 0 && speed <= 50) {varyng = 0; car.updateTime = 0.04;}
@@ -271,6 +296,7 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
 
   maxy = height;
   x = 0, dx = 0;
+  
 
   //if (startPos == 3500){//será goalposend
     //gameOver = true;
@@ -366,6 +392,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     
     app.draw(car.sprite);
   }else if(lines[(startPos+20 + whocol)%N].sprite_type == 0){
+    derrape = false;
     app.draw(car.sprite);
     car.colision = true;
     perderControl = true;
@@ -378,6 +405,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   }else if(lines[(startPos+20 + whocol)%N].sprite_type == 2){//meta
     app.draw(car.sprite);
   }else if(lines[(startPos+20 + whocol)%N].sprite_type == 3){//charco
+    derrape = false;
   //std::cout << "charco" << std::endl;
     charco = true;
     app.draw(car.sprite);
@@ -437,7 +465,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float rebase = 0;
 
   speeds = 5.0f;
-  maxSpeeds = (mediumSpeed - 70) - (i * 7);
+  maxSpeeds = (mediumSpeed - 100) - (i * 7);
 
 
   while(!gameOver){
@@ -613,7 +641,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   int rebase = 0; // 0 rebasa por izquierda 1 por derecha
   
   speeds = 5.0f;
-  maxSpeeds = (mediumSpeed - 70) - (i * 7);
+  maxSpeeds = (mediumSpeed - 100) - (i * 7);
   
 
   while(!gameOver){
@@ -801,7 +829,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   // sabes que el coche que controlas siempre está en la misma posición, X = 0, Y = nose
   // cuando estes cerca de esa Y siendo la tuya más arriba te acercas poco a poco a esa X = 0
   speeds = 5.0f;
-  maxSpeeds = (mediumSpeed- 70) - (i * 7);
+  maxSpeeds = (mediumSpeed- 100) - (i * 7);
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
