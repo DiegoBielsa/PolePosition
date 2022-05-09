@@ -29,7 +29,9 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
   car.car_dir = 0;
   if(perderControl){
     contadorDerrape = 0;
-    speed = 50;
+    if(speed >= 100) speed -= 10;
+    else if(speed - 1 > 0)speed -= 1;
+    else speed = 0;
     animColision++;
     if(animColision == 150){
       //ponerlo en el medio
@@ -275,6 +277,10 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
     pos -= N * segL;
   while (pos < 0)
     pos += N * segL;
+  
+  if(car.colision && (lines[(startPos+20)%N].localBounds.intersects(car.sprite.getGlobalBounds()) || lines[(startPos+21)%N].localBounds.intersects(car.sprite.getGlobalBounds()))){
+    pos += 2;
+  }
 
   app.clear(Color(105, 205, 4));
   app.draw(sBackground);
@@ -423,7 +429,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
       sounds[1].play();
     }
     
-    
+
   }else if(lines[(startPos+20 + whocol)%N].sprite_type == 2){//meta
     app.draw(car.sprite);
   }else if(lines[(startPos+20 + whocol)%N].sprite_type == 3){//charco
@@ -487,13 +493,14 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float rebase = 0;
 
   speeds = 5.0f;
-  maxSpeeds = (mediumSpeed - 85) - (i * 7);
+  maxSpeeds = (mediumSpeed - 100) - (i * 7);
 
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
     //if(!go) continue;
     int diff = linePos[i] - startPos;
+    //std::cout << diff << std::endl;
     
 
     if(linePos[i]+1 >= lines.size()){
@@ -663,7 +670,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   int rebase = 0; // 0 rebasa por izquierda 1 por derecha
   
   speeds = 5.0f;
-  maxSpeeds = (mediumSpeed - 85) - (i * 7);
+  maxSpeeds = (mediumSpeed - 100) - (i * 7);
   
 
   while(!gameOver){
@@ -851,7 +858,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   // sabes que el coche que controlas siempre está en la misma posición, X = 0, Y = nose
   // cuando estes cerca de esa Y siendo la tuya más arriba te acercas poco a poco a esa X = 0
   speeds = 5.0f;
-  maxSpeeds = (mediumSpeed- 85) - (i * 7);
+  maxSpeeds = (mediumSpeed- 100) - (i * 7);
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));

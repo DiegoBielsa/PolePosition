@@ -152,6 +152,7 @@ struct carSprite{
     maxTex = maxTexNoKey;
     actualTex = 0;
     car_dir = 0;
+    car_status = 0;
     colisionSprite = 0;
     car_inv = false;
     colision = false;
@@ -163,6 +164,7 @@ struct carSprite{
     maxTex = maxTexNoKey;
     actualTex = 0;
     car_dir = 0;
+    car_status = 0;
     colisionSprite = 0;
     car_inv = false;
     colision = false;
