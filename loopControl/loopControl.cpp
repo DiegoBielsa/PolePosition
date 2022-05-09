@@ -38,10 +38,16 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
       car.reinit();
     }
   }else if(derrape){
-    std::cout << contadorDerrape << std::endl;
     car.maxTex = 23;
     speed -= 3;
     float gone = 1.2 * turn_power * ((float(speed)/maxSpeed));
+    if(dirDerrape == 0 && Keyboard::isKeyPressed(Keyboard::Left)){ //derrape a derechas pero tratamos de recuperar
+      contadorDerrape += 1;
+      car.maxTex = 17;
+    }else if(dirDerrape == 1 && Keyboard::isKeyPressed(Keyboard::Right)){ //derrape a izquierdas pero tratamos de recuperar
+      contadorDerrape += 1;
+      car.maxTex = 17;
+    }
     if(dirDerrape == 0 && ((playerX * roadW) > (-roadW-off_road_allowed)) && (((playerX - gone) * roadW) > (-roadW-off_road_allowed))){ // derrape a derechas
       playerX += gone;
       
@@ -51,7 +57,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
     }
 
     contadorDerrape++;
-    if(contadorDerrape == 80){ // paras de derrapar
+    if(contadorDerrape >= 80){ // paras de derrapar
       derrape = false;
       contadorDerrape = 0;
     }
@@ -87,7 +93,15 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
         }else{
           playerX += turn_power * ((float(speed)/maxSpeed));
         }
-        contadorDer = 30;
+        if(speed >= 20 && speed <= 50) contadorDer = 10;
+        else if(speed > 50 && speed <= 100) contadorDer = 11;
+        else if(speed > 100 && speed <= 150) contadorDer = 12;
+        else if(speed > 150 && speed <= 200) contadorDer = 13;
+        else if(speed > 200 && speed <= 250) contadorDer = 14;
+        else if(speed > 250 && speed <= 300) contadorDer = 15;
+        else if(speed > 300 && speed <= 380) contadorDer = 16;
+        else if(speed > 380 && speed <= 440) contadorDer = 17;
+        else if(speed > 440 && speed <= maxSpeed) contadorDer = 18;
       }
       car.car_dir = 1;
     }else{
@@ -117,7 +131,15 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
         }else{
           playerX -= turn_power * ((float(speed)/maxSpeed));
         }
-        contadorIzq = 30;
+        if(speed >= 20 && speed <= 50) contadorIzq = 10;
+        else if(speed > 50 && speed <= 100) contadorIzq = 11;
+        else if(speed > 100 && speed <= 150) contadorIzq = 12;
+        else if(speed > 150 && speed <= 200) contadorIzq = 13;
+        else if(speed > 200 && speed <= 250) contadorIzq = 14;
+        else if(speed > 250 && speed <= 300) contadorIzq = 15;
+        else if(speed > 300 && speed <= 380) contadorIzq = 16;
+        else if(speed > 380 && speed <= 440) contadorIzq = 17;
+        else if(speed > 440 && speed <= maxSpeed) contadorIzq = 18;
       }
       car.car_dir = -1;
     }else{
@@ -465,7 +487,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float rebase = 0;
 
   speeds = 5.0f;
-  maxSpeeds = (mediumSpeed - 100) - (i * 7);
+  maxSpeeds = (mediumSpeed - 85) - (i * 7);
 
 
   while(!gameOver){
@@ -641,7 +663,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   int rebase = 0; // 0 rebasa por izquierda 1 por derecha
   
   speeds = 5.0f;
-  maxSpeeds = (mediumSpeed - 100) - (i * 7);
+  maxSpeeds = (mediumSpeed - 85) - (i * 7);
   
 
   while(!gameOver){
@@ -829,7 +851,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   // sabes que el coche que controlas siempre está en la misma posición, X = 0, Y = nose
   // cuando estes cerca de esa Y siendo la tuya más arriba te acercas poco a poco a esa X = 0
   speeds = 5.0f;
-  maxSpeeds = (mediumSpeed- 100) - (i * 7);
+  maxSpeeds = (mediumSpeed- 85) - (i * 7);
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));

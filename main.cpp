@@ -172,6 +172,8 @@ int main() {
     object[16].setPosition(width,200);
     object[16].setScale(2,2);
 
+    
+
     for (int i=0; i<5; i++) {
         t[17+i].loadFromFile("sprites/entorno/sema"+to_string(i)+".png");
         t[17+i].setSmooth(true);
@@ -179,6 +181,13 @@ int main() {
         object[17+i].setPosition((width/2)-85,100);
         object[17+i].setScale(3,3);
     }
+
+    t[22].loadFromFile("sprites/entorno/personas.png");
+    t[22].setSmooth(true);
+    object[22].setTexture(t[22]);
+    t[23].loadFromFile("sprites/entorno/ruedaCarrera.png");
+    t[23].setSmooth(true);
+    object[23].setTexture(t[23]);
 
 
 
@@ -345,7 +354,7 @@ int main() {
             }
             
         }
-        linePos[i] = 250 + 50*i;
+        linePos[i] = (goalPosIni-10) - i * 7;//250 + 50*i;
         posIA++;
     }
     
@@ -514,6 +523,7 @@ int main() {
             break;
 
         case 1://carrera
+            setMaps(maps, object);
             go = false;
             semaforo=0;
             sounds[5].setPitch(1.0f);
@@ -531,6 +541,7 @@ int main() {
             speed = 0;
             doJoin = true;
             terminar = false;
+            car.init();
             for (int i = 0; i < numCars; i++) {
                 if (i == carPosition) {
                     if (posIA % 2 == 0) playerX = -0.5;

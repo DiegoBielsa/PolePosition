@@ -122,6 +122,18 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
           line.sprite_type = 3;
         }
 
+        if(i>100 && i % 937 == 0 && line.curve == 0){//personas
+          line.sprite = object[22];
+          line.spriteX = -0.5;
+          line.sprite_type = 2;
+        }
+
+        if(i>100 && i % 780 == 0 && line.curve == 0){//ruedaCarrera
+          line.sprite = object[23];
+          line.spriteX = -0.5;
+          line.sprite_type = 2;
+        }
+
         if(i>100 && i % 400 == 0){//cartel1
           line.sprite = object[9];
           line.spriteX = -2.5;
