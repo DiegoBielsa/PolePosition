@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 4;
+int estado = 3;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -354,7 +354,7 @@ int main() {
             }
             
         }
-        linePos[i] = (goalPosIni-10) - i * 7;//250 + 50*i;
+        linePos[i] = 250 + 50*i;
         posIA++;
     }
     
@@ -523,7 +523,6 @@ int main() {
             break;
 
         case 1://carrera
-            setMaps(maps, object);
             go = false;
             semaforo=0;
             sounds[5].setPitch(1.0f);
@@ -541,7 +540,7 @@ int main() {
             speed = 0;
             doJoin = true;
             terminar = false;
-            car.init();
+            car.reinit();
             for (int i = 0; i < numCars; i++) {
                 if (i == carPosition) {
                     if (posIA % 2 == 0) playerX = -0.5;
