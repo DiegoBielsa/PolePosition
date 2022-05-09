@@ -434,7 +434,7 @@ int main() {
                 }
 
                 
-                sf::Time elapsed = clock.getElapsedTime();
+                
             
                 comprobarMeta(startPos, goalPosIni, metacruz,speed);
 
@@ -442,18 +442,20 @@ int main() {
                 if (metacruz == true && antmetacruz==false) {
                     if (esPrimeravez==true) {
                         esPrimeravez = false;
+                        clock.restart();
                     }
                     else {
                         gameOver = true;
                     }
                 }
+                sf::Time elapsed = clock.getElapsedTime();
                 antmetacruz = metacruz;
                 calcularScore(score, speed, lim, limite, gameOver,iaMode);
 
 
                 drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
                 drawObjects(app, startPos, lines, N, car, sounds);
-                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver,tiempoFinal,noClasifica);
+                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver,tiempoFinal,noClasifica, esPrimeravez);
                 
                 //std::cout<<startPos<<std::endl;
                 //if (startPos >= 3500 && startPos <= 3550) {
@@ -535,6 +537,7 @@ int main() {
             restart = false;
             clock.restart();
             esPrimeravez = true;
+            metacruz=false;
             pos = 0;
             playerX = 0;
             speed = 0;
@@ -617,23 +620,24 @@ int main() {
                     manageKeys(playerX, speed, H, car, lines, startPos, sounds);
                     updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 }
-                sf::Time elapsed = clock.getElapsedTime();
-                bool metacruz = false;
+                
                 comprobarMeta(startPos, goalPosIni, metacruz,speed);
                 if (metacruz == true && antmetacruz == false) {
                     if (esPrimeravez == true) {
                         esPrimeravez = false;
+                        clock.restart();
                     }
                     else {
                         clock.restart();  //cuando hagamos vuelta
-                        elapsed = clock.getElapsedTime();
-                        lim = lim+limite;
+                        lim = lim+limite/2;
                         lap++;
                         if (lap == 3) {
                             gameOver = true;
                         }
                     }
                 }
+                sf::Time elapsed = clock.getElapsedTime();
+
                 antmetacruz = metacruz;
                 calcularScore(score, speed, lim, limite, gameOver,iaMode);
 
@@ -641,7 +645,7 @@ int main() {
 
                 drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
                 drawObjects(app, startPos, lines, N, car, sounds);
-                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver,tiempoFinal,noClasifica);
+                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver,tiempoFinal,noClasifica,esPrimeravez);
                 //std::cout<<startPos<<std::endl;
 
                 drawGear(app, marchaBaja, marcha);
@@ -665,6 +669,7 @@ int main() {
 
                 if (gameOver == true && restart == false) {
                     tiempoparafin.restart();
+                    score = 21;
                     escribirPuntuaciones(puntuaciones, score, mapa,posicionPuntuacion,iaMode);
                     cout << "posicionPuntuacion " << posicionPuntuacion << endl;
                     restart = true;
@@ -713,7 +718,6 @@ int main() {
                     if (posicionPuntuacion >= 0 && posicionPuntuacion < 7) {
                         selectName(nombre, key, letra, iterador, terminar, haCambiado, actualizar);
 
-
                         nombres[posicionPuntuacion] = nombre[0] + nombre[1] + nombre[2];
 
 
@@ -725,11 +729,11 @@ int main() {
                         }
                     }
                     drawRanking(app, puntuaciones,nombres ,lim, score,posicionPuntuacion,color);
-                
                 if(terminar==true) {
-                    estado = 2;
+                   
                     terminar = true;
                     escribirNombres(nombres, mapa, iaMode);
+                    app.close();
                 }
                 app.display();
             }
