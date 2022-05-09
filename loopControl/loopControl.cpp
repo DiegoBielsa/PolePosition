@@ -400,7 +400,6 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
 
   car.updateCarSprite();
   
-
   bool colisiona = lines[(startPos+20)%N].localBounds.intersects(car.sprite.getGlobalBounds()) || lines[(startPos+21)%N].localBounds.intersects(car.sprite.getGlobalBounds());
   int whocol=0;
   if(lines[(startPos+20)%N].localBounds.intersects(car.sprite.getGlobalBounds())){
@@ -431,6 +430,9 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   //std::cout << "charco" << std::endl;
     charco = true;
     app.draw(car.sprite);
+  }
+  else { //por si acaso mejor que no desaparezca
+      app.draw(car.sprite);
   }
 }
 
