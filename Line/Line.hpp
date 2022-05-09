@@ -59,7 +59,8 @@ struct Line {
     s.setScale(destW / w, destH / h);
     s.setPosition(destX, destY);
 
-    if(!std::isnan(s.getGlobalBounds().height)){
+    if(!std::isnan(s.getGlobalBounds().height) && !std::isnan(s.getGlobalBounds().width)
+      && !std::isnan(s.getGlobalBounds().left) && !std::isnan(s.getGlobalBounds().top)  ){
       localBounds = s.getGlobalBounds();
     }
     

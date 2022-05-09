@@ -527,6 +527,7 @@ int main() {
             restart = false;
             clock.restart();
             esPrimeravez = true;
+            metacruz=false;
             pos = 0;
             playerX = 0;
             speed = 0;
@@ -609,7 +610,6 @@ int main() {
                     updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                 }
                 
-                bool metacruz = false;
                 comprobarMeta(startPos, goalPosIni, metacruz,speed);
                 if (metacruz == true && antmetacruz == false) {
                     if (esPrimeravez == true) {
