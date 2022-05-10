@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 3;
+int estado = 4;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -366,8 +366,16 @@ int main() {
         switch (estado)
         {
         case 0://clasificacion
-        
-
+            metacruz = false;
+            antmetacruz = false; //para ver si estamos parados en la meta
+            terminar = false;
+            gameOver = false;
+            restart = false;
+            pos = 0;
+            carPosition = 8;
+            semaforo = 0;
+            playerX = 0;
+            esPrimeravez = true;
             sounds[9].play();
             sounds[5].setPitch(1.0f);
             sounds[5].setLoop(true);
@@ -378,6 +386,7 @@ int main() {
             posicionPuntuacion = 0;
             color = 0;
             startPos = 0;
+            score = 0;
             doJoin = true;
             go = false;
             IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
