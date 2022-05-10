@@ -744,7 +744,7 @@ int main() {
                    
                     terminar = true;
                     escribirNombres(nombres, mapa, iaMode);
-                    app.close();
+                    estado = 3;
                 }
                 app.display();
             }
