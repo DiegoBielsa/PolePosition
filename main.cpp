@@ -469,7 +469,9 @@ int main() {
 
 
                 if (gameOver == true) {
-                    drawGameOver(app);
+                    if (noClasifica == true) {
+                        drawGameOver(app);
+                    }
                     // al ser un bucle se ejecuta muchas veces
                     
                     if(doJoin){
