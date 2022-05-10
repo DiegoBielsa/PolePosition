@@ -680,7 +680,7 @@ int main() {
 
                 if (gameOver == true && restart == false) {
                     tiempoparafin.restart();
-                    score = 21;
+                    //score = 21;
                     escribirPuntuaciones(puntuaciones, score, mapa,posicionPuntuacion,iaMode);
                     cout << "posicionPuntuacion " << posicionPuntuacion << endl;
                     restart = true;
