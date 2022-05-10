@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 4;
+int estado = 3;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -384,8 +384,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed){
                         app.close();
+                        gameOver=true;
+                    }
                 }
 
 
@@ -469,7 +471,9 @@ int main() {
 
 
                 if (gameOver == true) {
-                    drawGameOver(app);
+                    if (noClasifica == true) {
+                        drawGameOver(app);
+                    }
                     // al ser un bucle se ejecuta muchas veces
                     
                     if(doJoin){
@@ -586,8 +590,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed){
                         app.close();
+                        gameOver=true;
+                    }
                 }
 
 
@@ -633,7 +639,7 @@ int main() {
                     }
                     else {
                         clock.restart();  //cuando hagamos vuelta
-                        lim = lim+limite/2;
+                        lim = lim+limite/3;
                         lap++;
                         if (lap == 3) {
                             gameOver = true;
@@ -674,7 +680,7 @@ int main() {
 
                 if (gameOver == true && restart == false) {
                     tiempoparafin.restart();
-                    score = 21;
+                    //score = 21;
                     escribirPuntuaciones(puntuaciones, score, mapa,posicionPuntuacion,iaMode);
                     cout << "posicionPuntuacion " << posicionPuntuacion << endl;
                     restart = true;
@@ -854,6 +860,7 @@ int main() {
 
 
         }
+        cout<<endl;
     }
 
 
