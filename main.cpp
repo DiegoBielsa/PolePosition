@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 4;
+int estado = 3;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -384,8 +384,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed){
                         app.close();
+                        gameOver=true;
+                    }
                 }
 
 
@@ -588,8 +590,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed){
                         app.close();
+                        gameOver=true;
+                    }
                 }
 
 
@@ -856,6 +860,7 @@ int main() {
 
 
         }
+        cout<<endl;
     }
 
 
