@@ -407,6 +407,8 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
   car.updateCarSprite();
   
   bool colisiona = lines[(startPos+20)%N].localBounds.intersects(car.sprite.getGlobalBounds()) || lines[(startPos+21)%N].localBounds.intersects(car.sprite.getGlobalBounds());
+  bool colisionaIa = lines[(startPos+20)%N].carLocalBounds.intersects(car.sprite.getGlobalBounds()) || lines[(startPos+21)%N].carLocalBounds.intersects(car.sprite.getGlobalBounds());
+
   int whocol=0;
   if(lines[(startPos+20)%N].localBounds.intersects(car.sprite.getGlobalBounds())){
     whocol = 0;
@@ -414,11 +416,11 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     whocol = 1;
   }
   //std::cout << lines[(startPos+20 + whocol)%N].sprite_type << std::endl;
-  if(!colisiona){//no choca
+  if(!colisiona && !colisionaIa){//no choca
       //actualizar sprite
     
     app.draw(car.sprite);
-  }else if(lines[(startPos+20 + whocol)%N].sprite_type == 0){
+  }else if(colisionaIa){ // si da colision con ia miramos si de verdad hay un coche ahí
     derrape = false;
     app.draw(car.sprite);
     car.colision = true;
@@ -427,17 +429,28 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     if(status != sf::Music::Playing){
       sounds[1].play();
     }
-    
 
-  }else if(lines[(startPos+20 + whocol)%N].sprite_type == 2){//meta
-    app.draw(car.sprite);
-  }else if(lines[(startPos+20 + whocol)%N].sprite_type == 3){//charco
-    derrape = false;
-  //std::cout << "charco" << std::endl;
-    charco = true;
-    app.draw(car.sprite);
-  }
-  else { //por si acaso mejor que no desaparezca
+  }else if(colisiona){ // si colisiona con objeto getionamos
+    if(lines[(startPos+20 + whocol)%N].sprite_type == 0){
+      derrape = false;
+      app.draw(car.sprite);
+      car.colision = true;
+      perderControl = true;
+      sf::SoundSource::Status status = sounds[1].getStatus();
+      if(status != sf::Music::Playing){
+        sounds[1].play();
+      }
+      
+
+    }else if(lines[(startPos+20 + whocol)%N].sprite_type == 2){//meta
+      app.draw(car.sprite);
+    }else if(lines[(startPos+20 + whocol)%N].sprite_type == 3){//charco
+      derrape = false;
+    //std::cout << "charco" << std::endl;
+      charco = true;
+      app.draw(car.sprite);
+    }
+  }else { //por si acaso mejor que no desaparezca
       app.draw(car.sprite);
   }
 }
@@ -507,6 +520,11 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
     if(linePos[i]+1 >= lines.size()){
       lines[lines.size()-2].cars[i] = sf::Sprite();
+      lines[lines.size()-2].carLocalBounds.height = 0;
+      lines[lines.size()-2].carLocalBounds.width = 0;
+      lines[lines.size()-2].carLocalBounds.top = 0;
+      lines[lines.size()-2].carLocalBounds.left = 0;
+      
       linePos[i] = 1;
       continue;
     } 
@@ -520,13 +538,25 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     if(cars[i].colision){ // si ha colisionado, gestionamos
       lines[linePos[i]].carExplosion[i] = true;
       if(cars[i].colisionSprite == 8){ // acaba de colisionar lo mandamos lejos
+      //reseteamos para no volver a explotar
+      lines[linePos[i]].carExplosion[i] = false;
       lines[linePos[i]-1].cars[i] = sf::Sprite();
+      lines[linePos[i]-1].carLocalBounds.height = 0;
+      lines[linePos[i]-1].carLocalBounds.width = 0;
+      lines[linePos[i]-1].carLocalBounds.top = 0;
+      lines[linePos[i]-1].carLocalBounds.left = 0;
       linePos[i] += 500;
       if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
       cars[i].updateCarSprite();
       continue;
     }else if(diff < -20 && diff > -60){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
+        //reseteamos para no volver a explotar
+        lines[linePos[i]].carExplosion[i] = false;
         lines[linePos[i] -1].cars[i] = sf::Sprite();
+        lines[linePos[i]-1].carLocalBounds.height = 0;
+        lines[linePos[i]-1].carLocalBounds.width = 0;
+        lines[linePos[i]-1].carLocalBounds.top = 0;
+        lines[linePos[i]-1].carLocalBounds.left = 0;
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
         cars[i].colisionSprite = 8;
@@ -538,6 +568,10 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     }else{
       if(diff < -20 && diff > -60){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         lines[linePos[i] -1].cars[i] = sf::Sprite();
+        lines[linePos[i]-1].carLocalBounds.height = 0;
+        lines[linePos[i]-1].carLocalBounds.width = 0;
+        lines[linePos[i]-1].carLocalBounds.top = 0;
+        lines[linePos[i]-1].carLocalBounds.left = 0;
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
         continue;
@@ -639,6 +673,10 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     
     
     cars[i].updateCarSprite();
+    lines[linePos[i]-1].carLocalBounds.height = 0;
+    lines[linePos[i]-1].carLocalBounds.width = 0;
+    lines[linePos[i]-1].carLocalBounds.top = 0;
+    lines[linePos[i]-1].carLocalBounds.left = 0;
     lines[linePos[i] -1].carExplosion[i] = false;
     lines[linePos[i] -1].cars[i] = sf::Sprite();
     lines[linePos[i]].cars[i] = cars[i].sprite;
@@ -654,11 +692,30 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     
   }
   
+
+  lines[linePos[i]-1].carLocalBounds.height = 0;
+  lines[linePos[i]-1].carLocalBounds.width = 0;
+  lines[linePos[i]-1].carLocalBounds.top = 0;
+  lines[linePos[i]-1].carLocalBounds.left = 0;
   lines[linePos[i] -1].cars[i] = sf::Sprite();
-  if(linePos[i]+1 < lines.size())lines[linePos[i] +1].cars[i] = sf::Sprite();
+  if(linePos[i]+1 < lines.size()){
+    lines[linePos[i] +1].cars[i] = sf::Sprite();
+    lines[linePos[i]+1].carLocalBounds.height = 0;
+    lines[linePos[i]+1].carLocalBounds.width = 0;
+    lines[linePos[i]+1].carLocalBounds.top = 0;
+    lines[linePos[i]+1].carLocalBounds.left = 0;
+  }
   lines[linePos[i]].cars[i] = sf::Sprite();
   lines[lines.size()-1].cars[i] = sf::Sprite();
+  lines[lines.size()-1].carLocalBounds.height = 0;
+  lines[lines.size()-1].carLocalBounds.width = 0;
+  lines[lines.size()-1].carLocalBounds.top = 0;
+  lines[lines.size()-1].carLocalBounds.left = 0;
   lines[lines.size()-2].cars[i] = sf::Sprite();
+  lines[lines.size()-2].carLocalBounds.height = 0;
+  lines[lines.size()-2].carLocalBounds.width = 0;
+  lines[lines.size()-2].carLocalBounds.top = 0;
+  lines[lines.size()-2].carLocalBounds.left = 0;
 }
 
 void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], carSpriteIA cars[], int numCars, int i){
@@ -681,6 +738,10 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     int diff = linePos[i] - startPos;
     if(linePos[i]+1 >= lines.size()){
       lines[lines.size()-2].cars[i] = sf::Sprite();
+      lines[lines.size()-2].carLocalBounds.height = 0;
+      lines[lines.size()-2].carLocalBounds.width = 0;
+      lines[lines.size()-2].carLocalBounds.top = 0;
+      lines[lines.size()-2].carLocalBounds.left = 0;
       linePos[i] = 1;
       continue;
     } 
@@ -694,13 +755,21 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     if(cars[i].colision){ // si ha colisionado, gestionamos
       lines[linePos[i]].carExplosion[i] = true;
       if(cars[i].colisionSprite == 8){ // acaba de colisionar lo mandamos lejos
-      lines[linePos[i]-1].cars[i] = sf::Sprite();
-      linePos[i] += 500;
-      if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
-      cars[i].updateCarSprite();
-      continue;
+        lines[linePos[i]-1].cars[i] = sf::Sprite();
+        lines[linePos[i]-1].carLocalBounds.height = 0;
+        lines[linePos[i]-1].carLocalBounds.width = 0;
+        lines[linePos[i]-1].carLocalBounds.top = 0;
+        lines[linePos[i]-1].carLocalBounds.left = 0;
+        linePos[i] += 500;
+        if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
+        cars[i].updateCarSprite();
+        continue;
     }else if(diff < -20 && diff > -60){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
         lines[linePos[i] -1].cars[i] = sf::Sprite();
+        lines[linePos[i]-1].carLocalBounds.height = 0;
+        lines[linePos[i]-1].carLocalBounds.width = 0;
+        lines[linePos[i]-1].carLocalBounds.top = 0;
+        lines[linePos[i]-1].carLocalBounds.left = 0;
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
         cars[i].colisionSprite = 8;
@@ -712,6 +781,10 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     }else{
       if(diff < -20 && diff > -60){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         lines[linePos[i] -1].cars[i] = sf::Sprite();
+        lines[linePos[i]-1].carLocalBounds.height = 0;
+        lines[linePos[i]-1].carLocalBounds.width = 0;
+        lines[linePos[i]-1].carLocalBounds.top = 0;
+        lines[linePos[i]-1].carLocalBounds.left = 0;
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
         continue;
@@ -827,6 +900,10 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     }
 
     cars[i].updateCarSprite();
+    lines[linePos[i]-1].carLocalBounds.height = 0;
+    lines[linePos[i]-1].carLocalBounds.width = 0;
+    lines[linePos[i]-1].carLocalBounds.top = 0;
+    lines[linePos[i]-1].carLocalBounds.left = 0;
     lines[linePos[i] -1].carExplosion[i] = false;
     lines[linePos[i] -1].cars[i] = sf::Sprite();
     lines[linePos[i]].cars[i] = cars[i].sprite;
@@ -840,11 +917,29 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     
     
   }
+  lines[linePos[i]-1].carLocalBounds.height = 0;
+  lines[linePos[i]-1].carLocalBounds.width = 0;
+  lines[linePos[i]-1].carLocalBounds.top = 0;
+  lines[linePos[i]-1].carLocalBounds.left = 0;
   lines[linePos[i] -1].cars[i] = sf::Sprite();
-  if(linePos[i]+1 < lines.size())lines[linePos[i] +1].cars[i] = sf::Sprite();
+  if(linePos[i]+1 < lines.size()){
+    lines[linePos[i] +1].cars[i] = sf::Sprite();
+    lines[linePos[i]+1].carLocalBounds.height = 0;
+    lines[linePos[i]+1].carLocalBounds.width = 0;
+    lines[linePos[i]+1].carLocalBounds.top = 0;
+    lines[linePos[i]+1].carLocalBounds.left = 0;
+  }
   lines[linePos[i]].cars[i] = sf::Sprite();
   lines[lines.size()-1].cars[i] = sf::Sprite();
+  lines[lines.size()-1].carLocalBounds.height = 0;
+  lines[lines.size()-1].carLocalBounds.width = 0;
+  lines[lines.size()-1].carLocalBounds.top = 0;
+  lines[lines.size()-1].carLocalBounds.left = 0;
   lines[lines.size()-2].cars[i] = sf::Sprite();
+  lines[lines.size()-2].carLocalBounds.height = 0;
+  lines[lines.size()-2].carLocalBounds.width = 0;
+  lines[lines.size()-2].carLocalBounds.top = 0;
+  lines[lines.size()-2].carLocalBounds.left = 0;
 }
 
 void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSpriteIA cars[], int numCars, int i){
@@ -870,6 +965,10 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
     if(linePos[i]+1 >= lines.size()){
       lines[lines.size()-2].cars[i] = sf::Sprite();
+      lines[lines.size()-2].carLocalBounds.height = 0;
+      lines[lines.size()-2].carLocalBounds.width = 0;
+      lines[lines.size()-2].carLocalBounds.top = 0;
+      lines[lines.size()-2].carLocalBounds.left = 0;
       linePos[i] = 1;
       continue;
     } 
@@ -882,12 +981,20 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
       lines[linePos[i]].carExplosion[i] = true;
       if(cars[i].colisionSprite == 8){ // acaba de colisionar lo mandamos lejos
       lines[linePos[i]-1].cars[i] = sf::Sprite();
+      lines[linePos[i]-1].carLocalBounds.height = 0;
+      lines[linePos[i]-1].carLocalBounds.width = 0;
+      lines[linePos[i]-1].carLocalBounds.top = 0;
+      lines[linePos[i]-1].carLocalBounds.left = 0;
       linePos[i] += 500;
       if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
       cars[i].updateCarSprite();
       continue;
     }else if(diff < -20 && diff > -60){ // lo hemos dejado atras, lo reiniciamos y lo mandamos alante
         lines[linePos[i] -1].cars[i] = sf::Sprite();
+        lines[linePos[i]-1].carLocalBounds.height = 0;
+        lines[linePos[i]-1].carLocalBounds.width = 0;
+        lines[linePos[i]-1].carLocalBounds.top = 0;
+        lines[linePos[i]-1].carLocalBounds.left = 0;
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
         cars[i].colisionSprite = 8;
@@ -899,6 +1006,10 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     }else{
       if(diff < -20 && diff > -60){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         lines[linePos[i] -1].cars[i] = sf::Sprite();
+        lines[linePos[i]-1].carLocalBounds.height = 0;
+        lines[linePos[i]-1].carLocalBounds.width = 0;
+        lines[linePos[i]-1].carLocalBounds.top = 0;
+        lines[linePos[i]-1].carLocalBounds.left = 0;
         linePos[i] += 500;
         if(linePos[i]+1 >= lines.size()) linePos[i] -= lines.size(); // para cuando sea justo al dar vuelta
         continue;
@@ -1052,6 +1163,10 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     }
 
     cars[i].updateCarSprite();
+    lines[linePos[i]-1].carLocalBounds.height = 0;
+    lines[linePos[i]-1].carLocalBounds.width = 0;
+    lines[linePos[i]-1].carLocalBounds.top = 0;
+    lines[linePos[i]-1].carLocalBounds.left = 0;
     lines[linePos[i] -1].carExplosion[i] = false;
     lines[linePos[i] -1].cars[i] = sf::Sprite();
     lines[linePos[i]].cars[i] = cars[i].sprite;
@@ -1070,11 +1185,29 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     }
     
     
+  lines[linePos[i]-1].carLocalBounds.height = 0;
+  lines[linePos[i]-1].carLocalBounds.width = 0;
+  lines[linePos[i]-1].carLocalBounds.top = 0;
+  lines[linePos[i]-1].carLocalBounds.left = 0;
   lines[linePos[i] -1].cars[i] = sf::Sprite();
-  if(linePos[i]+1 < lines.size())lines[linePos[i] +1].cars[i] = sf::Sprite();
+  if(linePos[i]+1 < lines.size()){
+    lines[linePos[i] +1].cars[i] = sf::Sprite();
+    lines[linePos[i]+1].carLocalBounds.height = 0;
+    lines[linePos[i]+1].carLocalBounds.width = 0;
+    lines[linePos[i]+1].carLocalBounds.top = 0;
+    lines[linePos[i]+1].carLocalBounds.left = 0;
+  }
   lines[linePos[i]].cars[i] = sf::Sprite();
   lines[lines.size()-1].cars[i] = sf::Sprite();
+  lines[lines.size()-1].carLocalBounds.height = 0;
+  lines[lines.size()-1].carLocalBounds.width = 0;
+  lines[lines.size()-1].carLocalBounds.top = 0;
+  lines[lines.size()-1].carLocalBounds.left = 0;
   lines[lines.size()-2].cars[i] = sf::Sprite();
+  lines[lines.size()-2].carLocalBounds.height = 0;
+  lines[lines.size()-2].carLocalBounds.width = 0;
+  lines[lines.size()-2].carLocalBounds.top = 0;
+  lines[lines.size()-2].carLocalBounds.left = 0;
   
 }
 

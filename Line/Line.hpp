@@ -10,6 +10,7 @@ struct Line {
   float X, Y, W; // screen coord
   float curve, spriteX, clip, scale;
   FloatRect localBounds;
+  FloatRect carLocalBounds;
   bool isGoal;
   Sprite sprite;
   int sprite_type; // 0 valla, 1 coche ia, 2 meta, 3 charco
@@ -101,8 +102,9 @@ struct Line {
         cars[i].setPosition(destX, destY);
       }
 
-      if(!std::isnan(cars[i].getGlobalBounds().height)){
-        localBounds = cars[i].getGlobalBounds();
+      if(!std::isnan(cars[i].getGlobalBounds().height) && !std::isnan(cars[i].getGlobalBounds().width)
+      && !std::isnan(cars[i].getGlobalBounds().left) && !std::isnan(cars[i].getGlobalBounds().top)  ){
+        carLocalBounds = cars[i].getGlobalBounds();
       }
 
       app.draw(cars[i]);

@@ -354,7 +354,7 @@ int main() {
             }
             
         }
-        linePos[i] = 250 + 50*i;
+        linePos[i] = (goalPosIni-10) - i * 7;//250 + 50*i;
         posIA++;
     }
     
@@ -526,6 +526,8 @@ int main() {
             break;
 
         case 1://carrera
+            //setMaps(maps, object);
+            //lines = maps[mapa];
             go = false;
             semaforo=0;
             sounds[5].setPitch(1.0f);
