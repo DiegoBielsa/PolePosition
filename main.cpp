@@ -725,7 +725,13 @@ int main() {
                 }
                     app.clear(Color(44, 76, 116));
                     bool haCambiado = 0;
+                    if (noClasifica == true) {
+                        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                            terminar = true;
+                        }
 
+                    }
+                    
                     if (posicionPuntuacion >= 0 && posicionPuntuacion < 7) {
                         selectName(nombre, key, letra, iterador, terminar, haCambiado, actualizar);
 
