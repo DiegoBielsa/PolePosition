@@ -633,7 +633,7 @@ int main() {
                     }
                     else {
                         clock.restart();  //cuando hagamos vuelta
-                        lim = lim+limite/2;
+                        lim = lim+limite/3;
                         lap++;
                         if (lap == 3) {
                             gameOver = true;
