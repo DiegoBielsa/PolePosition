@@ -103,7 +103,6 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         // solo hay que poner los sprites y las curvas (y la meta)
         Line line;
         line.z = i * segL;
-        line.sprite_type = 4; // por si acaso
 
         if(i == goalPosIni){
           line.isGoal = true;
