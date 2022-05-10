@@ -723,6 +723,7 @@ int main() {
         case 2: //resultados clas
 
             terminar = false;
+            sounds[5].pause();
             tiempoparafin.restart();
             letra = 0;
             color = 0;
