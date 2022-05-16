@@ -24,3 +24,5 @@ void escribirNombres(string nombres[], int numero, int iaMode);
 void leerClasificaciones(string clas[], int numero, int iaMode);
 void calcularPosclasificacion(string clas[], Time tiempo, int& posicionClasi, bool noClasifica);
 void calcularBonusExtra(int posicionSalida, int iaMode, int& bonus);
+void hacerPausa(RenderWindow& app, bool& salir, bool& terminar, bool& pausa, Clock& clock);
+void eleccionPausa(RenderWindow& app, bool& pausa, int& color);
