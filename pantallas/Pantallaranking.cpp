@@ -289,140 +289,165 @@ void drawSemaphore(RenderWindow& app,Sprite object[],  int& contadorSem){
 }
 
 
-void manageKeysCircuito(int& mapa,bool& terminar) {
+void manageKeysCircuito(int& mapa,bool& terminar,bool& atras,Clock& clock) {
+    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+        clock.restart();
+        if (atras == true) {
+            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                mapa = 1;
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                terminar = true;
+            }
+        }
+        else {
+            if (mapa == 0) {//test
+                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    mapa = 0;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                    mapa = 1;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    mapa = 0;
+                    atras = true;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    mapa = 2;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+                }
+            }
+            else if (mapa == 1) {//fuji
+                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    mapa = 0; //test
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                    mapa = 1;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    mapa = 1;
+                    atras = true;
 
 
-    if (mapa == 0) {//test
-        if (Keyboard::isKeyPressed(Keyboard::Right)) {
-            mapa = 0;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    mapa = 3;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+                }
+            }
+            else if (mapa == 3) {//suzuka
+                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    mapa = 2;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Left)) {
-            mapa =1;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                    mapa = 3;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Up)) {
-            mapa = 0;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    mapa = 1;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Down)) {
-            mapa = 2;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    mapa = 3;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-            terminar = true;
-        }
-    }
-    else if (mapa == 1) {//fuji
-        if (Keyboard::isKeyPressed(Keyboard::Right)) {
-            mapa = 0; //test
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Left)) {
-            mapa = 1;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Up)) {
-            mapa = 1;
+                }
+            }
+            else if (mapa == 2) {//seaside
+                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    mapa = 2;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Down)) {
-            mapa=3;
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-            terminar = true;
-        }
-    }
-    else if (mapa == 3) {//suzuka
-        if (Keyboard::isKeyPressed(Keyboard::Right)) {
-            mapa = 2;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                    mapa = 3;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Left)) {
-            mapa = 3;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    mapa = 0;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Up)) {
-            mapa = 1;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    mapa = 2;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Down)) {
-            mapa = 3;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
 
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-            terminar = true;
-
-        }
-    }
-    else if (mapa == 2) {//seaside
-        if (Keyboard::isKeyPressed(Keyboard::Right)) {
-            mapa = 2;
-
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Left)) {
-            mapa = 3;
-
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Up)) {
-            mapa = 0;
-
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Down)) {
-            mapa = 2;
-
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-            terminar = true;
-
+                }
+            }
         }
     }
 
 }
 
-void manageKeysIa(int& iaMode, bool& terminar, Clock& clock) {
+void manageKeysIa(int& iaMode, bool& terminar, Clock& clock,bool &atras) {
     if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
         clock.restart();
-        if (iaMode == 0) {//facil
-
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                iaMode = 2;
-
-
-            }
+        if (atras == true) {
             if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                iaMode = 1;
-
+                mapa = 1;
             }
             if (Keyboard::isKeyPressed(Keyboard::Enter)) {
                 terminar = true;
             }
         }
-        else if (iaMode == 1) {//medio
+        else {
+            if (iaMode == 0) {//facil
 
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                iaMode = 0;
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    iaMode = 2;
+                    atras = true;
 
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    iaMode = 1;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+                }
             }
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                iaMode = 2;
+            else if (iaMode == 1) {//medio
 
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                terminar = true;
-            }
-        }
-        else if (iaMode == 2) {//dificil
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    iaMode = 0;
 
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                iaMode = 1;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    iaMode = 2;
 
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+                }
             }
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                iaMode = 0;
+            else if (iaMode == 2) {//dificil
 
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                terminar = true;
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    iaMode = 1;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    iaMode = 0;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+                }
             }
         }
     }
@@ -430,12 +455,25 @@ void manageKeysIa(int& iaMode, bool& terminar, Clock& clock) {
 
 }
 
-void drawCircuito(RenderWindow& app, int& color, int mapa) {
+void drawCircuito(RenderWindow& app, int& color, int mapa,bool atras) {
     sf::Text texto1;
     sf::Text texto2;
     sf::Text texto3;
     sf::Text texto4;
     sf::Text titulo;
+    Vector2f tamayo(40, 30);
+    RectangleShape botonatras(tamayo);
+    botonatras.setPosition(10, 10);
+    botonatras.setFillColor(Color::White);
+    botonatras.setOutlineThickness(1.5);
+
+    Texture atr;
+
+    atr.loadFromFile("images/flechaatras.png");
+
+    const sf::Texture* pTexture = &atr;
+    botonatras.setTexture(pTexture);
+    
 
     sf::Font font;
     font.loadFromFile("letra.ttf");
@@ -487,79 +525,100 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
     Sprite suzu(suzuka);
     Sprite test(tes);
     Sprite sea(seaside);
+    if (atras == true) {
+            if (color == 0 || color == 1) {
+                botonatras.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
 
-    if (mapa == 0) {//test
-        if (color == 0 || color == 1) {
-            test.setColor(sf::Color::Blue);
-            color++;
-        }
+            else if (color == 2 || color == 3) {
+                botonatras.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                botonatras.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                botonatras.setOutlineColor(sf::Color::White);
+                color = 0;
+            }
 
-        else if (color == 2 || color == 3) {
-            test.setColor(sf::Color::Yellow);
-            color++;
-        }
-        else if (color == 4 || color == 5 || color == 6) {
-            test.setColor(sf::Color::White);
-            color++;
-        }
-        else { //rojo
-            color = 0;
-        }
     }
-    else if (mapa == 1) {//fuji
-        if (color == 0 || color == 1) {
-           fuji.setColor(sf::Color::Blue);
-            color++;
-        }
+    else {
+        if (mapa == 0) {//test
+            if (color == 0 || color == 1) {
+                test.setColor(sf::Color::Blue);
+                color++;
+            }
 
-        else if (color == 2 || color == 3) {
-            fuji.setColor(sf::Color::Yellow);
-            color++;
+            else if (color == 2 || color == 3) {
+                test.setColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                test.setColor(sf::Color::White);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
         }
-        else if (color == 4 || color == 5 || color == 6) {
-            fuji.setColor(sf::Color::White);
-            color++;
-        }
-        else { //rojo
-            color = 0;
-        }
-    }
-    else if (mapa == 3) {//suzuka
-        if (color == 0 || color == 1) {
-            suzu.setColor(sf::Color::Blue);
- 
-            color++;
-        }
+        else if (mapa == 1) {//fuji
+            if (color == 0 || color == 1) {
+                fuji.setColor(sf::Color::Blue);
+                color++;
+            }
 
-        else if (color == 2 || color == 3) {
-            suzu.setColor(sf::Color::Yellow);
-            color++;
+            else if (color == 2 || color == 3) {
+                fuji.setColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                fuji.setColor(sf::Color::White);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
         }
-        else if (color == 4 || color == 5 || color == 6) {
-            suzu.setColor(sf::Color::White);
-            color++;
-        }
-        else { //rojo
-            color = 0;
-        }
-    }
-    else if (mapa == 2) {//seaside
-        if (color == 0 || color == 1) {
-            sea.setColor(sf::Color::Blue);
-            color++;
-        }
+        else if (mapa == 3) {//suzuka
+            if (color == 0 || color == 1) {
+                suzu.setColor(sf::Color::Blue);
 
-        else if (color == 2 || color == 3) {
-            sea.setColor(sf::Color::Yellow);
-            color++;
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                suzu.setColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                suzu.setColor(sf::Color::White);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
         }
-        else if (color == 4 || color == 5 || color == 6) {
-            sea.setColor(sf::Color::White);
-            color++;
-        }
-        else { //rojo
-            color = 0;
-        }
+        else if (mapa == 2) {//seaside
+            if (color == 0 || color == 1) {
+                sea.setColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                sea.setColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                sea.setColor(sf::Color::White);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
+        } 
     }
 
 
@@ -579,15 +638,28 @@ void drawCircuito(RenderWindow& app, int& color, int mapa) {
     app.draw(texto3);
     app.draw(texto4);
     app.draw(titulo);
+    app.draw(botonatras);
 }
 
 
-void drawIa(RenderWindow& app, int& color, int iaMode) {
+void drawIa(RenderWindow& app, int& color, int iaMode,bool atras) {
 
     sf::Text texto1;
     sf::Text texto2;
     sf::Text texto3;
     sf::Text titulo;
+    Vector2f tamayo(40, 30);
+    RectangleShape botonatras(tamayo);
+    botonatras.setPosition(10, 10);
+    botonatras.setFillColor(Color::White);
+    botonatras.setOutlineThickness(1.5);
+
+    Texture atr;
+
+    atr.loadFromFile("images/flechaatras.png");
+
+    const sf::Texture* pTexture = &atr;
+    botonatras.setTexture(pTexture);
 
     sf::Font font;
     font.loadFromFile("letra.ttf");
@@ -616,58 +688,81 @@ void drawIa(RenderWindow& app, int& color, int iaMode) {
     texto3.setPosition(400, 500);
     titulo.setPosition(280, 30);
 
-    if (iaMode == 0) {//test
+
+    if (atras == true) {
         if (color == 0 || color == 1) {
-            texto1.setFillColor(sf::Color::Blue);
+            botonatras.setOutlineColor(sf::Color::Blue);
             color++;
         }
 
         else if (color == 2 || color == 3) {
-            texto1.setFillColor(sf::Color::Yellow);
+            botonatras.setOutlineColor(sf::Color::Yellow);
             color++;
         }
         else if (color == 4 || color == 5 || color == 6) {
-            texto1.setFillColor(sf::Color::Red);
+            botonatras.setOutlineColor(sf::Color::Red);
             color++;
         }
         else { //blanco
+            botonatras.setOutlineColor(sf::Color::White);
             color = 0;
         }
+
     }
-    else  if (iaMode == 1) {//medium
-        if (color == 0 || color == 1) {
-            texto2.setFillColor(sf::Color::Blue);
-            color++;
-        }
+    else {
+        if (iaMode == 0) {//test
+            if (color == 0 || color == 1) {
+                texto1.setFillColor(sf::Color::Blue);
+                color++;
+            }
 
-        else if (color == 2 || color == 3) {
-            texto2.setFillColor(sf::Color::Yellow);
-            color++;
+            else if (color == 2 || color == 3) {
+                texto1.setFillColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                texto1.setFillColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                color = 0;
+            }
         }
-        else if (color == 4 || color == 5 || color == 6) {
-            texto2.setFillColor(sf::Color::Red);
-            color++;
-        }
-        else { //blanco
-            color = 0;
-        }
-    }
-    else  if (iaMode == 2) {//hard
-        if (color == 0 || color == 1) {
-            texto3.setFillColor(sf::Color::Blue);
-            color++;
-        }
+        else  if (iaMode == 1) {//medium
+            if (color == 0 || color == 1) {
+                texto2.setFillColor(sf::Color::Blue);
+                color++;
+            }
 
-        else if (color == 2 || color == 3) {
-            texto3.setFillColor(sf::Color::Yellow);
-            color++;
+            else if (color == 2 || color == 3) {
+                texto2.setFillColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                texto2.setFillColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                color = 0;
+            }
         }
-        else if (color == 4 || color == 5 || color == 6) {
-            texto3.setFillColor(sf::Color::Red);
-            color++;
-        }
-        else { //blanco
-            color = 0;
+        else  if (iaMode == 2) {//hard
+            if (color == 0 || color == 1) {
+                texto3.setFillColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                texto3.setFillColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                texto3.setFillColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                color = 0;
+            }
         }
     }
     
@@ -678,6 +773,7 @@ void drawIa(RenderWindow& app, int& color, int iaMode) {
     app.draw(texto2);
     app.draw(texto3);
     app.draw(titulo);
+    app.draw(botonatras);
 
 
 }
