@@ -395,12 +395,25 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 
 void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car, std::vector<Sound>& sounds){
   ////////draw objects//////// hay que hacer 2 bucles para que dibuje los coches siempre encima
-  for (int n = startPos + draw_distance; n > startPos; n--){
-    lines[n % N].drawSprite(app);
+  int upLimit = startPos + draw_distance -50;
+  upLimit = upLimit%N;
+  if(goalPosIni > startPos && goalPosIni < upLimit){ // si está la meta dibujamos antes los coches
+    for (int n = startPos + draw_distance; n > startPos; n--){
+      lines[n % N].drawSprite(app);
+    }
+    for (int n = startPos + draw_distance; n > startPos; n--){ 
+      for(int i = 0; i < numCars; i++) lines[n % N].drawCars(app, i);
+    }
+  }else{ //si no dibujamos antes los carteles y demás
+    for (int n = startPos + draw_distance; n > startPos; n--){ 
+      for(int i = 0; i < numCars; i++) lines[n % N].drawCars(app, i);
+    } 
+    for (int n = startPos + draw_distance; n > startPos; n--){
+      lines[n % N].drawSprite(app);
+    }
+    
   }
-  for (int n = startPos + draw_distance; n > startPos; n--){ 
-    for(int i = 0; i < numCars; i++) lines[n % N].drawCars(app, i);
-  }
+    
     
 
 
