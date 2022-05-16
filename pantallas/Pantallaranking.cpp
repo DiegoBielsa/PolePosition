@@ -934,3 +934,604 @@ void drawResultadosClas(RenderWindow& app,Time tiempo, int& posicionSalida,int& 
     app.draw(ocho);
     app.draw(bonus);
 }
+void manageKeysMenu(bool& terminar, Clock& clock, int& posicionMenu) {
+    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+        clock.restart();
+        if (posicionMenu == 0) {//clasificacion
+
+            if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                posicionMenu = 2;
+
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                posicionMenu = 1;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                terminar = true;
+            }
+        }
+        else if (posicionMenu == 1) {//options
+
+            if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                posicionMenu = 0;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                posicionMenu = 2;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                terminar = true;
+            }
+        }
+        else if (posicionMenu == 2) {//exit
+
+            if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                posicionMenu = 1;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                posicionMenu = 0;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                terminar = true;
+            }
+        }
+    }
+}
+
+
+void drawMenu(RenderWindow& app, int& color, int posicionMenu) {
+
+    sf::Text texto1;
+    sf::Text texto2;
+    sf::Text texto3;
+    sf::Texture fa;
+    fa.loadFromFile("images/falonsoedition.png");
+
+    Sprite nano(fa);
+
+    Vector2f tamayo(200, 100);
+    Vector2f tamayo2(350, 500);
+    RectangleShape botonplay(tamayo);
+    RectangleShape botonopts(tamayo);
+    RectangleShape botonexit(tamayo);
+    RectangleShape fondo(tamayo2);
+
+
+    botonplay.setPosition(380, 220);
+    botonplay.setFillColor(Color(200, 127, 107));
+    botonplay.setOutlineThickness(3.5);
+
+    botonopts.setPosition(380, 370);
+    botonopts.setFillColor(Color(200, 127, 107));
+    botonopts.setOutlineThickness(3.5);
+
+    botonexit.setPosition(380, 520);
+    botonexit.setFillColor(Color(200, 127, 107));
+    botonexit.setOutlineThickness(3.5);
+
+    fondo.setPosition(310, 180);
+    fondo.setFillColor(Color(255, 187, 157));
+    fondo.setOutlineThickness(2);
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    sf::Font font2;
+    font2.loadFromFile("retro.ttf");
+    // select the font
+    texto1.setFont(font2); // font is a sf::Font
+    texto2.setFont(font2);
+    texto3.setFont(font2);
+
+    texto1.setString("PLAY");
+    texto2.setString("OPTIONS");
+    texto3.setString("EXIT");
+
+    texto1.setFillColor(sf::Color::Black);
+    texto2.setFillColor(sf::Color::Black);
+    texto3.setFillColor(sf::Color::Black);
+
+
+
+    texto1.setCharacterSize(55);
+    texto2.setCharacterSize(55);
+    texto3.setCharacterSize(55);
+
+    texto1.setPosition(430, 240);
+    texto2.setPosition(390, 390);
+    texto3.setPosition(430, 540);
+    nano.setScale(1.5,1.5);
+    nano.setPosition(290, 50);
+
+
+    
+        if (posicionMenu == 0) {//test
+            if (color == 0 || color == 1) {
+                botonplay.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                botonplay.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                botonplay.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                color = 0;
+            }
+        }
+        else  if (posicionMenu == 1) {//medium
+            if (color == 0 || color == 1) {
+                botonopts.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                botonopts.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                botonopts.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                color = 0;
+            }
+        }
+        else  if (posicionMenu == 2) {//hard
+            if (color == 0 || color == 1) {
+                botonexit.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                botonexit.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                botonexit.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                color = 0;
+            }
+        }
+    
+
+
+        app.draw(fondo);
+        app.draw(botonplay);
+        app.draw(botonopts);
+        app.draw(botonexit);
+    app.draw(texto1);
+    app.draw(texto2);
+    app.draw(texto3);
+    app.draw(nano);
+
+
+}
+
+
+
+
+void manageKeysOptions(int& posicionMenuOpciones, bool& terminar, Clock& clock, bool& atras) {
+    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+        clock.restart();
+        if (atras == true) {
+            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                posicionMenuOpciones = 0;
+                atras = false;
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                terminar = true;
+            }
+
+        }
+        else {
+            if (posicionMenuOpciones == 0) {//options
+
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    posicionMenuOpciones = 0;
+                    atras = true;
+
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    posicionMenuOpciones = 1;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+                }
+            }
+            else if (posicionMenuOpciones == 1) {//nano
+
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    posicionMenuOpciones = 0;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    posicionMenuOpciones = 1;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+                }
+            }
+        }
+    }
+
+
+}
+
+
+
+
+
+
+
+
+void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu,bool atras) {
+
+    sf::Text texto1;
+    sf::Text texto2;
+    sf::Text titulo;
+    Vector2f tamayo3(40, 30);
+    RectangleShape botonatras(tamayo3);
+    botonatras.setPosition(10, 10);
+    botonatras.setFillColor(Color::White);
+    botonatras.setOutlineThickness(1.5);
+
+    Texture atr;
+
+    atr.loadFromFile("images/flechaatras.png");
+
+    const sf::Texture* pTexture = &atr;
+    botonatras.setTexture(pTexture);
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    titulo.setFont(font);
+    titulo.setString("OPTIONS");
+    titulo.setCharacterSize(80);
+    titulo.setPosition(350, 30);
+
+    Vector2f tamayo(200, 100);
+    Vector2f tamayo2(350, 500);
+    RectangleShape botonkeys(tamayo);
+    RectangleShape botonopts(tamayo);
+    RectangleShape fondo(tamayo2);
+
+
+    botonkeys.setPosition(380, 220);
+    botonkeys.setFillColor(Color(200, 127, 107));
+    botonkeys.setOutlineThickness(3.5);
+
+    botonopts.setPosition(380, 370);
+    botonopts.setFillColor(Color(200, 127, 107));
+    botonopts.setOutlineThickness(3.5);
+
+
+    fondo.setPosition(310, 180);
+    fondo.setFillColor(Color(255, 187, 157));
+    fondo.setOutlineThickness(2);
+
+    sf::Font font2;
+    font2.loadFromFile("retro.ttf");
+    // select the font
+    texto1.setFont(font2); // font is a sf::Font
+    texto2.setFont(font2);
+
+    texto1.setString("KEYS");
+    texto2.setString("NANO");
+
+
+    texto1.setFillColor(sf::Color::Black);
+    texto2.setFillColor(sf::Color::Black);
+  
+
+
+
+    texto1.setCharacterSize(55);
+    texto2.setCharacterSize(55);
+ 
+
+    texto1.setPosition(430, 240);
+    texto2.setPosition(430, 390);
+
+ 
+
+
+    if (atras == true) {
+        if (color == 0 || color == 1) {
+            botonatras.setOutlineColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            botonatras.setOutlineColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            botonatras.setOutlineColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            botonatras.setOutlineColor(sf::Color::White);
+            color = 0;
+        }
+
+    }
+    else {
+        if (posicionMenu == 0) {//test
+            if (color == 0 || color == 1) {
+                botonkeys.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                botonkeys.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                botonkeys.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                color = 0;
+            }
+        }
+        else  if (posicionMenu == 1) {//medium
+            if (color == 0 || color == 1) {
+                botonopts.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                botonopts.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                botonopts.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                color = 0;
+            }
+        }
+    }
+
+
+
+
+    app.draw(fondo);
+    app.draw(botonkeys);
+    app.draw(botonopts);
+    app.draw(texto1);
+    app.draw(texto2);
+  
+    app.draw(botonatras);
+    app.draw(titulo);
+
+
+}
+
+
+
+void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras) {
+
+
+    sf::Text titulo;
+    Vector2f tamayo3(40, 30);
+    RectangleShape botonatras(tamayo3);
+    botonatras.setPosition(10, 10);
+    botonatras.setFillColor(Color::White);
+    botonatras.setOutlineThickness(1.5);
+
+    Vector2f tamayo4(50, 50);
+    RectangleShape imgder(tamayo4);
+    imgder.setPosition(630, 150);
+    RectangleShape imgizq(tamayo4);
+    imgizq.setPosition(630, 250);
+    RectangleShape imggas(tamayo4);
+    imggas.setPosition(630, 350);
+    RectangleShape imgbrake(tamayo4);
+    imgbrake.setPosition(630, 450);
+    RectangleShape imggear(tamayo4);
+    imggear.setPosition(630, 550);
+    RectangleShape imgpause(tamayo4);
+    imgpause.setPosition(630, 650);
+
+
+    Texture atr;
+    Texture der;
+    Texture izq;
+    Texture gas;
+    Texture brake;
+    Texture gear;
+    Texture pause;
+
+    atr.loadFromFile("images/flechaatras.png");
+    der.loadFromFile("sprites/coches/DroveCar/tile100.png");
+    izq.loadFromFile("images/izquierdaparapantalla.png");
+    gas.loadFromFile("sprites/coches/DroveCar/tile00.png");
+    brake.loadFromFile("images/cochefrena.png");
+    gear.loadFromFile("images/marcha_alta.png");
+    pause.loadFromFile("images/pause.png");
+
+    const sf::Texture* pTexture = &atr;
+    botonatras.setTexture(pTexture);
+
+    pTexture = &der;
+    imgder.setTexture(pTexture);
+
+    pTexture = &izq;
+    imgizq.setTexture(pTexture);
+
+    pTexture = &gas;
+    imggas.setTexture(pTexture);
+
+    pTexture = &brake;
+    imgbrake.setTexture(pTexture);
+
+    pTexture = &gear;
+    imggear.setTexture(pTexture);
+    pTexture = &pause;
+    imgpause.setTexture(pTexture);
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    titulo.setFont(font);
+    titulo.setString("KEYS");
+    titulo.setCharacterSize(80);
+    titulo.setPosition(430, 30);
+
+    Vector2f tamayo(450, 50);
+    Vector2f tamayo2(350, 500);
+    RectangleShape botonGas(tamayo);
+    RectangleShape botonBrake(tamayo);
+    RectangleShape botonIzq(tamayo);
+    RectangleShape botonDer(tamayo);
+    RectangleShape botonGear(tamayo);
+    RectangleShape botonPause(tamayo);
+    RectangleShape fondo(tamayo2);
+
+
+    botonGas.setPosition(300, 150);
+    botonGas.setFillColor(Color(200, 127, 107));
+    botonGas.setOutlineThickness(3.5);
+
+    botonBrake.setPosition(300, 250);
+    botonBrake.setFillColor(Color(200, 127, 107));
+    botonBrake.setOutlineThickness(3.5);
+
+    botonDer.setPosition(300, 350);
+    botonDer.setFillColor(Color(200, 127, 107));
+    botonDer.setOutlineThickness(3.5);
+
+    botonIzq.setPosition(300, 450);
+    botonIzq.setFillColor(Color(200, 127, 107));
+    botonIzq.setOutlineThickness(3.5);
+
+    botonGear.setPosition(300, 550);
+    botonGear.setFillColor(Color(200, 127, 107));
+    botonGear.setOutlineThickness(3.5);
+
+    botonPause.setPosition(300, 650);
+    botonPause.setFillColor(Color(200, 127, 107));
+    botonPause.setOutlineThickness(3.5);
+
+
+
+    sf::Font font2;
+    font2.loadFromFile("retro.ttf");
+    // select the font
+  
+
+
+
+
+
+
+    if (atras == true) {
+        if (color == 0 || color == 1) {
+            botonatras.setOutlineColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            botonatras.setOutlineColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            botonatras.setOutlineColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            botonatras.setOutlineColor(sf::Color::White);
+            color = 0;
+        }
+
+    }
+
+    sf::Text texto1;
+    sf::Text texto2;
+    sf::Text texto3;
+    sf::Text texto4;
+    sf::Text texto5;
+    sf::Text texto6;
+
+    texto1.setFont(font); // font is a sf::Font
+    texto2.setFont(font);
+    texto3.setFont(font);
+    texto4.setFont(font);
+    texto5.setFont(font);
+    texto6.setFont(font);
+
+    texto1.setString("RIGHT -> RIGHTARROW");
+    texto2.setString("LEFT ->  LEFTARROW");
+    texto3.setString("GAS  -> UPARROW");
+    texto4.setString("LEFT ->  DOWNARROW");
+    texto5.setString("GEAR ->  CONTROL");
+    texto6.setString("PAUSE ->  ALT-IZQ");
+
+
+    texto1.setFillColor(sf::Color::Black);
+    texto2.setFillColor(sf::Color::Black);
+    texto3.setFillColor(sf::Color::Black);
+    texto4.setFillColor(sf::Color::Black);
+    texto5.setFillColor(sf::Color::Black);
+    texto6.setFillColor(sf::Color::Black);
+
+
+
+
+
+    texto1.setCharacterSize(30);
+    texto2.setCharacterSize(30);
+    texto3.setCharacterSize(30);
+    texto4.setCharacterSize(30);
+    texto5.setCharacterSize(30);
+    texto6.setCharacterSize(30);
+
+
+    texto1.setPosition(300, 150);
+    texto2.setPosition(430, 390);
+    texto3.setPosition(430, 240);
+    texto4.setPosition(430, 390);
+    texto5.setPosition(430, 240);
+    texto6.setPosition(430, 390);
+
+
+
+    app.draw(botonatras);
+    
+    app.draw(botonGas);
+    
+    app.draw(botonBrake);
+    app.draw(botonGear);
+    app.draw(botonIzq);
+    app.draw(botonDer);
+    app.draw(botonPause);
+
+    app.draw(imgder);
+    app.draw(imgizq);
+    app.draw(imggas);
+    app.draw(imgbrake);
+    app.draw(imggear);
+    app.draw(imgpause);
+
+    app.draw(texto1);
+
+   
+    app.draw(titulo);
+
+
+}

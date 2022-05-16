@@ -12,3 +12,10 @@ void manageKeysIa(int& iaMode, bool& terminar, Clock& clock, bool& atras);
 void drawIa(RenderWindow& app, int& color, int iaMode, bool atras);
 void selectName(string name[], string key[], int& letra, int& iterador, bool& terminar, bool& haCambiado, Clock& clock);
 void drawResultadosClas(RenderWindow& app, Time tiempo, int& posicionSalida, int& bon, int& color,int parpadeo);
+void manageKeysMenu(bool& terminar, Clock& clock, int& posicionMenu);
+void drawMenu(RenderWindow& app, int& color, int posicionMenu);
+
+void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu, bool atras);
+void manageKeysOptions(int& posicionMenuOpciones, bool& terminar, Clock& clock, bool& atras);
+
+void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras);
