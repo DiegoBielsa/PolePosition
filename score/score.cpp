@@ -561,3 +561,130 @@ void calcularBonusExtra(int posicionSalida, int iaMode,int& bonus) {
         bonus = 0;
     }
 }
+
+void hacerPausa(RenderWindow& app, bool& salir, bool& terminar,bool& pausa,Clock& clock) {
+  
+    sf::Text texto1;
+
+    sf::Font font;
+    font.loadFromFile("retro.ttf");
+    texto1.setFont(font);
+    texto1.setString("ARE YOU SURE YOU WANT TO EXIT?");
+    texto1.setCharacterSize(30);
+    texto1.setPosition(350, 350);
+    texto1.setFillColor(sf::Color::White);
+    Vector2f tamayo(700, 300);
+    RectangleShape botonatras(tamayo);
+    botonatras.setPosition(200, 300);
+    botonatras.setFillColor(Color(44, 76, 116));
+    botonatras.setOutlineThickness(1.5);
+
+    bool fin = false;
+
+    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+        clock.restart();
+        if (salir == 0) { //NO
+            if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                salir = 1;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                fin = true;
+            }
+        }
+        else if (salir == 1) {//yes
+            if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                salir = 0;
+
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                fin = true;
+            }
+        }
+    }
+        app.draw(botonatras);
+        app.draw(texto1);
+        if (fin == true) {
+            if (salir == true) {
+                terminar = true;
+            }
+            else { //NO
+                terminar = false;
+                pausa = false;
+            }
+        }
+    
+}
+
+void eleccionPausa(RenderWindow& app, bool& salir,int& color) {
+    sf::Text texto1;
+    sf::Text texto2;
+
+    sf::Font font;
+    font.loadFromFile("retro.ttf");
+    texto1.setFont(font);
+    texto1.setString("YES");
+    texto1.setCharacterSize(60);
+    texto1.setPosition(360, 470);
+    texto1.setFillColor(sf::Color::White);
+
+    texto2.setFont(font);
+    texto2.setString("NO");
+    texto2.setCharacterSize(60);
+    texto2.setPosition(670, 470);
+    texto2.setFillColor(sf::Color::White);
+
+    Vector2f tamayo(200, 100);
+    RectangleShape botonyes(tamayo);
+    botonyes.setPosition(300, 450);
+    botonyes.setFillColor(Color(44, 76, 116));
+    botonyes.setOutlineThickness(1.5);
+
+    RectangleShape botonno(tamayo);
+    botonno.setPosition(590, 450);
+    botonno.setFillColor(Color(44, 76, 116));
+    botonno.setOutlineThickness(1.5);
+
+        if (salir == 1) {//yes
+            if (color == 0 || color == 1) {
+                texto1.setFillColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                texto1.setFillColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                texto1.setFillColor(sf::Color::White);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
+        }
+        else {//no
+            if (color == 0 || color == 1) {
+                texto2.setFillColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                texto2.setFillColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                texto2.setFillColor(sf::Color::White);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
+
+        }
+  
+    app.draw(botonyes);
+    app.draw(botonno);
+    app.draw(texto1);
+    app.draw(texto2);
+}
