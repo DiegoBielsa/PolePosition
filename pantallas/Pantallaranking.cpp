@@ -295,6 +295,7 @@ void manageKeysCircuito(int& mapa,bool& terminar,bool& atras,Clock& clock) {
         if (atras == true) {
             if (Keyboard::isKeyPressed(Keyboard::Down)) {
                 mapa = 1;
+                atras = false;
             }
             if (Keyboard::isKeyPressed(Keyboard::Enter)) {
                 terminar = true;
@@ -398,11 +399,13 @@ void manageKeysIa(int& iaMode, bool& terminar, Clock& clock,bool &atras) {
         clock.restart();
         if (atras == true) {
             if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                mapa = 1;
+                iaMode = 0;
+                atras = false;
             }
             if (Keyboard::isKeyPressed(Keyboard::Enter)) {
                 terminar = true;
             }
+           
         }
         else {
             if (iaMode == 0) {//facil
