@@ -42,6 +42,7 @@ float draft_power;
 float goalPosIni;
 float goalPosEnd;
 int color = 0;
+sf::Time antesdepausa;
 
 int speed = 0;
 bool marchaBaja = true;
@@ -83,6 +84,8 @@ bool go = false;
 
 int mapa; //mapa a elegir
 bool atras = false;
+bool salir = false;
+bool pausa = false;
 
 string nombre[] = { "A","A","A" };
 string key[] = { "A","B","C","D", "E","F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
@@ -386,6 +389,7 @@ int main() {
             sounds[5].play();
             terminar = false;
             tiempoparafin.restart();
+            antesdepausa = clock.getElapsedTime();
             clock.restart();
             posicionPuntuacion = 0;
             color = 0;
@@ -393,152 +397,205 @@ int main() {
             score = 0;
             doJoin = true;
             go = false;
+            
             IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
-                Event e;
-                while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed) {
-                        app.close();
-                        gameOver = true;
-                    }
-                }
-
-
-                if (e.type == sf::Event::Resized) {
-                    sf::View view = app.getDefaultView();
-                    view = getLetterboxView(view, e.size.width, e.size.height);
-                    app.setView(view);
-                }
-
-                if (e.type == sf::Event::KeyPressed) {
-                    if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
-                        marchaBaja = !marchaBaja;
-                    }
-                    keyState[e.key.code] = true;
-
-                }
-                else if (e.type == sf::Event::KeyReleased) {
-                    // Update state of current key:
-                    keyState[e.key.code] = false;
-                }
-
-
-
-                updateSound(speed, sounds);
-
-
-                int camH, maxy;
-                float x = 0, dx = 0;
-                if (prepare) {
-                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-                    drawPrepare(app, object, prepare);
-                }
-                else if (semaforo < 50)
-                {
-                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-                    if (semaforo == 0) { sounds[11].play(); }
-                    semaforo++;
-                    if (semaforo < 25) {
-                        app.draw(object[17]);
-                    }
-                    else {
-                        app.draw(object[21]);
-                    }
-                }
-                else {
-                    go = true;
-                    manageKeys(playerX, speed, H, car, lines, startPos, sounds);
-                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-                }
-
-
-
-
-                comprobarMeta(startPos, goalPosIni, metacruz, speed);
-
-
-                if (metacruz == true && antmetacruz == false) {
-                    if (esPrimeravez == true) {
-                        esPrimeravez = false;
-                        clock.restart();
-                    }
-                    else {
-                        gameOver = true;
-                    }
-                }
-                sf::Time elapsed = clock.getElapsedTime();
-                antmetacruz = metacruz;
-                calcularScore(score, speed, lim, limite, gameOver, iaMode);
-
-
-                drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-                drawObjects(app, startPos, lines, N, car, sounds);
-                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver, tiempoFinal, noClasifica, esPrimeravez);
-
-                //std::cout<<startPos<<std::endl;
-                //if (startPos >= 3500 && startPos <= 3550) {
-                  //  gameOver = true;
-                //}
-                drawGear(app, marchaBaja, marcha);
-
-                if (speed < 0) speed = 0;
-
-
-
-                if (gameOver == true) {
-                    if (noClasifica == true) {
-                        drawGameOver(app);
-                    }
-                    // al ser un bucle se ejecuta muchas veces
-
-                    if (doJoin) {
-                        for (int i = 0; i < numCars; i++) {
-                            //std::cout << "join " << i << std::endl;
-                            threads[i].join();
+                if (!pausa) {
+                    Event e;
+                    while (app.pollEvent(e)) {
+                        if (e.type == Event::Closed) {
+                            app.close();
+                            gameOver = true;
                         }
                     }
 
-                    doJoin = false;
-                }
 
-
-                if (gameOver == true && restart == false) {
-                    tiempoparafin.restart();
-                    //escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion,iaMode);
-                    calcularPosclasificacion(clasificaciones, tiempoFinal, carPosition, noClasifica);
-                    if (noClasifica == true) {
-                        posicionPuntuacion = 10;
+                    if (e.type == sf::Event::Resized) {
+                        sf::View view = app.getDefaultView();
+                        view = getLetterboxView(view, e.size.width, e.size.height);
+                        app.setView(view);
                     }
-                    calcularBonusExtra(carPosition, iaMode, bonus);
-                    score = score + bonus;
-                    restart = true;
-                }
-                else if (gameOver == true && restart == true) {
-                    if (carPosition > 7) {
-                        estado = 2;
+
+                    if (e.type == sf::Event::KeyPressed) {
+
+                        if (e.key.code == sf::Keyboard::LAlt && !keyState[e.key.code]) {
+                            cout << "pausa" << endl;
+                            sf::Texture textureCaptura;
+                            textureCaptura.create(app.getSize().x, app.getSize().y);
+                            textureCaptura.update(app);
+                            if (textureCaptura.copyToImage().saveToFile("images/captura.png"))
+                            {
+                                std::cout << "screenshot saved to " << "images/captura.png" << std::endl;
+                            }
+
+                            pausa = true;
+                           
+                        }
+                        if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
+                            marchaBaja = !marchaBaja;
+                        }
+
+                        keyState[e.key.code] = true;
+
+                    }
+                    else if (e.type == sf::Event::KeyReleased) {
+                        // Update state of current key:
+                        keyState[e.key.code] = false;
+                    }
+
+
+
+                    updateSound(speed, sounds);
+
+
+                    int camH, maxy;
+                    float x = 0, dx = 0;
+                    if (prepare) {
+                        updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                        drawPrepare(app, object, prepare);
+                    }
+                    else if (semaforo < 50)
+                    {
+                        updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                        if (semaforo == 0) { sounds[11].play(); }
+                        semaforo++;
+                        if (semaforo < 25) {
+                            app.draw(object[17]);
+                        }
+                        else {
+                            app.draw(object[21]);
+                        }
                     }
                     else {
-                        estado = 1;
-                    }
-
-                    if (tiempoparafin.getElapsedTime().asSeconds() < 3) {
-                        drawResultadosClas(app, tiempoFinal, carPosition, bonus, color, 0);
-                    }
-                    else if (tiempoparafin.getElapsedTime().asSeconds() < 6) {
-                        drawResultadosClas(app, tiempoFinal, carPosition, bonus, color, 1);
-
-                    }
-                    else if (tiempoparafin.getElapsedTime().asSeconds() < 9) {
-                        drawResultadosClas(app, tiempoFinal, carPosition, bonus, color, 2);
+                        go = true;
+                        manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                        updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                     }
 
 
-                    if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
-                        terminar = true;
+
+
+                    comprobarMeta(startPos, goalPosIni, metacruz, speed);
+
+
+                    if (metacruz == true && antmetacruz == false) {
+                        if (esPrimeravez == true) {
+                            esPrimeravez = false;
+                            clock.restart();
+                        }
+                        else {
+                            gameOver = true;
+                        }
                     }
+                    sf::Time elapsed = clock.getElapsedTime() + antesdepausa;
+                    antmetacruz = metacruz;
+                    calcularScore(score, speed, lim, limite, gameOver, iaMode);
+
+
+                    drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
+                    drawObjects(app, startPos, lines, N, car, sounds);
+                    drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver, tiempoFinal, noClasifica, esPrimeravez);
+
+                    //std::cout<<startPos<<std::endl;
+                    //if (startPos >= 3500 && startPos <= 3550) {
+                      //  gameOver = true;
+                    //}
+                    drawGear(app, marchaBaja, marcha);
+
+                    if (speed < 0) speed = 0;
+
+
+
+                    if (gameOver == true || terminar == true) {
+                        if (noClasifica == true) {
+                            drawGameOver(app);
+                        }
+                        // al ser un bucle se ejecuta muchas veces
+
+                        if (doJoin) {
+                            for (int i = 0; i < numCars; i++) {
+                                //std::cout << "join " << i << std::endl;
+                                threads[i].join();
+                            }
+                        }
+
+                        doJoin = false;
+                    }
+
+
+                    if (gameOver == true && restart == false) {
+                        tiempoparafin.restart();
+                        //escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion,iaMode);
+                        calcularPosclasificacion(clasificaciones, tiempoFinal, carPosition, noClasifica);
+                        if (noClasifica == true) {
+                            posicionPuntuacion = 10;
+                        }
+                        calcularBonusExtra(carPosition, iaMode, bonus);
+                        score = score + bonus;
+                        restart = true;
+                    }
+                    else if (gameOver == true && restart == true) {
+                        if (carPosition > 7) {
+                            estado = 2;
+                        }
+                        else {
+                            estado = 1;
+                        }
+
+                        if (tiempoparafin.getElapsedTime().asSeconds() < 3) {
+                            drawResultadosClas(app, tiempoFinal, carPosition, bonus, color, 0);
+                        }
+                        else if (tiempoparafin.getElapsedTime().asSeconds() < 6) {
+                            drawResultadosClas(app, tiempoFinal, carPosition, bonus, color, 1);
+
+                        }
+                        else if (tiempoparafin.getElapsedTime().asSeconds() < 9) {
+                            drawResultadosClas(app, tiempoFinal, carPosition, bonus, color, 2);
+                        }
+
+
+                        if (tiempoparafin.getElapsedTime().asSeconds() > 10) {//esperamos 10 segundos para terminar
+                            terminar = true;
+                        }
+                    }
+                    if (pausa == true) {
+                        antesdepausa = elapsed;
+                    
+                    }
+
+                    app.display();
                 }
 
-                app.display();
+                    else {
+                    Event e;
+                    while (app.pollEvent(e)) {
+                        if (e.type == Event::Closed) {
+                            app.close();
+                            gameOver = true;
+                        }
+                    }
+
+
+                    if (e.type == sf::Event::Resized) {
+                        sf::View view = app.getDefaultView();
+                        view = getLetterboxView(view, e.size.width, e.size.height);
+                        app.setView(view);
+                    }
+                        Texture capt;
+                        capt.loadFromFile("images/captura.png");
+                        Sprite captura(capt);
+
+                        captura.setColor(sf::Color(0x00FF007F));
+                        app.draw(captura);
+                        hacerPausa(app, salir,terminar,pausa,actualizar);
+                        eleccionPausa(app, salir,color);
+                        if (salir && terminar) {
+                            estado = 3;
+                        }
+
+                        clock.restart();
+                        app.display();
+                    }
 
 
             }
@@ -559,6 +616,7 @@ int main() {
             gameOver = false;
             restart = false;
             clock.restart();
+            antesdepausa = clock.getElapsedTime();
             esPrimeravez = true;
             metacruz = false;
             pos = 0;
@@ -606,116 +664,164 @@ int main() {
             }
             IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
-                Event e;
-                while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed) {
-                        app.close();
-                        gameOver = true;
-                    }
-                }
-
-
-                if (e.type == sf::Event::Resized) {
-                    sf::View view = app.getDefaultView();
-                    view = getLetterboxView(view, e.size.width, e.size.height);
-                    app.setView(view);
-                }
-
-                if (e.type == sf::Event::KeyPressed) {
-                    if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
-                        marchaBaja = !marchaBaja;
-                    }
-                    keyState[e.key.code] = true;
-
-                }
-                else if (e.type == sf::Event::KeyReleased) {
-                    // Update state of current key:
-                    keyState[e.key.code] = false;
-                }
-
-
-
-                int camH, maxy;
-                float x = 0, dx = 0;
-                updateSound(speed, sounds);
-                //updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-                if (semaforo < 250) {
-                    if (semaforo == 0) { sounds[10].play(); }
-                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-                    drawSemaphore(app, object, semaforo);
-                }
-                else {
-                    go = true;
-                    manageKeys(playerX, speed, H, car, lines, startPos, sounds);
-                    updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-                }
-
-                comprobarMeta(startPos, goalPosIni, metacruz, speed);
-                if (metacruz == true && antmetacruz == false) {
-                    if (esPrimeravez == true) {
-                        esPrimeravez = false;
-                        clock.restart();
-                    }
-                    else {
-                        clock.restart();  //cuando hagamos vuelta
-                        lim = lim + limite / 3;
-                        lap++;
-                        if (lap == 3) {
+                if (!pausa) {
+                    Event e;
+                    while (app.pollEvent(e)) {
+                        if (e.type == Event::Closed) {
+                            app.close();
                             gameOver = true;
                         }
                     }
+
+
+                    if (e.type == sf::Event::Resized) {
+                        sf::View view = app.getDefaultView();
+                        view = getLetterboxView(view, e.size.width, e.size.height);
+                        app.setView(view);
+                    }
+
+                    if (e.type == sf::Event::KeyPressed) {
+                        if (e.key.code == sf::Keyboard::LAlt && !keyState[e.key.code]) {
+                            cout << "pausa" << endl;
+                            sf::Texture textureCaptura;
+                            textureCaptura.create(app.getSize().x, app.getSize().y);
+                            textureCaptura.update(app);
+                            if (textureCaptura.copyToImage().saveToFile("images/captura.png"))
+                            {
+                                std::cout << "screenshot saved to " << "images/captura.png" << std::endl;
+                            }
+
+                            pausa = true;
+                        }
+                        if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
+                            marchaBaja = !marchaBaja;
+                        }
+                        keyState[e.key.code] = true;
+
+                    }
+                    else if (e.type == sf::Event::KeyReleased) {
+                        // Update state of current key:
+                        keyState[e.key.code] = false;
+                    }
+
+
+
+                    int camH, maxy;
+                    float x = 0, dx = 0;
+                    updateSound(speed, sounds);
+                    //updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                    if (semaforo < 250) {
+                        if (semaforo == 0) { sounds[10].play(); }
+                        updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                        drawSemaphore(app, object, semaforo);
+                    }
+                    else {
+                        go = true;
+                        manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                        updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
+                    }
+
+                    comprobarMeta(startPos, goalPosIni, metacruz, speed);
+                    if (metacruz == true && antmetacruz == false) {
+                        if (esPrimeravez == true) {
+                            esPrimeravez = false;
+                            clock.restart();
+                        }
+                        else {
+                            clock.restart();  //cuando hagamos vuelta
+                            lim = lim + limite / 3;
+                            lap++;
+                            if (lap == 3) {
+                                gameOver = true;
+                            }
+                        }
+                    }
+                    sf::Time elapsed = clock.getElapsedTime() +antesdepausa;
+
+                    antmetacruz = metacruz;
+                    calcularScore(score, speed, lim, limite, gameOver, iaMode);
+
+
+
+
+                    drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
+                    drawObjects(app, startPos, lines, N, car, sounds);
+                    drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver, tiempoFinal, noClasifica, esPrimeravez);
+                    //std::cout<<startPos<<std::endl;
+
+                    drawGear(app, marchaBaja, marcha);
+
+                    if (speed < 0) speed = 0;
+
+
+
+                    if (gameOver == true) {
+                        drawGameOver(app);
+                        if (doJoin) {
+                            for (int i = 0; i < numCars; i++) {
+                                //std::cout << "join " << i << std::endl;
+                                threads[i].join();
+                            }
+                        }
+
+                        doJoin = false;
+                    }
+
+
+                    if (gameOver == true && restart == false) {
+                        tiempoparafin.restart();
+                        //score = 21;
+                        escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion, iaMode);
+                        cout << "posicionPuntuacion " << posicionPuntuacion << endl;
+                        restart = true;
+                    }
+
+
+
+                    else if (gameOver == true && restart == true) {
+                        estado = 2;
+
+                        if (tiempoparafin.getElapsedTime().asSeconds() > 5) {//esperamos 10 segundos para terminar
+                            terminar = true;
+                        }
+                    }
+                    if (pausa == true) {
+                        antesdepausa = elapsed;
+
+                    }
+                    app.display();
                 }
-                sf::Time elapsed = clock.getElapsedTime();
-
-                antmetacruz = metacruz;
-                calcularScore(score, speed, lim, limite, gameOver, iaMode);
-
-
-
-
-                drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-                drawObjects(app, startPos, lines, N, car, sounds);
-                drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver, tiempoFinal, noClasifica, esPrimeravez);
-                //std::cout<<startPos<<std::endl;
-
-                drawGear(app, marchaBaja, marcha);
-
-                if (speed < 0) speed = 0;
-
-
-
-                if (gameOver == true) {
-                    drawGameOver(app);
-                    if (doJoin) {
-                        for (int i = 0; i < numCars; i++) {
-                            //std::cout << "join " << i << std::endl;
-                            threads[i].join();
+                else {
+                    Event e;
+                    while (app.pollEvent(e)) {
+                        if (e.type == Event::Closed) {
+                            app.close();
+                            gameOver = true;
                         }
                     }
 
-                    doJoin = false;
-                }
 
-
-                if (gameOver == true && restart == false) {
-                    tiempoparafin.restart();
-                    //score = 21;
-                    escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion, iaMode);
-                    cout << "posicionPuntuacion " << posicionPuntuacion << endl;
-                    restart = true;
-                }
-
-
-
-                else if (gameOver == true && restart == true) {
-                    estado = 2;
-
-                    if (tiempoparafin.getElapsedTime().asSeconds() > 5) {//esperamos 10 segundos para terminar
-                        terminar = true;
+                    if (e.type == sf::Event::Resized) {
+                        sf::View view = app.getDefaultView();
+                        view = getLetterboxView(view, e.size.width, e.size.height);
+                        app.setView(view);
                     }
-                }
+                    Texture capt;
+                    capt.loadFromFile("images/captura.png");
+                    Sprite captura(capt);
 
-                app.display();
+                    captura.setColor(sf::Color(0x00FF007F));
+                    app.draw(captura);
+                    hacerPausa(app, salir, terminar, pausa, actualizar);
+                    eleccionPausa(app, salir, color);
+                    if (salir && terminar) {
+                        estado = 3;
+                    }
+
+                    clock.restart();
+                    app.display();
+                
+                }
 
 
             }
@@ -735,6 +841,7 @@ int main() {
                 while (app.pollEvent(e)) {
                     if (e.type == Event::Closed)
                         app.close();
+                  
                 }
 
 
@@ -895,6 +1002,7 @@ int main() {
                 app.display();
             }
             break;
+       
         default:
             break;
 
