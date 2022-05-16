@@ -1476,11 +1476,11 @@ void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras
     texto6.setFont(font);
 
     texto1.setString("RIGHT -> RIGHTARROW");
-    texto2.setString("LEFT ->  LEFTARROW");
+    texto2.setString("LEFT -> LEFTARROW");
     texto3.setString("GAS  -> UPARROW");
-    texto4.setString("LEFT ->  DOWNARROW");
-    texto5.setString("GEAR ->  CONTROL");
-    texto6.setString("PAUSE ->  ALT-IZQ");
+    texto4.setString("BRAKR -> DOWNARROW");
+    texto5.setString("GEAR -> CONTROL");
+    texto6.setString("PAUSE -> ALT-IZQ");
 
 
     texto1.setFillColor(sf::Color::Black);
@@ -1502,12 +1502,12 @@ void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras
     texto6.setCharacterSize(30);
 
 
-    texto1.setPosition(300, 150);
-    texto2.setPosition(430, 390);
-    texto3.setPosition(430, 240);
-    texto4.setPosition(430, 390);
-    texto5.setPosition(430, 240);
-    texto6.setPosition(430, 390);
+    texto1.setPosition(320, 150);
+    texto2.setPosition(320, 250);
+    texto3.setPosition(320, 350);
+    texto4.setPosition(320, 450);
+    texto5.setPosition(320, 550);
+    texto6.setPosition(320, 650);
 
 
 
@@ -1529,6 +1529,12 @@ void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras
     app.draw(imgpause);
 
     app.draw(texto1);
+    app.draw(texto2);
+    app.draw(texto3);
+    app.draw(texto4);
+    app.draw(texto5);
+    app.draw(texto6);
+
 
    
     app.draw(titulo);
