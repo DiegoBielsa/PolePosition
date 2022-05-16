@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 4;
+int estado = 8;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -1127,7 +1127,13 @@ int main() {
                 app.clear(Color(227, 187, 107));
 
                  drawMenuteclas(app, color, posicionMenuOpciones, atras);
-               
+                 if (actualizar.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+                     actualizar.restart();
+                         if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                             terminar = true;
+                         }
+
+                     }
                         if (terminar == true) {
                             if (atras == true) {
                                 estado = 7;
