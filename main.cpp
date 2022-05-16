@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 3;
+int estado = 4;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -82,6 +82,7 @@ bool go = false;
 
 
 int mapa; //mapa a elegir
+bool atras = false;
 
 string nombre[] = { "A","A","A" };
 string key[] = { "A","B","C","D", "E","F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
@@ -808,7 +809,9 @@ int main() {
         case 4: //pantalla eleccioncircuito
             sounds[7].play();
             terminar = false;
+            atras = false;
             tiempoparafin.restart();
+            actualizar.restart();
             color = 0; //color de los sprites
             mapa = 0;
             while (app.isOpen() && !terminar) {
@@ -826,14 +829,20 @@ int main() {
                 }
                 app.clear(Color(44, 76, 116));
 
-                manageKeysCircuito(mapa, terminar);
+                manageKeysCircuito(mapa, terminar,atras,actualizar);
 
-                drawCircuito(app, color, mapa);
+                drawCircuito(app, color, mapa,atras);
                 if (terminar == true) {
-                    estado = 5;
-                    // eleccion del mapa
-                    lines = maps[mapa];
-                    N = lines.size();
+                    if (atras == true) {
+                        estado = 3;
+                    }
+                    else {
+                        estado = 5;
+
+                        // eleccion del mapa
+                        lines = maps[mapa];
+                        N = lines.size();
+                    }
                 }
 
 
@@ -844,6 +853,7 @@ int main() {
         case 5: //pantalla eleccion ia
             sounds[7].play();
             terminar = false;
+            atras = false;
             actualizar.restart();
             tiempoparafin.restart();
             color = 0; //color de los sprites
@@ -863,16 +873,21 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(44, 76, 116));
-                manageKeysIa(iaMode, terminar, actualizar);
+                manageKeysIa(iaMode, terminar, actualizar,atras);
 
-                drawIa(app, color, iaMode);
+                drawIa(app, color, iaMode,atras);
                 if (terminar == true) {
-                    estado = 0;
-                    leerPuntuaciones(puntuaciones, mapa, iaMode);
-                    leerClasificaciones(clasificaciones, mapa, iaMode);
-                    leerNombres(nombres, mapa, iaMode);
-                    leerLimite(limite, mapa);
-                    lim = limite;
+                    if (atras == true) {
+                        estado = 4;
+                    }
+                    else {
+                        estado = 0;
+                        leerPuntuaciones(puntuaciones, mapa, iaMode);
+                        leerClasificaciones(clasificaciones, mapa, iaMode);
+                        leerNombres(nombres, mapa, iaMode);
+                        leerLimite(limite, mapa);
+                        lim = limite;
+                    }
 
                 }
 
