@@ -462,6 +462,10 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
       derrape = false;
     //std::cout << "charco" << std::endl;
       charco = true;
+      sf::SoundSource::Status status = sounds[12].getStatus();
+      if(status != sf::Music::Playing){
+        sounds[12].play();
+      }
       app.draw(car.sprite);
     }
   }else { //por si acaso mejor que no desaparezca

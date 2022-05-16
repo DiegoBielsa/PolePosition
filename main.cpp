@@ -299,6 +299,13 @@ int main() {
     }
     sound12.setBuffer(buffer12);
     sounds.push_back(sound12);
+    SoundBuffer buffer13;
+    Sound sound13;
+    if (!buffer13.loadFromFile("audio/charco.wav")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound13.setBuffer(buffer13);
+    sounds.push_back(sound13);
 
 
 
