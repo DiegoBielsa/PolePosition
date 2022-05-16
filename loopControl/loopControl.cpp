@@ -519,6 +519,9 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float drivingCarYPos = 600;
   float drivingCarXPos = width/2-car_width*1.5;
   float rebase = 0;
+  bool charco = false;
+  float posicionCharco = 0.0;
+  int lineCharco = 0;
 
   speeds = 5.0f;
   maxSpeeds = (mediumSpeed - 100) - (i * 7);
@@ -526,6 +529,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
 
   while(!gameOver){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
+    
     //if(!go) continue;
     int diff = linePos[i] - startPos;
     //std::cout << diff << std::endl;
@@ -682,6 +686,29 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
               }
           }
       }
+      if(lines[linePos[i]+100].sprite_type == 3 && !charco){ // establecemos donde está el charco y si nos lo vamos a comer
+        
+        posicionCharco = lines[linePos[i]+20].spriteX + 0.4;
+        lineCharco = linePos[i]+100;
+        //std::cout << "charco " << posicionCharco << std::endl;
+        //std::cout << "yo " << XPos[i] << std::endl;
+        if(XPos[i] > posicionCharco-0.7 && XPos[i] < posicionCharco+0.7){ // asumimos aqui nos lo comemos y lo vamos a querere evitar
+          charco = true;
+        }
+        
+        
+        
+      }else if(linePos[i] > lineCharco && charco){ // quitamos las variables para un uso posterior
+        charco = false;
+        posicionCharco = 0.0;
+        lineCharco = 0;
+      }else if(charco){ // esquivamos el charco
+          cars[i].maxTex = 7;
+          if((XPos[i] - 0.01 > -off_road_allowed_cars-0.2)){ 
+              XPos[i] -= 0.01;
+              cars[i].car_dir = -1;
+          }
+      }
     }
     
     
@@ -740,6 +767,9 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   float drivingCarYPos = 600;
   float drivingCarXPos = width/2-car_width*1.5;
   int rebase = 0; // 0 rebasa por izquierda 1 por derecha
+  bool charco = false;
+  float posicionCharco = 0.0;
+  int lineCharco = 0;
   
   speeds = 5.0f;
   maxSpeeds = (mediumSpeed - 100) - (i * 7);
@@ -910,6 +940,29 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
               }
           }
       }
+      if(lines[linePos[i]+100].sprite_type == 3 && !charco){ // establecemos donde está el charco y si nos lo vamos a comer
+        
+        posicionCharco = lines[linePos[i]+20].spriteX + 0.4;
+        lineCharco = linePos[i]+100;
+        //std::cout << "charco " << posicionCharco << std::endl;
+        //std::cout << "yo " << XPos[i] << std::endl;
+        if(XPos[i] > posicionCharco-0.7 && XPos[i] < posicionCharco+0.7){ // asumimos aqui nos lo comemos y lo vamos a querere evitar
+          charco = true;
+        }
+        
+        
+        
+      }else if(linePos[i] > lineCharco && charco){ // quitamos las variables para un uso posterior
+        charco = false;
+        posicionCharco = 0.0;
+        lineCharco = 0;
+      }else if(charco){ // esquivamos el charco
+          cars[i].maxTex = 7;
+          if((XPos[i] - 0.01 > -off_road_allowed_cars-0.2)){ 
+              XPos[i] -= 0.01;
+              cars[i].car_dir = -1;
+          }
+      }
     }
 
     cars[i].updateCarSprite();
@@ -964,6 +1017,9 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   float drivingCarYPos = 600;
   float drivingCarXPos = width/2-car_width*1.5;
   float rebase = 0;
+  bool charco = false;
+  float posicionCharco = 0.0;
+  int lineCharco = 0;
   
   // sabes que el coche que controlas siempre está en la misma posición, X = 0, Y = nose
   // cuando estes cerca de esa Y siendo la tuya más arriba te acercas poco a poco a esa X = 0
@@ -1093,7 +1149,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
             cars[i].maxTex = 7;
           }
         }
-        if(carsYpos > 460 && carsYpos < 550){ //aquí es cuando tiende a ponerse delante tuyo
+        if(carsYpos > 460 && carsYpos < 550 && !charco){ //aquí es cuando tiende a ponerse delante tuyo
             // tratas de igualar las X para molestar lo máximo posible
             if(carsXpos  > drivingCarXPos + (car_width-10) && XPos[i] - 0.02 > -off_road_allowed_cars-0.2){ 
                 XPos[i] -= 0.03;
@@ -1171,6 +1227,30 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
                     }
                 
               }
+          }
+      }
+
+      if(lines[linePos[i]+100].sprite_type == 3 && !charco){ // establecemos donde está el charco y si nos lo vamos a comer
+        
+        posicionCharco = lines[linePos[i]+20].spriteX + 0.4;
+        lineCharco = linePos[i]+100;
+        //std::cout << "charco " << posicionCharco << std::endl;
+        //std::cout << "yo " << XPos[i] << std::endl;
+        if(XPos[i] > posicionCharco-0.7 && XPos[i] < posicionCharco+0.7){ // asumimos aqui nos lo comemos y lo vamos a querere evitar
+          charco = true;
+        }
+        
+        
+        
+      }else if(linePos[i] > lineCharco && charco){ // quitamos las variables para un uso posterior
+        charco = false;
+        posicionCharco = 0.0;
+        lineCharco = 0;
+      }else if(charco){ // esquivamos el charco
+          cars[i].maxTex = 7;
+          if((XPos[i] - 0.01 > -off_road_allowed_cars-0.2)){ 
+              XPos[i] -= 0.01;
+              cars[i].car_dir = -1;
           }
       }
     }

@@ -100,9 +100,11 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
     case 0:
       goalPosEnd = 3500;
       for(int i = 0; i < 3600; i++){
+        
         // solo hay que poner los sprites y las curvas (y la meta)
         Line line;
         line.z = i * segL;
+        line.sprite_type = 0;
 
         if(i == goalPosIni){
           line.isGoal = true;
@@ -110,6 +112,8 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
           line.spriteX = -0.5;
           line.sprite_type = 2;//meta
         }
+
+        
         
 
         if((i >= 500 && i <= 800) || (i >= 1000 && i <= 1300) || (i >= 2300 && i <= 2600) || (i >= 2800 && i <= 3100)){
@@ -179,6 +183,7 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         // solo hay que poner los sprites y las curvas (y la meta)
         Line line;
         line.z = i * segL;
+        line.sprite_type = 0;
 
         if(i == goalPosIni){
           line.isGoal = true;
@@ -274,6 +279,7 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
           // solo hay que poner los sprites y las curvas (y la meta)
           Line line;
           line.z = i * segL;
+          line.sprite_type = 0;
 
           if(i == goalPosIni){
           line.isGoal = true;
