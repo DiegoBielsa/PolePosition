@@ -418,8 +418,7 @@ int main() {
 
                     if (e.type == sf::Event::KeyPressed) {
 
-                        if (e.key.code == sf::Keyboard::LAlt && !keyState[e.key.code]) {
-                            cout << "pausa" << endl;
+                        if (e.key.code == sf::Keyboard::LAlt) {
                             sf::Texture textureCaptura;
                             textureCaptura.create(app.getSize().x, app.getSize().y);
                             textureCaptura.update(app);
