@@ -357,7 +357,7 @@ int main() {
             }
 
         }
-        linePos[i] = (goalPosIni - 10) - i * 7;//250 + 50 * i;
+        linePos[i] = 250 + 50 * i;
         posIA++;
     }
 
