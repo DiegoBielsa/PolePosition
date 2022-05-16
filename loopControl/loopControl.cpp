@@ -3,6 +3,7 @@
 #include <time.h>
 #include <chrono>
 #include <thread>
+#include <random>
 
 using namespace std;
 using namespace sf;
@@ -522,6 +523,9 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   bool charco = false;
   float posicionCharco = 0.0;
   int lineCharco = 0;
+  float firstXPos = XPos[i];
+  int contador = 0;
+
 
   speeds = 5.0f;
   maxSpeeds = (mediumSpeed - 100) - (i * 7);
@@ -583,6 +587,20 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     if(speeds-20 > 0) speeds -= 20;
       
     }else{
+      if(contador > 0){ // si no está en su xpos habitual ni evitando un charco vuelve a ella
+        if(contador < 100){
+          if(XPos[i] < firstXPos){ // esta a la izquierda
+            XPos[i] += 0.01;
+            cars[i].car_dir = 1;
+            cars[i].maxTex = 7;
+          }else if(XPos[i] > firstXPos){ // esta a la derecha
+            XPos[i] -= 0.01;
+            cars[i].car_dir = -1;
+            cars[i].maxTex = 7;
+          }
+        }
+        contador--;
+      }
       if(diff < -20 && diff > -60){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         lines[linePos[i] -1].cars[i] = sf::Sprite();
         lines[linePos[i]-1].carLocalBounds.height = 0;
@@ -702,6 +720,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
         charco = false;
         posicionCharco = 0.0;
         lineCharco = 0;
+        contador = 200;
       }else if(charco){ // esquivamos el charco
           cars[i].maxTex = 7;
           if((XPos[i] - 0.01 > -off_road_allowed_cars-0.2)){ 
@@ -770,6 +789,12 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   bool charco = false;
   float posicionCharco = 0.0;
   int lineCharco = 0;
+  int contador = 0;
+  float firstXPos = XPos[i];
+  std::random_device dev;
+  std::mt19937 rng(dev());
+  std::uniform_int_distribution<std::mt19937::result_type> dist6(0,1); // distribution in range [1, 6]
+  int zigzag = dist6(rng); // si 0 gira a izquierdas si 1 a derechas en su zigzag
   
   speeds = 5.0f;
   maxSpeeds = (mediumSpeed - 100) - (i * 7);
@@ -822,6 +847,33 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     if(speeds-20 > 0) speeds -= 20;
       
     }else{
+      if(!charco){ // hacemos zigzaf
+        if(contador == 0){
+          if(zigzag == 0){ // gira a la izquierda
+              if((XPos[i] - 0.2 > -off_road_allowed_cars-0.2)){ // intenta adelantar por la izquierda
+                  XPos[i] -= 0.01;
+                  cars[i].car_dir = -1;
+                  cars[i].maxTex = 7;
+              }else{
+                zigzag = 1; //si no puede lo intentará a derechas
+              }
+            
+          }else{ // esta a la derecha
+            if((XPos[i] + 0.2 < off_road_allowed_cars)){ // intenta adelantar por la izquierda
+                  XPos[i] += 0.01;
+                  cars[i].car_dir = 1;
+                  cars[i].maxTex = 7;
+              }else{
+                zigzag = 0; //si no puede lo intentará a derechas
+              }
+          }
+        }else{
+          contador--;
+        }
+      }
+      
+        
+      
       if(diff < -20 && diff > -60){ // lo hemos adelantado de sobra pues lo ponemos alante otra vez
         lines[linePos[i] -1].cars[i] = sf::Sprite();
         lines[linePos[i]-1].carLocalBounds.height = 0;
@@ -956,6 +1008,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
         charco = false;
         posicionCharco = 0.0;
         lineCharco = 0;
+        contador = 200;
       }else if(charco){ // esquivamos el charco
           cars[i].maxTex = 7;
           if((XPos[i] - 0.01 > -off_road_allowed_cars-0.2)){ 
