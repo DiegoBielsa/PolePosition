@@ -24,7 +24,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 8;
+int estado = 6;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
@@ -88,6 +88,7 @@ bool salir = false;
 bool pausa = false;
 int posicionMenu = 0;
 int posicionMenuOpciones = 0;
+int teamNano = 1;
 
 string nombre[] = { "A","A","A" };
 string key[] = { "A","B","C","D", "E","F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
@@ -398,6 +399,7 @@ int main() {
             sounds[5].play();
             terminar = false;
             tiempoparafin.restart();
+            pausa = false;
             antesdepausa = clock.getElapsedTime();
             clock.restart();
             posicionPuntuacion = 0;
@@ -407,7 +409,7 @@ int main() {
             doJoin = true;
             go = false;
 
-            IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
+           // IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
                 if (!pausa) {
                     Event e;
@@ -624,6 +626,7 @@ int main() {
             gameOver = false;
             restart = false;
             clock.restart();
+            pausa = false;
             antesdepausa = clock.getElapsedTime();
             esPrimeravez = true;
             metacruz = false;
@@ -1152,6 +1155,93 @@ int main() {
                         app.display();
             }
                 
+
+            break;
+        case 9: //elegir nano
+            sounds[7].play();
+            terminar = false;
+            atras = false;
+            actualizar.restart();
+            tiempoparafin.restart();
+            color = 0; //color de los sprites
+            iaMode = 0;
+            pulsada = 0;
+            posicionMenuOpciones = 0;
+            while (app.isOpen() && !terminar) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                app.clear(Color(227, 187, 107));
+
+                elegirTeamNano(teamNano,terminar,atras,actualizar);
+                drawNano(app, color, teamNano, atras);
+
+                if (terminar == true) {
+                    if (atras == true) {
+                        estado = 7;
+                    }
+                    else if (teamNano == 0) {//ferrari
+                        int k = 0;
+                        estado = 6;
+
+                        for (int j = 0; j <= 11; j++) {
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
+                            k++;
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
+                            k++;
+                        }
+                    }
+                    else if (teamNano == 1) {//alpine
+                        int k = 0;
+                        estado = 6;
+
+                        for (int j = 0; j <= 11; j++) {
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
+                            k++;
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
+                            k++;
+                        }
+
+                    }
+                    else if (teamNano == 2) {//mclaren
+                        int k = 0;
+                        estado = 6;
+
+                        for (int j = 0; j <= 11; j++) {
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
+                            k++;
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
+                            k++;
+                        }
+
+                    }
+                    else {//renault
+                        int k = 0;
+                        estado = 6;
+
+                        for (int j = 0; j <= 11; j++) {
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
+                            k++;
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
+                            k++;
+                        }
+                    }
+
+                }
+
+
+                app.display();
+            }
+
 
             break;
         default:
