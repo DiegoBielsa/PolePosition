@@ -1321,7 +1321,7 @@ int main() {
                     if (atras == true) {
                         estado = 7;
                     }
-
+                    estado = 7;
                 }
 
 
