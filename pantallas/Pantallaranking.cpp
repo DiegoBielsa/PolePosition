@@ -1541,3 +1541,306 @@ void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras
 
 
 }
+
+
+
+void elegirTeamNano(int& teamNano, bool& terminar, bool& atras, Clock& clock) {
+    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+        clock.restart();
+        if (atras == true) {
+            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                teamNano = 1;
+                atras = false;
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                terminar = true;
+            }
+        }
+        else {
+            if (teamNano == 0) {//ferrari
+                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    teamNano = 0;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                    teamNano = 1;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    teamNano = 0;
+                    atras = true;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    teamNano = 2;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+                }
+            }
+            else if (teamNano == 1) {//alpine
+                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    teamNano = 0; //test
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                    teamNano = 1;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    teamNano = 1;
+                    atras = true;
+
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    teamNano = 3;
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+                }
+            }
+            else if (teamNano == 3) {//renault
+                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    teamNano = 2;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                    teamNano = 3;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    teamNano = 1;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    teamNano = 3;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+
+                }
+            }
+            else if (teamNano == 2) {//mclaren
+                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    teamNano = 2;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                    teamNano = 3;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    teamNano = 0;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    teamNano = 2;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    terminar = true;
+
+                }
+            }
+        }
+    }
+
+}
+
+
+
+void drawNano(RenderWindow& app, int& color, int teamNano, bool atras) {
+    sf::Text texto1;
+    sf::Text texto2;
+    sf::Text texto3;
+    sf::Text texto4;
+    sf::Text titulo;
+    Vector2f tamayo(40, 30);
+    RectangleShape botonatras(tamayo);
+    botonatras.setPosition(10, 10);
+    botonatras.setFillColor(Color::White);
+    botonatras.setOutlineThickness(1.5);
+
+
+    Vector2f tamayo2(380, 200);
+    RectangleShape alpine(tamayo2);
+    alpine.setPosition(80, 180);
+    alpine.setFillColor(Color::White);
+    alpine.setOutlineThickness(2);
+
+    RectangleShape ferrari(tamayo2);
+    ferrari.setPosition(550, 180);
+    ferrari.setFillColor(Color::White);
+    ferrari.setOutlineThickness(2);
+
+    RectangleShape renault(tamayo2);
+    renault.setPosition(80, 450);
+    renault.setFillColor(Color::White);
+    renault.setOutlineThickness(2);
+
+    RectangleShape mclaren(tamayo2);
+    mclaren.setPosition(550, 450);
+    mclaren.setFillColor(Color::White);
+    mclaren.setOutlineThickness(2);
+
+    Texture atr;
+    Texture alp;
+    Texture rrari;
+    Texture renau;
+    Texture mc;
+
+    atr.loadFromFile("images/flechaatras.png");
+    alp.loadFromFile("images/alpine.png");
+    rrari.loadFromFile("images/ferrari.png");
+    renau.loadFromFile("images/renault.png");
+    mc.loadFromFile("images/mclaren.png");
+
+    const sf::Texture* pTexture = &atr;
+    botonatras.setTexture(pTexture);
+
+    pTexture = &alp;
+    alpine.setTexture(pTexture);
+
+    pTexture = &rrari;
+    ferrari.setTexture(pTexture);
+
+
+    pTexture = &renau;
+    renault.setTexture(pTexture);
+
+    pTexture = &mc;
+    mclaren.setTexture(pTexture);
+
+
+
+
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+
+  
+    titulo.setFont(font);
+
+   
+    titulo.setString("NANO'S TEAM");
+
+
+
+    titulo.setCharacterSize(60);
+
+  
+    titulo.setPosition(350, 30);
+
+
+ 
+    if (atras == true) {
+        if (color == 0 || color == 1) {
+            botonatras.setOutlineColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            botonatras.setOutlineColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            botonatras.setOutlineColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            botonatras.setOutlineColor(sf::Color::White);
+            color = 0;
+        }
+
+    }
+    
+    else {
+        if (teamNano == 0) {//ferrari
+            if (color == 0 || color == 1) {
+                ferrari.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                ferrari.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                ferrari.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
+        }
+        else if (teamNano == 1) {//alpine
+            if (color == 0 || color == 1) {
+                alpine.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                alpine.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                alpine.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
+        }
+        else if (teamNano == 3) {//renault
+            if (color == 0 || color == 1) {
+                renault.setOutlineColor(sf::Color::Blue);
+
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                renault.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                renault.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
+        }
+        else if (teamNano == 2) {//mclaren
+            if (color == 0 || color == 1) {
+                mclaren.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                mclaren.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                mclaren.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
+        }
+    }
+
+    
+
+
+  
+
+    app.draw(titulo);
+    app.draw(botonatras);
+    app.draw(alpine);
+    app.draw(ferrari);
+    app.draw(renault);
+    app.draw(mclaren);
+}

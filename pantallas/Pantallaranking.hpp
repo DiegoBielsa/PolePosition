@@ -19,3 +19,6 @@ void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu, bool atra
 void manageKeysOptions(int& posicionMenuOpciones, bool& terminar, Clock& clock, bool& atras);
 
 void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras);
+
+void elegirTeamNano(int& teamNano, bool& terminar, bool& atras, Clock& clock);
+void drawNano(RenderWindow& app, int& color, int teamNano, bool atras);
