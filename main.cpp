@@ -91,6 +91,7 @@ bool pausa = false;
 int posicionMenu = 0;
 int posicionMenuOpciones = 0;
 int teamNano = 1;
+int posicionMenuvolumen = 0;
 
 string nombre[] = { "A","A","A" };
 string key[] = { "A","B","C","D", "E","F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
@@ -413,7 +414,7 @@ int main() {
             doJoin = true;
             go = false;
 
-           IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
+            IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
                 if (!pausa) {
                     Event e;
@@ -434,11 +435,11 @@ int main() {
                                 //textureCaptura.create(app.getSize().x, app.getSize().y);
                                 textureCaptura.update(app, app.getSize().x, app.getSize().y);
                                 captura.setTexture(textureCaptura);
-                                cout<<"set color"<<endl;
+                                cout << "set color" << endl;
 
                                 captura.setColor(sf::Color::Blue);
-                                
-                                
+
+
 
                                 pausa = true;
 
@@ -457,7 +458,7 @@ int main() {
                     }
 
 
-                    
+
 
 
 
@@ -601,12 +602,12 @@ int main() {
                     //Sprite captura(textureCaptura);
                     //cout<<"set color"<<endl;
 
-                    
+
                     app.draw(captura);
                     hacerPausa(app, salir, terminar, pausa, actualizar);
                     eleccionPausa(app, salir, color);
                     if (salir && terminar) {
-                        
+
                         if (doJoin) {
                             for (int i = 0; i < numCars; i++) {
                                 //std::cout << "join " << i << std::endl;
@@ -963,7 +964,7 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed){
+                    if (e.type == Event::Closed) {
                         app.close();
                     }
 
@@ -978,7 +979,7 @@ int main() {
                 }
                 app.clear(Color(44, 76, 116));
 
-                
+
 
                 drawCircuito(app, color, mapa, atras);
                 if (terminar == true) {
@@ -1011,10 +1012,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed){
+                    if (e.type == Event::Closed) {
                         app.close();
                     }
-                        
+
                     manageKeysIa(iaMode, terminar, atras, e);
                 }
 
@@ -1025,7 +1026,7 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(44, 76, 116));
-                
+
 
                 drawIa(app, color, iaMode, atras);
                 if (terminar == true) {
@@ -1060,9 +1061,9 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed){
+                    if (e.type == Event::Closed) {
                         app.close();
-                    }    
+                    }
                     manageKeysMenu(terminar, e, posicionMenu);
                 }
 
@@ -1073,11 +1074,11 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(227, 187, 107));
-                
+
 
                 drawMenu(app, color, posicionMenu);
                 if (terminar == true) {
-                    
+
                     if (posicionMenu == 0) {
                         estado = 4;
 
@@ -1085,7 +1086,7 @@ int main() {
                     else if (posicionMenu == 1) {
                         estado = 7;
                     }
-                    else{
+                    else {
                         app.close();
                     }
 
@@ -1111,10 +1112,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed){
+                    if (e.type == Event::Closed) {
                         app.close();
                     }
-                    manageKeysOptions(posicionMenuOpciones,terminar, e,atras);
+                    manageKeysOptions(posicionMenuOpciones, terminar, e, atras);
                 }
 
 
@@ -1124,28 +1125,31 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(227, 187, 107));
-                
-                drawMenuOpciones(app, color, posicionMenuOpciones,atras);
-                if (terminar == true) {
-                            if (atras == true) {
-                                estado = 6;
-                            }
-                            else {
-                                if (posicionMenuOpciones == 0) {
-                                    estado = 8;
 
-                                }
-                                else if (posicionMenuOpciones == 1) {
-                                    estado = 9;
-                                }
-                            }
-                            terminar = true;
+                drawMenuOpciones(app, color, posicionMenuOpciones, atras);
+                if (terminar == true) {
+                    if (atras == true) {
+                        estado = 6;
+                    }
+                    else {
+                        if (posicionMenuOpciones == 0) {
+                            estado = 8;
+
+                        }
+                        else if (posicionMenuOpciones == 1) {
+                            estado = 9;
+                        }
+                        else if (posicionMenuOpciones == 2) {
+                            estado = 10;
+                        }
+                    }
+                    terminar = true;
 
                 }
 
-                        app.display();
-           }
-        
+                app.display();
+            }
+
 
             break;
 
@@ -1174,25 +1178,25 @@ int main() {
                 }
                 app.clear(Color(227, 187, 107));
 
-                 drawMenuteclas(app, color, posicionMenuOpciones, atras);
-                 if (actualizar.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-                     actualizar.restart();
-                         if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                             terminar = true;
-                         }
+                drawMenuteclas(app, color, posicionMenuOpciones, atras);
+                if (actualizar.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+                    actualizar.restart();
+                    if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                        terminar = true;
+                    }
 
-                     }
-                        if (terminar == true) {
-                            if (atras == true) {
-                                estado = 7;
-                            }
+                }
+                if (terminar == true) {
+                    if (atras == true) {
+                        estado = 7;
+                    }
 
-                        }
+                }
 
 
-                        app.display();
+                app.display();
             }
-                
+
 
             break;
         case 9: //elegir nano
@@ -1208,8 +1212,11 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed) {
                         app.close();
+                    }
+                    elegirTeamNano(teamNano, terminar, atras, e);
+                    
                 }
 
 
@@ -1220,7 +1227,7 @@ int main() {
                 }
                 app.clear(Color(227, 187, 107));
 
-                elegirTeamNano(teamNano,terminar,atras,actualizar);
+                
                 drawNano(app, color, teamNano, atras);
 
                 if (terminar == true) {
@@ -1272,6 +1279,47 @@ int main() {
                             car.texCar[k].loadFromFile("sprites/coches/DroveCar/renault/tile" + std::to_string(j) + std::to_string(1) + ".png");
                             k++;
                         }
+                    }
+
+                }
+
+
+                app.display();
+            }
+
+
+            break;
+        case 10: //elegir volumen
+            sounds[7].play();
+            terminar = false;
+            atras = false;
+            actualizar.restart();
+            tiempoparafin.restart();
+            color = 0; //color de los sprites
+            iaMode = 0;
+            pulsada = 0;
+            posicionMenuvolumen = 0;
+            while (app.isOpen() && !terminar) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                    elegirVolumen(posicionMenuvolumen, terminar, e, atras);
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                app.clear(Color(227, 187, 107));
+
+                drawVol(app, color, posicionMenuvolumen, atras);
+
+                if (terminar == true) {
+                    if (atras == true) {
+                        estado = 7;
                     }
 
                 }
