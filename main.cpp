@@ -3,6 +3,8 @@
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -121,6 +123,7 @@ int main() {
     string puntuaciones[7];
     string nombres[7];
     string clasificaciones[8];
+    Sprite captura = Sprite();
 
 
 
@@ -136,6 +139,7 @@ int main() {
     Texture t[50];
     Sprite object[50];
     Texture ca;
+    Texture textureCaptura = Texture();
     Texture marcha;
     //ca.loadFromFile("sprites/coches/carSpritesheet.png");
     //carSprite car;
@@ -418,40 +422,42 @@ int main() {
                             app.close();
                             gameOver = true;
                         }
-                    }
+                        if (e.type == sf::Event::Resized) {
+                            sf::View view = app.getDefaultView();
+                            view = getLetterboxView(view, e.size.width, e.size.height);
+                            app.setView(view);
+                        }
 
+                        if (e.type == sf::Event::KeyPressed) {
 
-                    if (e.type == sf::Event::Resized) {
-                        sf::View view = app.getDefaultView();
-                        view = getLetterboxView(view, e.size.width, e.size.height);
-                        app.setView(view);
-                    }
+                            if (e.key.code == sf::Keyboard::Escape) {
+                                //textureCaptura.create(app.getSize().x, app.getSize().y);
+                                textureCaptura.update(app, app.getSize().x, app.getSize().y);
+                                captura.setTexture(textureCaptura);
+                                cout<<"set color"<<endl;
 
-                    if (e.type == sf::Event::KeyPressed) {
+                                captura.setColor(sf::Color::Blue);
+                                
+                                
 
-                        if (e.key.code == sf::Keyboard::LAlt) {
-                            sf::Texture textureCaptura;
-                            textureCaptura.create(app.getSize().x, app.getSize().y);
-                            textureCaptura.update(app);
-                            if (textureCaptura.copyToImage().saveToFile("images/captura.png"))
-                            {
-                                std::cout << "screenshot saved to " << "images/captura.png" << std::endl;
+                                pausa = true;
+
+                            }
+                            if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
+                                marchaBaja = !marchaBaja;
                             }
 
-                            pausa = true;
+                            keyState[e.key.code] = true;
 
                         }
-                        if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
-                            marchaBaja = !marchaBaja;
+                        else if (e.type == sf::Event::KeyReleased) {
+                            // Update state of current key:
+                            keyState[e.key.code] = false;
                         }
-
-                        keyState[e.key.code] = true;
-
                     }
-                    else if (e.type == sf::Event::KeyReleased) {
-                        // Update state of current key:
-                        keyState[e.key.code] = false;
-                    }
+
+
+                    
 
 
 
@@ -591,11 +597,11 @@ int main() {
                         view = getLetterboxView(view, e.size.width, e.size.height);
                         app.setView(view);
                     }
-                    Texture capt;
-                    capt.loadFromFile("images/captura.png");
-                    Sprite captura(capt);
 
-                    captura.setColor(sf::Color(0x00FF007F));
+                    //Sprite captura(textureCaptura);
+                    //cout<<"set color"<<endl;
+
+                    
                     app.draw(captura);
                     hacerPausa(app, salir, terminar, pausa, actualizar);
                     eleccionPausa(app, salir, color);
@@ -830,7 +836,7 @@ int main() {
                     }
                     Texture capt;
                     capt.loadFromFile("images/captura.png");
-                    Sprite captura(capt);
+                    Sprite captura(textureCaptura);
 
                     captura.setColor(sf::Color(0x00FF007F));
                     app.draw(captura);
@@ -846,6 +852,8 @@ int main() {
 
                         doJoin = false;
                         estado = 6;
+                        speed = 0;
+                        updateSound(speed, sounds);
 
                     }
 
@@ -955,8 +963,11 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed){
                         app.close();
+                    }
+
+                    manageKeysCircuito(mapa, terminar, atras, e);
                 }
 
 
@@ -967,7 +978,7 @@ int main() {
                 }
                 app.clear(Color(44, 76, 116));
 
-                manageKeysCircuito(mapa, terminar, atras, actualizar);
+                
 
                 drawCircuito(app, color, mapa, atras);
                 if (terminar == true) {
@@ -1000,8 +1011,11 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed){
                         app.close();
+                    }
+                        
+                    manageKeysIa(iaMode, terminar, atras, e);
                 }
 
 
@@ -1011,7 +1025,7 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(44, 76, 116));
-                manageKeysIa(iaMode, terminar, actualizar, atras);
+                
 
                 drawIa(app, color, iaMode, atras);
                 if (terminar == true) {
@@ -1046,8 +1060,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed){
                         app.close();
+                    }    
+                    manageKeysMenu(terminar, e, posicionMenu);
                 }
 
 
@@ -1057,7 +1073,7 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(227, 187, 107));
-                manageKeysMenu(terminar, actualizar,posicionMenu);
+                
 
                 drawMenu(app, color, posicionMenu);
                 if (terminar == true) {
@@ -1095,8 +1111,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed){
                         app.close();
+                    }
+                    manageKeysOptions(posicionMenuOpciones,terminar, e,atras);
                 }
 
 
@@ -1106,7 +1124,7 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(227, 187, 107));
-                manageKeysOptions(posicionMenuOpciones,terminar, actualizar,atras);
+                
                 drawMenuOpciones(app, color, posicionMenuOpciones,atras);
                 if (terminar == true) {
                             if (atras == true) {

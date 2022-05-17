@@ -289,171 +289,182 @@ void drawSemaphore(RenderWindow& app,Sprite object[],  int& contadorSem){
 }
 
 
-void manageKeysCircuito(int& mapa,bool& terminar,bool& atras,Clock& clock) {
-    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-        clock.restart();
-        if (atras == true) {
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+void manageKeysCircuito(int& mapa,bool& terminar,bool& atras, Event& e) {
+
+    if (atras == true) {
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Down) {
                 mapa = 1;
                 atras = false;
             }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (e.key.code == sf::Keyboard::Enter) {
                 terminar = true;
             }
         }
-        else {
-            if (mapa == 0) {//test
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+    }
+    else {
+        if (mapa == 0) {//test
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Right) {
                     mapa = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                if (e.key.code == sf::Keyboard::Left) {
                     mapa = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                if (e.key.code == sf::Keyboard::Up) {
                     mapa = 0;
                     atras = true;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     mapa = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (mapa == 1) {//fuji
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+        }
+        else if (mapa == 1) {//fuji
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Right) {
                     mapa = 0; //test
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                if (e.key.code == sf::Keyboard::Left) {
                     mapa = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                if (e.key.code == sf::Keyboard::Up) {
                     mapa = 1;
                     atras = true;
 
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     mapa = 3;
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (mapa == 3) {//suzuka
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+        }
+        else if (mapa == 3) {//suzuka
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Right) {
                     mapa = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                if (e.key.code == sf::Keyboard::Left) {
                     mapa = 3;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                if (e.key.code == sf::Keyboard::Up) {
                     mapa = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     mapa = 3;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
 
                 }
             }
-            else if (mapa == 2) {//seaside
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+        }
+        else if (mapa == 2) {//seaside
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Right) {
                     mapa = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                if (e.key.code == sf::Keyboard::Left) {
                     mapa = 3;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                if (e.key.code == sf::Keyboard::Up) {
                     mapa = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     mapa = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
 
                 }
             }
         }
     }
+    
 
 }
 
-void manageKeysIa(int& iaMode, bool& terminar, Clock& clock,bool &atras) {
-    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-        clock.restart();
-        if (atras == true) {
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                iaMode = 0;
-                atras = false;
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                terminar = true;
-            }
-           
-        }
-        else {
-            if (iaMode == 0) {//facil
+void manageKeysIa(int& iaMode, bool& terminar, bool &atras, Event& e) {
 
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+    if (atras == true) {
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Down) {
+                iaMode = 0;
+                atras = false;      
+            }
+            if (e.key.code == sf::Keyboard::Enter) {
+                terminar = true;     
+            }
+
+        }
+    }
+    else {
+        if (iaMode == 0) {//facil
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     iaMode = 2;
                     atras = true;
-
-
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     iaMode = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (iaMode == 1) {//medio
-
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+        }
+        else if (iaMode == 1) {//medio
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     iaMode = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     iaMode = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (iaMode == 2) {//dificil
-
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+        }
+        else if (iaMode == 2) {//dificil
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     iaMode = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     iaMode = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
         }
     }
+    
     
 
 }
@@ -934,53 +945,55 @@ void drawResultadosClas(RenderWindow& app,Time tiempo, int& posicionSalida,int& 
     app.draw(ocho);
     app.draw(bonus);
 }
-void manageKeysMenu(bool& terminar, Clock& clock, int& posicionMenu) {
-    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-        clock.restart();
-        if (posicionMenu == 0) {//clasificacion
+void manageKeysMenu(bool& terminar, Event& e, int& posicionMenu) {
 
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
+    if (posicionMenu == 0) {//clasificacion
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Up) {
                 posicionMenu = 2;
 
 
             }
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+            if (e.key.code == sf::Keyboard::Down) {
                 posicionMenu = 1;
 
             }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                terminar = true;
-            }
-        }
-        else if (posicionMenu == 1) {//options
-
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                posicionMenu = 0;
-
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                posicionMenu = 2;
-
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                terminar = true;
-            }
-        }
-        else if (posicionMenu == 2) {//exit
-
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                posicionMenu = 1;
-
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                posicionMenu = 0;
-
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (e.key.code == sf::Keyboard::Enter) {
                 terminar = true;
             }
         }
     }
+    else if (posicionMenu == 1) {//options
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Up) {
+                posicionMenu = 0;
+
+            }
+            if (e.key.code == sf::Keyboard::Down) {
+                posicionMenu = 2;
+
+            }
+            if (e.key.code == sf::Keyboard::Enter) {
+                terminar = true;
+            }
+        }
+    }
+    else if (posicionMenu == 2) {//exit
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Up) {
+                posicionMenu = 1;
+
+            }
+            if (e.key.code == sf::Keyboard::Down) {
+                posicionMenu = 0;
+
+            }
+            if (e.key.code == sf::Keyboard::Enter) {
+                terminar = true;
+            }
+        }
+    }
+    
 }
 
 
@@ -1121,52 +1134,55 @@ void drawMenu(RenderWindow& app, int& color, int posicionMenu) {
 
 
 
-void manageKeysOptions(int& posicionMenuOpciones, bool& terminar, Clock& clock, bool& atras) {
-    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-        clock.restart();
-        if (atras == true) {
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+void manageKeysOptions(int& posicionMenuOpciones, bool& terminar, Event& e, bool& atras) {
+
+    if (atras == true) {
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Down) {
                 posicionMenuOpciones = 0;
                 atras = false;
             }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (e.key.code == sf::Keyboard::Enter) {
                 terminar = true;
             }
-
         }
-        else {
-            if (posicionMenuOpciones == 0) {//options
 
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+    }
+    else {
+        if (posicionMenuOpciones == 0) {//options
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     posicionMenuOpciones = 0;
                     atras = true;
 
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     posicionMenuOpciones = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (posicionMenuOpciones == 1) {//nano
-
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+        }
+        else if (posicionMenuOpciones == 1) {//nano
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     posicionMenuOpciones = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     posicionMenuOpciones = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
         }
     }
+    
 
 
 }
