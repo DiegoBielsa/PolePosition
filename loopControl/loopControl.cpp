@@ -732,10 +732,10 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
               }
           }
       }
-      if(lines[linePos[i]+100].sprite_type == 3 && !charco){ // establecemos donde está el charco y si nos lo vamos a comer
+      if(lines[(linePos[i]+100) % lines.size()].sprite_type == 3 && !charco){ // establecemos donde está el charco y si nos lo vamos a comer
         
-        posicionCharco = lines[linePos[i]+20].spriteX + 0.4;
-        lineCharco = linePos[i]+100;
+        posicionCharco = lines[(linePos[i]+20) % lines.size()].spriteX + 0.4;
+        lineCharco = (linePos[i]+100) % lines.size();
         //std::cout << "charco " << posicionCharco << std::endl;
         //std::cout << "yo " << XPos[i] << std::endl;
         if(XPos[i] > posicionCharco-0.7 && XPos[i] < posicionCharco+0.7){ // asumimos aqui nos lo comemos y lo vamos a querere evitar
@@ -1019,10 +1019,10 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
               }
           }
       }
-      if(lines[linePos[i]+100].sprite_type == 3 && !charco){ // establecemos donde está el charco y si nos lo vamos a comer
+      if(lines[(linePos[i]+100) % lines.size()].sprite_type == 3 && !charco) { // establecemos donde está el charco y si nos lo vamos a comer
         
-        posicionCharco = lines[linePos[i]+20].spriteX + 0.4;
-        lineCharco = linePos[i]+100;
+        posicionCharco = lines[(linePos[i]+20) % lines.size()].spriteX + 0.4;
+        lineCharco = (linePos[i]+100) % lines.size();
         //std::cout << "charco " << posicionCharco << std::endl;
         //std::cout << "yo " << XPos[i] << std::endl;
         if(XPos[i] > posicionCharco-0.7 && XPos[i] < posicionCharco+0.7){ // asumimos aqui nos lo comemos y lo vamos a querere evitar
@@ -1310,10 +1310,10 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
           }
       }
 
-      if(lines[linePos[i]+100].sprite_type == 3 && !charco){ // establecemos donde está el charco y si nos lo vamos a comer
+      if(lines[(linePos[i]+100) % lines.size()].sprite_type == 3 && !charco){ // establecemos donde está el charco y si nos lo vamos a comer
         
-        posicionCharco = lines[linePos[i]+20].spriteX + 0.4;
-        lineCharco = linePos[i]+100;
+        posicionCharco = lines[(linePos[i]+20) % lines.size()].spriteX + 0.4;
+        lineCharco = (linePos[i]+100) % lines.size();
         //std::cout << "charco " << posicionCharco << std::endl;
         //std::cout << "yo " << XPos[i] << std::endl;
         if(XPos[i] > posicionCharco-0.7 && XPos[i] < posicionCharco+0.7){ // asumimos aqui nos lo comemos y lo vamos a querere evitar

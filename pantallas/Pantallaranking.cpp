@@ -1,6 +1,6 @@
 #include "Pantallaranking.hpp"
 
-void selectName(string name[], string key[],int& letra,int& iterador, bool& terminar, bool& haCambiado,Clock& clock) {
+void selectName(string name[], string key[], int& letra, int& iterador, bool& terminar, bool& haCambiado, Clock & clock) {
 
     if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
         clock.restart();
@@ -20,7 +20,7 @@ void selectName(string name[], string key[],int& letra,int& iterador, bool& term
 
         }
         if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-            
+
             if (iterador < 2) {
                 iterador = iterador + 1;
             }
@@ -30,11 +30,11 @@ void selectName(string name[], string key[],int& letra,int& iterador, bool& term
         }
         name[iterador] = key[letra];
     }
-    
+
 }
 
 
-void drawRanking(RenderWindow& app,string puntuaciones[], string nombres[],int& lim,int& scoreentero, int& posicionPuntuacion,int& color) {
+void drawRanking(RenderWindow& app, string puntuaciones[], string nombres[], int& lim, int& scoreentero, int& posicionPuntuacion, int& color) {
     sf::Text score;
     sf::Text scorenumber;
     sf::Text timenumber;
@@ -53,10 +53,10 @@ void drawRanking(RenderWindow& app,string puntuaciones[], string nombres[],int& 
     // select the font
     texto1.setFont(font); // font is a sf::Font
     texto2.setFont(font);
-     scorecol.setFont(font);
-     timecol.setFont(font);
-     namecol.setFont(font);
-     NOcol.setFont(font);
+    scorecol.setFont(font);
+    timecol.setFont(font);
+    namecol.setFont(font);
+    NOcol.setFont(font);
     score.setFont(font);
     scorenumber.setFont(font);
     timenumber.setFont(font);
@@ -74,12 +74,12 @@ void drawRanking(RenderWindow& app,string puntuaciones[], string nombres[],int& 
     namecol.setString("NAME");
 
     score.setString("SCORE");
-    string puntu=inttostring(scoreentero);
+    string puntu = inttostring(scoreentero);
     scorenumber.setString(puntu);
 
-    string loamarillo=inttostring(lim);
-        timenumber.setString(loamarillo);
-    
+    string loamarillo = inttostring(lim);
+    timenumber.setString(loamarillo);
+
     speed.setString("SPEED");
     int s = 1;
     speednumber.setString("0 km");
@@ -148,7 +148,7 @@ void drawRanking(RenderWindow& app,string puntuaciones[], string nombres[],int& 
     app.draw(speednumber);
 
 
-    for (int i = 0;i < 6;i++) {
+    for (int i = 0; i < 6; i++) {
         sf::Text j;
         sf::Text s;
         sf::Text t;
@@ -169,7 +169,7 @@ void drawRanking(RenderWindow& app,string puntuaciones[], string nombres[],int& 
         n.setCharacterSize(50);
 
         int altura = 250 + (i * 60);
-        j.setPosition(75, altura );
+        j.setPosition(75, altura);
         s.setPosition(215, altura);
         t.setPosition(425, altura);
         n.setPosition(630, altura);
@@ -181,12 +181,12 @@ void drawRanking(RenderWindow& app,string puntuaciones[], string nombres[],int& 
             t.setFillColor(sf::Color::White);
             n.setFillColor(sf::Color::White);
         }
-        else if(i== posicionPuntuacion &&(color==0 || color ==1)) {
+        else if (i == posicionPuntuacion && (color == 0 || color == 1)) {
             j.setFillColor(sf::Color::Yellow);
             s.setFillColor(sf::Color::Yellow);
             t.setFillColor(sf::Color::Yellow);
             n.setFillColor(sf::Color::Yellow);
-             color++;
+            color++;
         }
         else if (i == posicionPuntuacion && (color == 2)) {
             j.setFillColor(sf::Color::Red);
@@ -215,38 +215,38 @@ void drawRanking(RenderWindow& app,string puntuaciones[], string nombres[],int& 
 }
 
 
-void drawInicio(RenderWindow& app,int& color){
+void drawInicio(RenderWindow& app, int& color) {
     Texture titulo;
     Texture nan;
     Texture letrai;
-        titulo.loadFromFile("images/titulo.png");
-        nan.loadFromFile("images/falonsoedition.png");
-        letrai.loadFromFile("images/letrasinicio.png");
+    titulo.loadFromFile("images/titulo.png");
+    nan.loadFromFile("images/falonsoedition.png");
+    letrai.loadFromFile("images/letrasinicio.png");
 
-        Sprite tit(titulo);
-        Sprite nano(nan);
-        Sprite letra(letrai);
+    Sprite tit(titulo);
+    Sprite nano(nan);
+    Sprite letra(letrai);
 
-        if (color == 0 ||color==1) {
-            tit.setColor(sf::Color::Red);
-            nano.setColor(sf::Color::Red);
-            color++;
-        }
-        
-        else if (color == 2 || color== 3) {
-            tit.setColor(sf::Color::Yellow);
-            nano.setColor(sf::Color::Blue);
-            color++;
-        }
-        else if (color == 4 || color == 5) {
-            tit.setColor(sf::Color::White);
-            nano.setColor(sf::Color::White);
-            color++;
-        }
-        else { //azul
-            color = 0;
-        }
-        
+    if (color == 0 || color == 1) {
+        tit.setColor(sf::Color::Red);
+        nano.setColor(sf::Color::Red);
+        color++;
+    }
+
+    else if (color == 2 || color == 3) {
+        tit.setColor(sf::Color::Yellow);
+        nano.setColor(sf::Color::Blue);
+        color++;
+    }
+    else if (color == 4 || color == 5) {
+        tit.setColor(sf::Color::White);
+        nano.setColor(sf::Color::White);
+        color++;
+    }
+    else { //azul
+        color = 0;
+    }
+
 
 
     tit.setPosition(20, 0);
@@ -259,12 +259,13 @@ void drawInicio(RenderWindow& app,int& color){
 
 }
 
-void drawPrepare(RenderWindow& app,Sprite object[], bool& prepare){
-    object[16].move(sf::Vector2f(-16,0));
+void drawPrepare(RenderWindow& app, Sprite object[], bool& prepare) {
+    object[16].move(sf::Vector2f(-16, 0));
 
-    if(object[16].getPosition().x > -1000){
+    if (object[16].getPosition().x > -1000) {
         app.draw(object[16]);
-    }else{
+    }
+    else {
         prepare = false;
     }
     //app.draw(globo);
@@ -273,118 +274,130 @@ void drawPrepare(RenderWindow& app,Sprite object[], bool& prepare){
 
 
 
-void drawSemaphore(RenderWindow& app,Sprite object[],  int& contadorSem){
+void drawSemaphore(RenderWindow& app, Sprite object[], int& contadorSem) {
     contadorSem++;
-    if(contadorSem <50){
+    if (contadorSem < 50) {
         app.draw(object[18]);
-    }else if(contadorSem >= 50 && contadorSem < 65){
+    }
+    else if (contadorSem >= 50 && contadorSem < 65) {
         app.draw(object[18]);
-    }else if(contadorSem >= 65 && contadorSem < 130){
+    }
+    else if (contadorSem >= 65 && contadorSem < 130) {
         app.draw(object[19]);
-    }else if(contadorSem >= 130 && contadorSem < 200){
+    }
+    else if (contadorSem >= 130 && contadorSem < 200) {
         app.draw(object[20]);
-    }else{
+    }
+    else {
         app.draw(object[21]);
     }
 }
 
 
-void manageKeysCircuito(int& mapa,bool& terminar,bool& atras,Clock& clock) {
-    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-        clock.restart();
-        if (atras == true) {
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+void manageKeysCircuito(int& mapa, bool& terminar, bool& atras, Event& e) {
+
+    if (atras == true) {
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Down) {
                 mapa = 1;
                 atras = false;
             }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (e.key.code == sf::Keyboard::Enter) {
                 terminar = true;
             }
         }
-        else {
-            if (mapa == 0) {//test
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+    }
+    else {
+        if (mapa == 0) {//test
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Right) {
                     mapa = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                if (e.key.code == sf::Keyboard::Left) {
                     mapa = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                if (e.key.code == sf::Keyboard::Up) {
                     mapa = 0;
                     atras = true;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     mapa = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (mapa == 1) {//fuji
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+        }
+        else if (mapa == 1) {//fuji
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Right) {
                     mapa = 0; //test
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                if (e.key.code == sf::Keyboard::Left) {
                     mapa = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                if (e.key.code == sf::Keyboard::Up) {
                     mapa = 1;
                     atras = true;
 
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     mapa = 3;
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (mapa == 3) {//suzuka
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+        }
+        else if (mapa == 3) {//suzuka
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Right) {
                     mapa = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                if (e.key.code == sf::Keyboard::Left) {
                     mapa = 3;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                if (e.key.code == sf::Keyboard::Up) {
                     mapa = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     mapa = 3;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
 
                 }
             }
-            else if (mapa == 2) {//seaside
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+        }
+        else if (mapa == 2) {//seaside
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Right) {
                     mapa = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                if (e.key.code == sf::Keyboard::Left) {
                     mapa = 3;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                if (e.key.code == sf::Keyboard::Up) {
                     mapa = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     mapa = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
 
                 }
@@ -392,73 +405,76 @@ void manageKeysCircuito(int& mapa,bool& terminar,bool& atras,Clock& clock) {
         }
     }
 
+
 }
 
-void manageKeysIa(int& iaMode, bool& terminar, Clock& clock,bool &atras) {
-    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-        clock.restart();
-        if (atras == true) {
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+void manageKeysIa(int& iaMode, bool& terminar, bool& atras, Event& e) {
+
+    if (atras == true) {
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Down) {
                 iaMode = 0;
                 atras = false;
             }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (e.key.code == sf::Keyboard::Enter) {
                 terminar = true;
             }
-           
-        }
-        else {
-            if (iaMode == 0) {//facil
 
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+        }
+    }
+    else {
+        if (iaMode == 0) {//facil
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     iaMode = 2;
                     atras = true;
-
-
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     iaMode = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (iaMode == 1) {//medio
-
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+        }
+        else if (iaMode == 1) {//medio
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     iaMode = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     iaMode = 2;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (iaMode == 2) {//dificil
-
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+        }
+        else if (iaMode == 2) {//dificil
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     iaMode = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     iaMode = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
         }
     }
-    
+
+
 
 }
 
-void drawCircuito(RenderWindow& app, int& color, int mapa,bool atras) {
+void drawCircuito(RenderWindow& app, int& color, int mapa, bool atras) {
     sf::Text texto1;
     sf::Text texto2;
     sf::Text texto3;
@@ -476,7 +492,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa,bool atras) {
 
     const sf::Texture* pTexture = &atr;
     botonatras.setTexture(pTexture);
-    
+
 
     sf::Font font;
     font.loadFromFile("letra.ttf");
@@ -495,7 +511,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa,bool atras) {
     titulo.setString("SELECT CIRCUIT");
 
 
-    texto1.setFillColor(Color(219,224,142));
+    texto1.setFillColor(Color(219, 224, 142));
     texto2.setFillColor(Color(219, 224, 142));
     texto3.setFillColor(Color(219, 224, 142));
     texto4.setFillColor(Color(219, 224, 142));
@@ -529,23 +545,23 @@ void drawCircuito(RenderWindow& app, int& color, int mapa,bool atras) {
     Sprite test(tes);
     Sprite sea(seaside);
     if (atras == true) {
-            if (color == 0 || color == 1) {
-                botonatras.setOutlineColor(sf::Color::Blue);
-                color++;
-            }
+        if (color == 0 || color == 1) {
+            botonatras.setOutlineColor(sf::Color::Blue);
+            color++;
+        }
 
-            else if (color == 2 || color == 3) {
-                botonatras.setOutlineColor(sf::Color::Yellow);
-                color++;
-            }
-            else if (color == 4 || color == 5 || color == 6) {
-                botonatras.setOutlineColor(sf::Color::Red);
-                color++;
-            }
-            else { //blanco
-                botonatras.setOutlineColor(sf::Color::White);
-                color = 0;
-            }
+        else if (color == 2 || color == 3) {
+            botonatras.setOutlineColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            botonatras.setOutlineColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            botonatras.setOutlineColor(sf::Color::White);
+            color = 0;
+        }
 
     }
     else {
@@ -621,7 +637,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa,bool atras) {
             else { //rojo
                 color = 0;
             }
-        } 
+        }
     }
 
 
@@ -645,7 +661,7 @@ void drawCircuito(RenderWindow& app, int& color, int mapa,bool atras) {
 }
 
 
-void drawIa(RenderWindow& app, int& color, int iaMode,bool atras) {
+void drawIa(RenderWindow& app, int& color, int iaMode, bool atras) {
 
     sf::Text texto1;
     sf::Text texto2;
@@ -768,7 +784,7 @@ void drawIa(RenderWindow& app, int& color, int iaMode,bool atras) {
             }
         }
     }
-    
+
 
 
 
@@ -800,7 +816,7 @@ void colorear(sf::Text& texto, int& color) {
     }
 
 }
-void drawResultadosClas(RenderWindow& app,Time tiempo, int& posicionSalida,int& bon,int& color,int parpadeo) {
+void drawResultadosClas(RenderWindow& app, Time tiempo, int& posicionSalida, int& bon, int& color, int parpadeo) {
     sf::Text lapnumber;
     sf::Text position;
     sf::Text uno;
@@ -839,7 +855,7 @@ void drawResultadosClas(RenderWindow& app,Time tiempo, int& posicionSalida,int& 
 
     String minu = inttostring(mili);
     String sec = inttostring(seconds2);
-    lapnumber.setString("LAP TIME "+sec + ". " + minu);
+    lapnumber.setString("LAP TIME " + sec + ". " + minu);
 
     position.setString("POSITION");
     uno.setString("1");
@@ -851,14 +867,14 @@ void drawResultadosClas(RenderWindow& app,Time tiempo, int& posicionSalida,int& 
     siete.setString("7");
     ocho.setString("8");
 
-    String puntu= inttostring(bon);
-    bonus.setString("BONUS "+puntu);
+    String puntu = inttostring(bon);
+    bonus.setString("BONUS " + puntu);
 
 
     if (parpadeo == 0) {
         colorear(lapnumber, color);
     }
-    else if(parpadeo == 1){
+    else if (parpadeo == 1) {
         colorear(position, color);
         if (posicionSalida == 0) {
             colorear(uno, color);
@@ -886,13 +902,13 @@ void drawResultadosClas(RenderWindow& app,Time tiempo, int& posicionSalida,int& 
         }
 
     }
-    else if(parpadeo==2) {
+    else if (parpadeo == 2) {
         colorear(bonus, color);
     }
 
 
-    
-  
+
+
 
 
     lapnumber.setCharacterSize(50);
@@ -934,53 +950,55 @@ void drawResultadosClas(RenderWindow& app,Time tiempo, int& posicionSalida,int& 
     app.draw(ocho);
     app.draw(bonus);
 }
-void manageKeysMenu(bool& terminar, Clock& clock, int& posicionMenu) {
-    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-        clock.restart();
-        if (posicionMenu == 0) {//clasificacion
+void manageKeysMenu(bool& terminar, Event& e, int& posicionMenu) {
 
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
+    if (posicionMenu == 0) {//clasificacion
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Up) {
                 posicionMenu = 2;
 
 
             }
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+            if (e.key.code == sf::Keyboard::Down) {
                 posicionMenu = 1;
 
             }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                terminar = true;
-            }
-        }
-        else if (posicionMenu == 1) {//options
-
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                posicionMenu = 0;
-
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                posicionMenu = 2;
-
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                terminar = true;
-            }
-        }
-        else if (posicionMenu == 2) {//exit
-
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                posicionMenu = 1;
-
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                posicionMenu = 0;
-
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (e.key.code == sf::Keyboard::Enter) {
                 terminar = true;
             }
         }
     }
+    else if (posicionMenu == 1) {//options
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Up) {
+                posicionMenu = 0;
+
+            }
+            if (e.key.code == sf::Keyboard::Down) {
+                posicionMenu = 2;
+
+            }
+            if (e.key.code == sf::Keyboard::Enter) {
+                terminar = true;
+            }
+        }
+    }
+    else if (posicionMenu == 2) {//exit
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Up) {
+                posicionMenu = 1;
+
+            }
+            if (e.key.code == sf::Keyboard::Down) {
+                posicionMenu = 0;
+
+            }
+            if (e.key.code == sf::Keyboard::Enter) {
+                terminar = true;
+            }
+        }
+    }
+
 }
 
 
@@ -1044,72 +1062,72 @@ void drawMenu(RenderWindow& app, int& color, int posicionMenu) {
     texto1.setPosition(430, 240);
     texto2.setPosition(390, 390);
     texto3.setPosition(430, 540);
-    nano.setScale(1.5,1.5);
+    nano.setScale(1.5, 1.5);
     nano.setPosition(290, 50);
 
 
-    
-        if (posicionMenu == 0) {//test
-            if (color == 0 || color == 1) {
-                botonplay.setOutlineColor(sf::Color::Blue);
-                color++;
-            }
 
-            else if (color == 2 || color == 3) {
-                botonplay.setOutlineColor(sf::Color::Yellow);
-                color++;
-            }
-            else if (color == 4 || color == 5 || color == 6) {
-                botonplay.setOutlineColor(sf::Color::Red);
-                color++;
-            }
-            else { //blanco
-                color = 0;
-            }
+    if (posicionMenu == 0) {//test
+        if (color == 0 || color == 1) {
+            botonplay.setOutlineColor(sf::Color::Blue);
+            color++;
         }
-        else  if (posicionMenu == 1) {//medium
-            if (color == 0 || color == 1) {
-                botonopts.setOutlineColor(sf::Color::Blue);
-                color++;
-            }
 
-            else if (color == 2 || color == 3) {
-                botonopts.setOutlineColor(sf::Color::Yellow);
-                color++;
-            }
-            else if (color == 4 || color == 5 || color == 6) {
-                botonopts.setOutlineColor(sf::Color::Red);
-                color++;
-            }
-            else { //blanco
-                color = 0;
-            }
+        else if (color == 2 || color == 3) {
+            botonplay.setOutlineColor(sf::Color::Yellow);
+            color++;
         }
-        else  if (posicionMenu == 2) {//hard
-            if (color == 0 || color == 1) {
-                botonexit.setOutlineColor(sf::Color::Blue);
-                color++;
-            }
-
-            else if (color == 2 || color == 3) {
-                botonexit.setOutlineColor(sf::Color::Yellow);
-                color++;
-            }
-            else if (color == 4 || color == 5 || color == 6) {
-                botonexit.setOutlineColor(sf::Color::Red);
-                color++;
-            }
-            else { //blanco
-                color = 0;
-            }
+        else if (color == 4 || color == 5 || color == 6) {
+            botonplay.setOutlineColor(sf::Color::Red);
+            color++;
         }
-    
+        else { //blanco
+            color = 0;
+        }
+    }
+    else  if (posicionMenu == 1) {//medium
+        if (color == 0 || color == 1) {
+            botonopts.setOutlineColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            botonopts.setOutlineColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            botonopts.setOutlineColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            color = 0;
+        }
+    }
+    else  if (posicionMenu == 2) {//hard
+        if (color == 0 || color == 1) {
+            botonexit.setOutlineColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            botonexit.setOutlineColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            botonexit.setOutlineColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            color = 0;
+        }
+    }
 
 
-        app.draw(fondo);
-        app.draw(botonplay);
-        app.draw(botonopts);
-        app.draw(botonexit);
+
+    app.draw(fondo);
+    app.draw(botonplay);
+    app.draw(botonopts);
+    app.draw(botonexit);
     app.draw(texto1);
     app.draw(texto2);
     app.draw(texto3);
@@ -1121,52 +1139,70 @@ void drawMenu(RenderWindow& app, int& color, int posicionMenu) {
 
 
 
-void manageKeysOptions(int& posicionMenuOpciones, bool& terminar, Clock& clock, bool& atras) {
-    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-        clock.restart();
-        if (atras == true) {
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
+void manageKeysOptions(int& posicionMenuOpciones, bool& terminar, Event& e, bool& atras) {
+
+    if (atras == true) {
+        if (e.type == sf::Event::KeyPressed) {
+            if (e.key.code == sf::Keyboard::Down) {
                 posicionMenuOpciones = 0;
                 atras = false;
             }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (e.key.code == sf::Keyboard::Enter) {
                 terminar = true;
             }
-
         }
-        else {
-            if (posicionMenuOpciones == 0) {//options
 
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+    }
+    else {
+        if (posicionMenuOpciones == 0) {//options
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     posicionMenuOpciones = 0;
                     atras = true;
 
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
                     posicionMenuOpciones = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
-            else if (posicionMenuOpciones == 1) {//nano
-
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
+        }
+        else if (posicionMenuOpciones == 1) {//nano
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     posicionMenuOpciones = 0;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                if (e.key.code == sf::Keyboard::Down) {
+                    posicionMenuOpciones = 2;
+
+                }
+                if (e.key.code == sf::Keyboard::Enter) {
+                    terminar = true;
+                }
+            }
+        }
+        else if (posicionMenuOpciones == 2) {//volumen
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Up) {
                     posicionMenuOpciones = 1;
 
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                if (e.key.code == sf::Keyboard::Down) {
+                    posicionMenuOpciones = 2;
+
+                }
+                if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
                 }
             }
         }
     }
+
 
 
 }
@@ -1178,10 +1214,11 @@ void manageKeysOptions(int& posicionMenuOpciones, bool& terminar, Clock& clock, 
 
 
 
-void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu,bool atras) {
+void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu, bool atras) {
 
     sf::Text texto1;
     sf::Text texto2;
+    sf::Text texto3;
     sf::Text titulo;
     Vector2f tamayo3(40, 30);
     RectangleShape botonatras(tamayo3);
@@ -1207,6 +1244,7 @@ void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu,bool atras
     Vector2f tamayo2(350, 500);
     RectangleShape botonkeys(tamayo);
     RectangleShape botonopts(tamayo);
+    RectangleShape botonvol(tamayo);
     RectangleShape fondo(tamayo2);
 
 
@@ -1218,6 +1256,10 @@ void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu,bool atras
     botonopts.setFillColor(Color(200, 127, 107));
     botonopts.setOutlineThickness(3.5);
 
+    botonvol.setPosition(380, 520);
+    botonvol.setFillColor(Color(200, 127, 107));
+    botonvol.setOutlineThickness(3.5);
+
 
     fondo.setPosition(310, 180);
     fondo.setFillColor(Color(255, 187, 157));
@@ -1228,25 +1270,30 @@ void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu,bool atras
     // select the font
     texto1.setFont(font2); // font is a sf::Font
     texto2.setFont(font2);
+    texto3.setFont(font2);
 
     texto1.setString("KEYS");
     texto2.setString("NANO");
+    texto3.setString("AUDIO");
 
 
     texto1.setFillColor(sf::Color::Black);
     texto2.setFillColor(sf::Color::Black);
-  
+    texto3.setFillColor(sf::Color::Black);
+
 
 
 
     texto1.setCharacterSize(55);
     texto2.setCharacterSize(55);
- 
+    texto3.setCharacterSize(55);
+
 
     texto1.setPosition(430, 240);
     texto2.setPosition(430, 390);
+    texto3.setPosition(420, 540);
 
- 
+
 
 
     if (atras == true) {
@@ -1306,6 +1353,24 @@ void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu,bool atras
                 color = 0;
             }
         }
+        else  if (posicionMenu == 2) {//medium
+            if (color == 0 || color == 1) {
+                botonvol.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                botonvol.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                botonvol.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //blanco
+                color = 0;
+            }
+        }
     }
 
 
@@ -1314,9 +1379,11 @@ void drawMenuOpciones(RenderWindow& app, int& color, int posicionMenu,bool atras
     app.draw(fondo);
     app.draw(botonkeys);
     app.draw(botonopts);
+    app.draw(botonvol);
     app.draw(texto1);
     app.draw(texto2);
-  
+    app.draw(texto3);
+
     app.draw(botonatras);
     app.draw(titulo);
 
@@ -1433,7 +1500,7 @@ void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras
     sf::Font font2;
     font2.loadFromFile("retro.ttf");
     // select the font
-  
+
 
 
 
@@ -1512,9 +1579,9 @@ void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras
 
 
     app.draw(botonatras);
-    
+
     app.draw(botonGas);
-    
+
     app.draw(botonBrake);
     app.draw(botonGear);
     app.draw(botonIzq);
@@ -1536,7 +1603,7 @@ void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras
     app.draw(texto6);
 
 
-   
+
     app.draw(titulo);
 
 
@@ -1544,108 +1611,117 @@ void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras
 
 
 
-void elegirTeamNano(int& teamNano, bool& terminar, bool& atras, Clock& clock) {
-    if (clock.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-        clock.restart();
+void elegirTeamNano(int& teamNano, bool& terminar, bool& atras, Event& e) {
+
         if (atras == true) {
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                teamNano = 1;
-                atras = false;
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Down){
+                    teamNano = 1;
+                    atras = false;
+                 }
+            
+                if (e.key.code == sf::Keyboard::Enter) {
                 terminar = true;
+                 }
             }
         }
         else {
             if (teamNano == 0) {//ferrari
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
-                    teamNano = 0;
+                if (e.type == sf::Event::KeyPressed) {
+                    if (e.key.code == sf::Keyboard::Right) {
+                        teamNano = 0;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
-                    teamNano = 1;
+                    }
+                    if (e.key.code == sf::Keyboard::Left) {
+                        teamNano = 1;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                    teamNano = 0;
-                    atras = true;
+                    }
+                    if (e.key.code == sf::Keyboard::Up) {
+                        teamNano = 0;
+                        atras = true;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                    teamNano = 2;
+                    }
+                    if (e.key.code == sf::Keyboard::Down) {
+                        teamNano = 2;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                    terminar = true;
+                    }
+                    if (e.key.code == sf::Keyboard::Enter) {
+                        terminar = true;
+                    }
                 }
             }
             else if (teamNano == 1) {//alpine
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
-                    teamNano = 0; //test
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
-                    teamNano = 1;
+                if (e.type == sf::Event::KeyPressed) {
+                    if (e.key.code == sf::Keyboard::Right) {
+                        teamNano = 0; //test
+                    }
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                    teamNano = 1;
-                    atras = true;
+                    if (e.key.code == sf::Keyboard::Left) {
+                         teamNano = 1;
+                    }
 
-
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    if (e.key.code == sf::Keyboard::Up) {
+                          teamNano = 1;
+                             atras = true;
+                    }
+                    if (e.key.code == sf::Keyboard::Down) {
                     teamNano = 3;
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                    }
+                    if (e.key.code == sf::Keyboard::Enter) {
                     terminar = true;
+                    }
                 }
             }
             else if (teamNano == 3) {//renault
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
-                    teamNano = 2;
+                if (e.type == sf::Event::KeyPressed) {
+                    if (e.key.code == sf::Keyboard::Right) {
+                        teamNano = 2;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
-                    teamNano = 3;
+                    }
+                    if (e.key.code == sf::Keyboard::Left) {
+                        teamNano = 3;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                    teamNano = 1;
+                    }
+                    if (e.key.code == sf::Keyboard::Up) {
+                        teamNano = 1;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                    teamNano = 3;
+                    }
+                    if (e.key.code == sf::Keyboard::Down) {
+                        teamNano = 3;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                    terminar = true;
+                    }
+                    if (e.key.code == sf::Keyboard::Enter) {
+                        terminar = true;
 
+                    }
                 }
             }
             else if (teamNano == 2) {//mclaren
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
-                    teamNano = 2;
+                if (e.type == sf::Event::KeyPressed) {
+                    if (e.key.code == sf::Keyboard::Right) {
+                        teamNano = 2;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
-                    teamNano = 3;
+                    }
+                    if (e.key.code == sf::Keyboard::Left) {
+                        teamNano = 3;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                    teamNano = 0;
+                    }
+                    if (e.key.code == sf::Keyboard::Up) {
+                        teamNano = 0;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                    teamNano = 2;
+                    }
+                    if (e.key.code == sf::Keyboard::Down) {
+                        teamNano = 2;
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                    terminar = true;
+                    }
+                    if (e.key.code == sf::Keyboard::Enter) {
+                        terminar = true;
 
+                    }
                 }
             }
         }
-    }
+    
 
 }
 
@@ -1720,21 +1796,21 @@ void drawNano(RenderWindow& app, int& color, int teamNano, bool atras) {
     sf::Font font;
     font.loadFromFile("letra.ttf");
 
-  
+
     titulo.setFont(font);
 
-   
+
     titulo.setString("NANO'S TEAM");
 
 
 
     titulo.setCharacterSize(60);
 
-  
+
     titulo.setPosition(350, 30);
 
 
- 
+
     if (atras == true) {
         if (color == 0 || color == 1) {
             botonatras.setOutlineColor(sf::Color::Blue);
@@ -1755,7 +1831,7 @@ void drawNano(RenderWindow& app, int& color, int teamNano, bool atras) {
         }
 
     }
-    
+
     else {
         if (teamNano == 0) {//ferrari
             if (color == 0 || color == 1) {
@@ -1832,10 +1908,10 @@ void drawNano(RenderWindow& app, int& color, int teamNano, bool atras) {
         }
     }
 
-    
 
 
-  
+
+
 
     app.draw(titulo);
     app.draw(botonatras);
@@ -1843,4 +1919,246 @@ void drawNano(RenderWindow& app, int& color, int teamNano, bool atras) {
     app.draw(ferrari);
     app.draw(renault);
     app.draw(mclaren);
+}
+
+void elegirVolumen(int& posicionVolumen, bool& terminar, Event& e, bool& atras) {
+
+        if (atras == true) {
+            if (e.type == sf::Event::KeyPressed) {
+                if (e.key.code == sf::Keyboard::Down) {
+                    posicionVolumen = 0;
+                    atras = false;
+                }
+                if (e.key.code == sf::Keyboard::Enter) {
+                    terminar = true;
+                }
+            }
+        }
+        else {
+            if (posicionVolumen == 0) {//sonido
+                if (e.type == sf::Event::KeyPressed) {
+                    if (e.key.code == sf::Keyboard::Up) {
+                        posicionVolumen = 0;
+                        atras = true;
+
+                    }
+                    if (e.key.code == sf::Keyboard::Down) {
+                        posicionVolumen = 1;
+
+                    }
+                    if (e.key.code == sf::Keyboard::Enter) {
+                        terminar = true;
+                    }
+                }
+            }
+            else if (posicionVolumen == 1) {//quitarsonido
+                if (e.type == sf::Event::KeyPressed) {
+                    if (e.key.code == sf::Keyboard::Up) {
+                        posicionVolumen = 0;
+
+
+                    }
+                    if (e.key.code == sf::Keyboard::Down) {
+                        posicionVolumen = 1;
+                    }
+                    if (e.key.code == sf::Keyboard::Enter) {
+                        terminar = true;
+                    }
+                }
+            }
+        }
+    
+}
+
+void drawVol(RenderWindow& app, int& color, int posicionVolumen, bool atras) {
+
+    sf::Text titulo;
+    Vector2f tamayo3(40, 30);
+    RectangleShape botonatras(tamayo3);
+    botonatras.setPosition(10, 10);
+    botonatras.setFillColor(Color::White);
+    botonatras.setOutlineThickness(1.5);
+
+    Vector2f tamayo4(50, 50);
+    RectangleShape volume(tamayo4);
+    volume.setPosition(630, 150);
+    
+    RectangleShape novolume(tamayo4);
+    novolume.setPosition(630, 250);
+    
+
+    if (posicionVolumen == 0) {
+        volume.setFillColor(Color::Yellow);
+        novolume.setFillColor(Color::Red);
+    }
+    else if (posicionVolumen == 1) {
+        novolume.setFillColor(Color::Yellow);
+        volume.setFillColor(Color::Red);
+    }
+
+
+
+    Texture atr;
+    Texture vol;
+    Texture novol;
+
+
+    atr.loadFromFile("images/flechaatras.png");
+    vol.loadFromFile("images/volumen.png");
+    novol.loadFromFile("images/novolume.png");
+  
+    const sf::Texture* pTexture = &atr;
+    botonatras.setTexture(pTexture);
+
+    pTexture = &vol;
+    volume.setTexture(pTexture);
+
+    pTexture = &novol;
+    novolume.setTexture(pTexture);
+
+  
+
+    sf::Font font;
+    font.loadFromFile("letra.ttf");
+    titulo.setFont(font);
+    titulo.setString("VOLUME");
+    titulo.setCharacterSize(80);
+    titulo.setPosition(420, 30);
+
+    Vector2f tamayo(450, 50);
+    Vector2f tamayo2(350, 500);
+    RectangleShape botonVol(tamayo);
+    RectangleShape botonnoVol(tamayo);
+
+
+
+    botonVol.setPosition(300, 150);
+    botonVol.setFillColor(Color(200, 127, 107));
+    botonVol.setOutlineThickness(3.5);
+
+    botonnoVol.setPosition(300, 250);
+    botonnoVol.setFillColor(Color(200, 127, 107));
+    botonnoVol.setOutlineThickness(3.5);
+
+
+
+    sf::Font font2;
+    font2.loadFromFile("retro.ttf");
+    // select the font
+
+
+
+
+
+
+
+    if (atras == true) {
+        if (color == 0 || color == 1) {
+            botonatras.setOutlineColor(sf::Color::Blue);
+            color++;
+        }
+
+        else if (color == 2 || color == 3) {
+            botonatras.setOutlineColor(sf::Color::Yellow);
+            color++;
+        }
+        else if (color == 4 || color == 5 || color == 6) {
+            botonatras.setOutlineColor(sf::Color::Red);
+            color++;
+        }
+        else { //blanco
+            botonatras.setOutlineColor(sf::Color::White);
+            color = 0;
+        }
+
+    }
+
+    else {
+        if (posicionVolumen == 0) {//ferrari
+            if (color == 0 || color == 1) {
+                botonVol.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                botonVol.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                botonVol.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
+        }
+        else if (posicionVolumen == 1) {//alpine
+            if (color == 0 || color == 1) {
+                botonnoVol.setOutlineColor(sf::Color::Blue);
+                color++;
+            }
+
+            else if (color == 2 || color == 3) {
+                botonnoVol.setOutlineColor(sf::Color::Yellow);
+                color++;
+            }
+            else if (color == 4 || color == 5 || color == 6) {
+                botonnoVol.setOutlineColor(sf::Color::Red);
+                color++;
+            }
+            else { //rojo
+                color = 0;
+            }
+        }
+    }
+
+    sf::Text texto1;
+    sf::Text texto2;
+
+
+    texto1.setFont(font); // font is a sf::Font
+    texto2.setFont(font);
+
+
+    texto1.setString("VOLUME -> ON");
+    texto2.setString("VOLUME -> OFF");
+
+
+
+    texto1.setFillColor(sf::Color::Black);
+    texto2.setFillColor(sf::Color::Black);
+   
+
+
+
+
+    texto1.setCharacterSize(30);
+    texto2.setCharacterSize(30);
+    
+
+    texto1.setPosition(320, 150);
+    texto2.setPosition(320, 250);
+ 
+
+
+
+    app.draw(botonatras);
+
+    app.draw(botonVol);
+
+    app.draw(botonnoVol);
+
+
+    app.draw(volume);
+    app.draw(novolume);
+
+
+    app.draw(texto1);
+    app.draw(texto2);
+
+
+
+
+    app.draw(titulo);
+
 }

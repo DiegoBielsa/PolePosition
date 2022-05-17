@@ -3,6 +3,8 @@
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -89,6 +91,7 @@ bool pausa = false;
 int posicionMenu = 0;
 int posicionMenuOpciones = 0;
 int teamNano = 1;
+int posicionMenuvolumen = 0;
 
 string nombre[] = { "A","A","A" };
 string key[] = { "A","B","C","D", "E","F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
@@ -121,6 +124,7 @@ int main() {
     string puntuaciones[7];
     string nombres[7];
     string clasificaciones[8];
+    Sprite captura = Sprite();
 
 
 
@@ -136,6 +140,7 @@ int main() {
     Texture t[50];
     Sprite object[50];
     Texture ca;
+    Texture textureCaptura = Texture();
     Texture marcha;
     //ca.loadFromFile("sprites/coches/carSpritesheet.png");
     //carSprite car;
@@ -409,7 +414,7 @@ int main() {
             doJoin = true;
             go = false;
 
-           IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
+            IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
                 if (!pausa) {
                     Event e;
@@ -418,40 +423,42 @@ int main() {
                             app.close();
                             gameOver = true;
                         }
-                    }
+                        if (e.type == sf::Event::Resized) {
+                            sf::View view = app.getDefaultView();
+                            view = getLetterboxView(view, e.size.width, e.size.height);
+                            app.setView(view);
+                        }
+
+                        if (e.type == sf::Event::KeyPressed) {
+
+                            if (e.key.code == sf::Keyboard::Escape) {
+                                //textureCaptura.create(app.getSize().x, app.getSize().y);
+                                textureCaptura.update(app, app.getSize().x, app.getSize().y);
+                                captura.setTexture(textureCaptura);
+                                cout << "set color" << endl;
+
+                                captura.setColor(sf::Color::Blue);
 
 
-                    if (e.type == sf::Event::Resized) {
-                        sf::View view = app.getDefaultView();
-                        view = getLetterboxView(view, e.size.width, e.size.height);
-                        app.setView(view);
-                    }
 
-                    if (e.type == sf::Event::KeyPressed) {
+                                pausa = true;
 
-                        if (e.key.code == sf::Keyboard::LAlt) {
-                            sf::Texture textureCaptura;
-                            textureCaptura.create(app.getSize().x, app.getSize().y);
-                            textureCaptura.update(app);
-                            if (textureCaptura.copyToImage().saveToFile("images/captura.png"))
-                            {
-                                std::cout << "screenshot saved to " << "images/captura.png" << std::endl;
+                            }
+                            if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
+                                marchaBaja = !marchaBaja;
                             }
 
-                            pausa = true;
+                            keyState[e.key.code] = true;
 
                         }
-                        if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
-                            marchaBaja = !marchaBaja;
+                        else if (e.type == sf::Event::KeyReleased) {
+                            // Update state of current key:
+                            keyState[e.key.code] = false;
                         }
-
-                        keyState[e.key.code] = true;
-
                     }
-                    else if (e.type == sf::Event::KeyReleased) {
-                        // Update state of current key:
-                        keyState[e.key.code] = false;
-                    }
+
+
+
 
 
 
@@ -591,16 +598,16 @@ int main() {
                         view = getLetterboxView(view, e.size.width, e.size.height);
                         app.setView(view);
                     }
-                    Texture capt;
-                    capt.loadFromFile("images/captura.png");
-                    Sprite captura(capt);
 
-                    captura.setColor(sf::Color(0x00FF007F));
+                    //Sprite captura(textureCaptura);
+                    //cout<<"set color"<<endl;
+
+
                     app.draw(captura);
                     hacerPausa(app, salir, terminar, pausa, actualizar);
                     eleccionPausa(app, salir, color);
                     if (salir && terminar) {
-                        
+
                         if (doJoin) {
                             for (int i = 0; i < numCars; i++) {
                                 //std::cout << "join " << i << std::endl;
@@ -610,6 +617,8 @@ int main() {
 
                         doJoin = false;
                         estado = 6;
+                        speed = 0;
+                        updateSound(speed, sounds);
                     }
 
                     clock.restart();
@@ -828,7 +837,7 @@ int main() {
                     }
                     Texture capt;
                     capt.loadFromFile("images/captura.png");
-                    Sprite captura(capt);
+                    Sprite captura(textureCaptura);
 
                     captura.setColor(sf::Color(0x00FF007F));
                     app.draw(captura);
@@ -844,6 +853,8 @@ int main() {
 
                         doJoin = false;
                         estado = 6;
+                        speed = 0;
+                        updateSound(speed, sounds);
 
                     }
 
@@ -953,8 +964,11 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed) {
                         app.close();
+                    }
+
+                    manageKeysCircuito(mapa, terminar, atras, e);
                 }
 
 
@@ -965,7 +979,7 @@ int main() {
                 }
                 app.clear(Color(44, 76, 116));
 
-                manageKeysCircuito(mapa, terminar, atras, actualizar);
+
 
                 drawCircuito(app, color, mapa, atras);
                 if (terminar == true) {
@@ -998,8 +1012,11 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed) {
                         app.close();
+                    }
+
+                    manageKeysIa(iaMode, terminar, atras, e);
                 }
 
 
@@ -1009,7 +1026,7 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(44, 76, 116));
-                manageKeysIa(iaMode, terminar, actualizar, atras);
+
 
                 drawIa(app, color, iaMode, atras);
                 if (terminar == true) {
@@ -1044,8 +1061,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed) {
                         app.close();
+                    }
+                    manageKeysMenu(terminar, e, posicionMenu);
                 }
 
 
@@ -1055,11 +1074,11 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(227, 187, 107));
-                manageKeysMenu(terminar, actualizar,posicionMenu);
+
 
                 drawMenu(app, color, posicionMenu);
                 if (terminar == true) {
-                    
+
                     if (posicionMenu == 0) {
                         estado = 4;
 
@@ -1067,7 +1086,7 @@ int main() {
                     else if (posicionMenu == 1) {
                         estado = 7;
                     }
-                    else{
+                    else {
                         app.close();
                     }
 
@@ -1093,8 +1112,10 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed) {
                         app.close();
+                    }
+                    manageKeysOptions(posicionMenuOpciones, terminar, e, atras);
                 }
 
 
@@ -1104,28 +1125,31 @@ int main() {
                     app.setView(view);
                 }
                 app.clear(Color(227, 187, 107));
-                manageKeysOptions(posicionMenuOpciones,terminar, actualizar,atras);
-                drawMenuOpciones(app, color, posicionMenuOpciones,atras);
-                if (terminar == true) {
-                            if (atras == true) {
-                                estado = 6;
-                            }
-                            else {
-                                if (posicionMenuOpciones == 0) {
-                                    estado = 8;
 
-                                }
-                                else if (posicionMenuOpciones == 1) {
-                                    estado = 9;
-                                }
-                            }
-                            terminar = true;
+                drawMenuOpciones(app, color, posicionMenuOpciones, atras);
+                if (terminar == true) {
+                    if (atras == true) {
+                        estado = 6;
+                    }
+                    else {
+                        if (posicionMenuOpciones == 0) {
+                            estado = 8;
+
+                        }
+                        else if (posicionMenuOpciones == 1) {
+                            estado = 9;
+                        }
+                        else if (posicionMenuOpciones == 2) {
+                            estado = 10;
+                        }
+                    }
+                    terminar = true;
 
                 }
 
-                        app.display();
-           }
-        
+                app.display();
+            }
+
 
             break;
 
@@ -1154,25 +1178,25 @@ int main() {
                 }
                 app.clear(Color(227, 187, 107));
 
-                 drawMenuteclas(app, color, posicionMenuOpciones, atras);
-                 if (actualizar.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
-                     actualizar.restart();
-                         if (Keyboard::isKeyPressed(Keyboard::Enter)) {
-                             terminar = true;
-                         }
+                drawMenuteclas(app, color, posicionMenuOpciones, atras);
+                if (actualizar.getElapsedTime().asSeconds() > 0.1f) { //sin esto se pasa de "estados"
+                    actualizar.restart();
+                    if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+                        terminar = true;
+                    }
 
-                     }
-                        if (terminar == true) {
-                            if (atras == true) {
-                                estado = 7;
-                            }
+                }
+                if (terminar == true) {
+                    if (atras == true) {
+                        estado = 7;
+                    }
 
-                        }
+                }
 
 
-                        app.display();
+                app.display();
             }
-                
+
 
             break;
         case 9: //elegir nano
@@ -1188,8 +1212,11 @@ int main() {
             while (app.isOpen() && !terminar) {
                 Event e;
                 while (app.pollEvent(e)) {
-                    if (e.type == Event::Closed)
+                    if (e.type == Event::Closed) {
                         app.close();
+                    }
+                    elegirTeamNano(teamNano, terminar, atras, e);
+                    
                 }
 
 
@@ -1200,7 +1227,7 @@ int main() {
                 }
                 app.clear(Color(227, 187, 107));
 
-                elegirTeamNano(teamNano,terminar,atras,actualizar);
+                
                 drawNano(app, color, teamNano, atras);
 
                 if (terminar == true) {
@@ -1254,6 +1281,47 @@ int main() {
                         }
                     }
 
+                }
+
+
+                app.display();
+            }
+
+
+            break;
+        case 10: //elegir volumen
+            sounds[7].play();
+            terminar = false;
+            atras = false;
+            actualizar.restart();
+            tiempoparafin.restart();
+            color = 0; //color de los sprites
+            iaMode = 0;
+            pulsada = 0;
+            posicionMenuvolumen = 0;
+            while (app.isOpen() && !terminar) {
+                Event e;
+                while (app.pollEvent(e)) {
+                    if (e.type == Event::Closed)
+                        app.close();
+                    elegirVolumen(posicionMenuvolumen, terminar, e, atras);
+                }
+
+
+                if (e.type == sf::Event::Resized) {
+                    sf::View view = app.getDefaultView();
+                    view = getLetterboxView(view, e.size.width, e.size.height);
+                    app.setView(view);
+                }
+                app.clear(Color(227, 187, 107));
+
+                drawVol(app, color, posicionMenuvolumen, atras);
+
+                if (terminar == true) {
+                    if (atras == true) {
+                        estado = 7;
+                    }
+                    estado = 7;
                 }
 
 
