@@ -409,7 +409,7 @@ int main() {
             doJoin = true;
             go = false;
 
-           // IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
+           IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
                 if (!pausa) {
                     Event e;
@@ -600,6 +600,7 @@ int main() {
                     hacerPausa(app, salir, terminar, pausa, actualizar);
                     eleccionPausa(app, salir, color);
                     if (salir && terminar) {
+                      
                         estado = 3;
                     }
 
