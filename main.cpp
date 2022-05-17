@@ -609,7 +609,7 @@ int main() {
                         }
 
                         doJoin = false;
-                        estado = 3;
+                        estado = 6;
                     }
 
                     clock.restart();
@@ -835,7 +835,16 @@ int main() {
                     hacerPausa(app, salir, terminar, pausa, actualizar);
                     eleccionPausa(app, salir, color);
                     if (salir && terminar) {
-                        estado = 3;
+                        if (doJoin) {
+                            for (int i = 0; i < numCars; i++) {
+                                //std::cout << "join " << i << std::endl;
+                                threads[i].join();
+                            }
+                        }
+
+                        doJoin = false;
+                        estado = 6;
+
                     }
 
                     clock.restart();
