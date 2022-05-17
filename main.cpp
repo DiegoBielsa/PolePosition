@@ -375,8 +375,6 @@ int main() {
     }
 
 
-    //IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
-
     bool doJoin = true;
     while (app.isOpen()) {
         switch (estado)
@@ -389,6 +387,8 @@ int main() {
             restart = false;
             pos = 0;
             carPosition = 8;
+            speed = 0;
+            startPos = 0;
             semaforo = 0;
             playerX = 0;
             esPrimeravez = true;
@@ -600,7 +600,15 @@ int main() {
                     hacerPausa(app, salir, terminar, pausa, actualizar);
                     eleccionPausa(app, salir, color);
                     if (salir && terminar) {
-                      
+                        
+                        if (doJoin) {
+                            for (int i = 0; i < numCars; i++) {
+                                //std::cout << "join " << i << std::endl;
+                                threads[i].join();
+                            }
+                        }
+
+                        doJoin = false;
                         estado = 3;
                     }
 
@@ -889,7 +897,7 @@ int main() {
 
                     terminar = true;
                     escribirNombres(nombres, mapa, iaMode);
-                    estado = 3;
+                    estado = 6;
                 }
                 app.display();
             }
@@ -919,7 +927,7 @@ int main() {
 
                 }
                 else {
-                    estado = 4;
+                    estado = 6;
                     terminar = true;
                 }
                 app.display();
