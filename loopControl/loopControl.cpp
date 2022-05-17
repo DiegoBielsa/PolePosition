@@ -770,7 +770,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     lines[linePos[i]].carsX[i] = XPos[i];
     linePos[i]++;
     clock.restart();
-    while(!go){
+    while(!go && !gameOver && !terminar){
       std::this_thread::sleep_for (std::chrono::milliseconds(20ms));
       clock.restart();
     }
@@ -1056,7 +1056,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
     lines[linePos[i]].carsX[i] = XPos[i];
     linePos[i]++;
     clock.restart();
-    while(!go){
+    while(!go && !gameOver && !terminar){
       std::this_thread::sleep_for (std::chrono::milliseconds(20ms));
       clock.restart();
     }
@@ -1346,7 +1346,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     lines[linePos[i]].carsX[i] = XPos[i];
     linePos[i]++;
     clock.restart();
-    while(!go){
+    while(!go && !gameOver && !terminar){
       std::this_thread::sleep_for (std::chrono::milliseconds(20ms));
       clock.restart();
     }
