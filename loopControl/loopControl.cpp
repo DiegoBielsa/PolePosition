@@ -262,9 +262,9 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
       
       
     if (Keyboard::isKeyPressed(Keyboard::Down)){
-      if (speed > 10) {
-        speed -= 20;
-      }else if(speed == 10){
+      if (speed - 3 > 0) {
+        speed -= 3;
+      }else{
         speed = 0;
       }
     }
