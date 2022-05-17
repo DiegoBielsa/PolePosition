@@ -1195,9 +1195,9 @@ int main() {
                         estado = 6;
 
                         for (int j = 0; j <= 11; j++) {
-                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/ferrari/tile" + std::to_string(j) + std::to_string(0) + ".png");
                             k++;
-                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/ferrari/tile" + std::to_string(j) + std::to_string(1) + ".png");
                             k++;
                         }
                     }
@@ -1206,9 +1206,9 @@ int main() {
                         estado = 6;
 
                         for (int j = 0; j <= 11; j++) {
-                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/alpine/tile" + std::to_string(j) + std::to_string(0) + ".png");
                             k++;
-                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/alpine/tile" + std::to_string(j) + std::to_string(1) + ".png");
                             k++;
                         }
 
@@ -1218,9 +1218,9 @@ int main() {
                         estado = 6;
 
                         for (int j = 0; j <= 11; j++) {
-                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/mclaren/tile" + std::to_string(j) + std::to_string(0) + ".png");
                             k++;
-                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/mclaren/tile" + std::to_string(j) + std::to_string(1) + ".png");
                             k++;
                         }
 
@@ -1230,9 +1230,9 @@ int main() {
                         estado = 6;
 
                         for (int j = 0; j <= 11; j++) {
-                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(0) + ".png");
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/renault/tile" + std::to_string(j) + std::to_string(0) + ".png");
                             k++;
-                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/tile" + std::to_string(j) + std::to_string(1) + ".png");
+                            car.texCar[k].loadFromFile("sprites/coches/DroveCar/renault/tile" + std::to_string(j) + std::to_string(1) + ".png");
                             k++;
                         }
                     }
