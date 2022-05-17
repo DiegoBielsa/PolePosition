@@ -25,6 +25,7 @@ extern bool enHierba;
 extern std::array<bool, sf::Keyboard::KeyCount> keyState;
 extern int numMaps;
 extern bool gameOver;
+extern bool terminar;
 extern bool perderControl;
 extern bool charco;
 extern int animColision;
