@@ -347,7 +347,7 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
  */
 void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line>& lines, int& N, float& x, float& dx, int& maxy, int& camH){
   ///////draw road////////
-  for (int n = startPos; n < startPos + draw_distance; n++) {
+  for (int n = startPos; n < startPos  + draw_distance; n++) {
     Line &l = lines[n % N];
 
     // decidimos donde está la cámara y las coor de la pantalla que va a sacar
@@ -396,8 +396,13 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 
 void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car, std::vector<Sound>& sounds){
   ////////draw objects//////// hay que hacer 2 bucles para que dibuje los coches siempre encima
+  // primero miramos si dibujar algo delante de nosotros sabiendo que nuestro coche está en startPos +16
+  int frontCarPos = startPos + 16;
+  int backCarPos = startPos;
   int upLimit = startPos + draw_distance -50;
   upLimit = upLimit%N;
+
+  // dibujamos sprites
   if(goalPosIni > startPos && goalPosIni < upLimit){ // si está la meta dibujamos antes los coches
     for (int n = startPos + draw_distance; n > startPos; n--){
       lines[n % N].drawSprite(app);
@@ -414,9 +419,10 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     }
     
   }
-    
-    
 
+    
+    
+  // dibujamos coches
 
   car.updateCarSprite();
   
@@ -456,7 +462,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
       }
       
 
-    }else if(lines[(startPos+20 + whocol)%N].sprite_type == 2){//meta
+    }else if(lines[(startPos+20 + whocol)%N].sprite_type == 2 || lines[(startPos+20 + whocol)%N].sprite_type == 9){//meta
       app.draw(car.sprite);
     }else if(lines[(startPos+20 + whocol)%N].sprite_type == 3){//charco
       derrape = false;
@@ -470,6 +476,25 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     }
   }else { //por si acaso mejor que no desaparezca
       app.draw(car.sprite);
+  }
+
+  // dibujamos sprites delante del coche si no es ni charco ni meta
+
+  if(goalPosIni > startPos && goalPosIni < upLimit){ // si está la meta dibujamos antes los coches
+    for (int n = frontCarPos; n > startPos; n--){
+      if(lines[n % N].sprite_type != 3 && lines[n % N].sprite_type != 2) lines[n % N].drawSprite(app);
+    }
+    for (int n = frontCarPos; n > startPos; n--){ 
+      for(int i = 0; i < numCars; i++) lines[n % N].drawCars(app, i);
+    }
+  }else{ //si no dibujamos antes los carteles y demás
+    for (int n = frontCarPos; n > startPos; n--){ 
+      for(int i = 0; i < numCars; i++) lines[n % N].drawCars(app, i);
+    } 
+    for (int n = frontCarPos; n > startPos; n--){
+      if(lines[n % N].sprite_type != 3 && lines[n % N].sprite_type != 2) lines[n % N].drawSprite(app);
+    }
+    
   }
 }
 
