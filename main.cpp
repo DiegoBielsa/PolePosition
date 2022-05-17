@@ -610,6 +610,8 @@ int main() {
 
                         doJoin = false;
                         estado = 6;
+                        speed = 0;
+                        updateSound(speed, sounds);
                     }
 
                     clock.restart();
