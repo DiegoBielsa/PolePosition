@@ -416,6 +416,7 @@ int main() {
 
             IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
+                std::cout << playerX << std::endl;
                 if (!pausa) {
                     Event e;
                     while (app.pollEvent(e)) {
