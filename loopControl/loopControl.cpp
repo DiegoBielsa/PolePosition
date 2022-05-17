@@ -534,8 +534,7 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   speeds = 5.0f;
   maxSpeeds = (mediumSpeed - 100) - (i * 7);
 
-
-  while(!gameOver){
+  while(!gameOver && !terminar){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
     
     //if(!go) continue;
@@ -754,7 +753,6 @@ void IAeasy_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
     
     
   }
-  
 
   lines[linePos[i]-1].carLocalBounds.height = 0;
   lines[linePos[i]-1].carLocalBounds.width = 0;
@@ -804,7 +802,7 @@ void IAnormal_control(std::vector<Line>& lines, int linePos[], float XPos[], car
   maxSpeeds = (mediumSpeed - 100) - (i * 7);
   
 
-  while(!gameOver){
+  while(!gameOver && !terminar){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
 
     int diff = linePos[i] - startPos;
@@ -1083,7 +1081,7 @@ void IAhard_control(std::vector<Line>& lines, int linePos[], float XPos[], carSp
   speeds = 5.0f;
   maxSpeeds = (mediumSpeed- 100) - (i * 7);
 
-  while(!gameOver){
+  while(!gameOver && !terminar){
     std::this_thread::sleep_for (std::chrono::milliseconds(int((1/speeds)*1000)));
 
     int diff = linePos[i] - startPos;
