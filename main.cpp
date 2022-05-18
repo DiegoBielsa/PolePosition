@@ -575,7 +575,7 @@ int main() {
                             terminar = true;
                         }
                     }
-                    if (pausa == true) {
+                    if (pausa == true && esPrimeravez==false) {
                         antesdepausa = elapsed;
 
                     }
@@ -815,7 +815,7 @@ int main() {
                             terminar = true;
                         }
                     }
-                    if (pausa == true) {
+                    if (pausa == true && esPrimeravez == false) {
                         antesdepausa = elapsed;
 
                     }
