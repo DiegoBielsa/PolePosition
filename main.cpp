@@ -109,6 +109,21 @@ void updateSound(int& speed, vector<Sound>& sounds) {
     }
 }
 
+void updateSoundIA(vector<Sound>& sounds, int linePos[], int miPos) {
+
+    for (int i = 0; i < 8; i++) {
+        int distancia = abs(miPos - linePos[i]);
+        if (distancia < 30) {//coche i esta cerca
+            //cout<<"coche "<<i<<" cerca, a "<<distancia<<endl;
+            sounds[13+i].setVolume(80 - distancia);
+            //sounds[13+i].play();
+        }else{
+            //sounds[13+i].pause();
+            sounds[13+i].setVolume(0);
+        }
+    }
+}
+
 int main() {
     //INICIALIZANDO EL JUEGO
     setConfig();
@@ -313,6 +328,78 @@ int main() {
     sound13.setBuffer(buffer13);
     sounds.push_back(sound13);
 
+    SoundBuffer buffer14;
+    Sound sound14;
+    if (!buffer14.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound14.setBuffer(buffer14);
+    sounds.push_back(sound14);
+
+    SoundBuffer buffer15;
+    Sound sound15;
+    if (!buffer15.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound15.setBuffer(buffer15);
+    sounds.push_back(sound15);
+
+    SoundBuffer buffer16;
+    Sound sound16;
+    if (!buffer16.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound16.setBuffer(buffer16);
+    sounds.push_back(sound16);
+
+    SoundBuffer buffer17;
+    Sound sound17;
+    if (!buffer17.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound17.setBuffer(buffer17);
+    sounds.push_back(sound17);
+
+    SoundBuffer buffer18;
+    Sound sound18;
+    if (!buffer18.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound18.setBuffer(buffer18);
+    sounds.push_back(sound18);
+
+    SoundBuffer buffer19;
+    Sound sound19;
+    if (!buffer19.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound19.setBuffer(buffer19);
+    sounds.push_back(sound19);
+
+    SoundBuffer buffer20;
+    Sound sound20;
+    if (!buffer20.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound20.setBuffer(buffer20);
+    sounds.push_back(sound20);
+
+    SoundBuffer buffer21;
+    Sound sound21;
+    if (!buffer21.loadFromFile("audio/f1sound1.ogg")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound21.setBuffer(buffer21);
+    sounds.push_back(sound21);
+    for (int i=0; i<8; i++) {
+        sounds[13+i].play();
+        sounds[13+i].setLoop(true);
+        sounds[13+i].setPitch(0.7f);
+        sounds[13+i].setVolume(0.0f);
+        
+    }
+    
+
 
 
 
@@ -385,6 +472,8 @@ int main() {
         switch (estado)
         {
         case 0://clasificacion
+            
+
             metacruz = false;
             antmetacruz = false; //para ver si estamos parados en la meta
             terminar = false;
@@ -463,6 +552,7 @@ int main() {
 
 
                     updateSound(speed, sounds);
+                    updateSoundIA(sounds, linePos, startPos+16);
 
 
                     int camH, maxy;
@@ -524,6 +614,9 @@ int main() {
 
 
                     if (gameOver == true || terminar == true) {
+                        for (int i=0; i<8; i++) {
+                            sounds[13+i].setVolume(0.0f);
+                        }
                         if (noClasifica == true) {
                             drawGameOver(app);
                         }
@@ -541,6 +634,9 @@ int main() {
 
 
                     if (gameOver == true && restart == false) {
+                        for (int i=0; i<8; i++) {
+                            sounds[13+i].setVolume(0.0f);
+                        }
                         tiempoparafin.restart();
                         //escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion,iaMode);
                         calcularPosclasificacion(clasificaciones, tiempoFinal, carPosition, noClasifica);
@@ -619,6 +715,8 @@ int main() {
                         estado = 6;
                         speed = 0;
                         updateSound(speed, sounds);
+                        sounds[5].pause();
+                        updateSoundIA(sounds, linePos, startPos+16);
                         prepare = true;
                     }
 
@@ -634,6 +732,9 @@ int main() {
         case 1://carrera
             //setMaps(maps, object);
             //lines = maps[mapa];
+            for (int i=0; i<8; i++) {
+                sounds[13+i].setVolume(0.0f);
+            }
             go = false;
             semaforo = 0;
             sounds[5].setPitch(1.0f);
@@ -701,44 +802,52 @@ int main() {
                             app.close();
                             gameOver = true;
                         }
-                    }
+
+                        if (e.type == sf::Event::Resized) {
+                            sf::View view = app.getDefaultView();
+                            view = getLetterboxView(view, e.size.width, e.size.height);
+                            app.setView(view);
+                        }
+
+                        if (e.type == sf::Event::KeyPressed) {
+
+                            if (e.key.code == sf::Keyboard::Escape) {
+                                //textureCaptura.create(app.getSize().x, app.getSize().y);
+                                textureCaptura.update(app, app.getSize().x, app.getSize().y);
+                                captura.setTexture(textureCaptura);
+                                cout << "set color" << endl;
+
+                                captura.setColor(sf::Color::Blue);
 
 
-                    if (e.type == sf::Event::Resized) {
-                        sf::View view = app.getDefaultView();
-                        view = getLetterboxView(view, e.size.width, e.size.height);
-                        app.setView(view);
-                    }
 
-                    if (e.type == sf::Event::KeyPressed) {
-                        if (e.key.code == sf::Keyboard::LAlt && !keyState[e.key.code]) {
-                            cout << "pausa" << endl;
-                            sf::Texture textureCaptura;
-                            textureCaptura.create(app.getSize().x, app.getSize().y);
-                            textureCaptura.update(app);
-                            if (textureCaptura.copyToImage().saveToFile("images/captura.png"))
-                            {
-                                std::cout << "screenshot saved to " << "images/captura.png" << std::endl;
+                                pausa = true;
+
+                            }
+                            if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
+                                marchaBaja = !marchaBaja;
                             }
 
-                            pausa = true;
-                        }
-                        if (e.key.code == sf::Keyboard::LControl && !keyState[e.key.code]) {
-                            marchaBaja = !marchaBaja;
-                        }
-                        keyState[e.key.code] = true;
+                            keyState[e.key.code] = true;
 
+                        }
+                        else if (e.type == sf::Event::KeyReleased) {
+                            // Update state of current key:
+                            keyState[e.key.code] = false;
+                        }
                     }
-                    else if (e.type == sf::Event::KeyReleased) {
-                        // Update state of current key:
-                        keyState[e.key.code] = false;
-                    }
+
+
+                    
+
+                    
 
 
 
                     int camH, maxy;
                     float x = 0, dx = 0;
                     updateSound(speed, sounds);
+                    
                     //updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                     if (semaforo < 250) {
                         if (semaforo == 0) { if(!posicionMenuvolumen){sounds[10].play();} }
@@ -746,6 +855,7 @@ int main() {
                         drawSemaphore(app, object, semaforo);
                     }
                     else {
+                        updateSoundIA(sounds, linePos, startPos+16);
                         go = true;
                         manageKeys(playerX, speed, H, car, lines, startPos, sounds, posicionMenuvolumen);
                         updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
@@ -856,6 +966,8 @@ int main() {
                         estado = 6;
                         speed = 0;
                         updateSound(speed, sounds);
+                        sounds[5].pause();
+                        updateSoundIA(sounds, linePos, startPos+16);
                         prepare = true;
 
                     }
