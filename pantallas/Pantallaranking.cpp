@@ -693,7 +693,7 @@ void drawIa(RenderWindow& app, int& color, int iaMode, bool atras) {
     texto1.setString("-EASY-");
     texto2.setString("-MEDIUM-");
     texto3.setString("-HARD-");
-    titulo.setString("SELECT LEVEL");
+    titulo.setString("SELECT IA");
 
 
 
@@ -705,7 +705,7 @@ void drawIa(RenderWindow& app, int& color, int iaMode, bool atras) {
     texto1.setPosition(400, 200);
     texto2.setPosition(380, 350);
     texto3.setPosition(400, 500);
-    titulo.setPosition(280, 30);
+    titulo.setPosition(290, 30);
 
 
     if (atras == true) {
