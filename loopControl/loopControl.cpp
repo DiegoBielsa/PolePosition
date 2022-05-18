@@ -349,9 +349,8 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
   ///////draw road////////
   for (int n = startPos; n < startPos  + draw_distance; n++) {
     Line &l = lines[n % N];
-
     // decidimos donde está la cámara y las coor de la pantalla que va a sacar
-    l.project(playerX * roadW - x, camH,
+    l.project(playerX * roadW - x/2 , camH,
               startPos * segL - (n >= N ? N * segL : 0));
 
    

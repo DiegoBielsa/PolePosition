@@ -105,6 +105,7 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         Line line;
         line.z = i * segL;
         line.sprite_type = 0;
+        line.curve = 0;
 
         if(i == goalPosIni){
           line.isGoal = true;
@@ -184,6 +185,7 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         Line line;
         line.z = i * segL;
         line.sprite_type = 0;
+        line.curve = 0;
 
         if(i == goalPosIni){
           line.isGoal = true;
@@ -280,6 +282,7 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
           Line line;
           line.z = i * segL;
           line.sprite_type = 0;
+          line.curve = 0;
 
           if(i == goalPosIni){
           line.isGoal = true;
@@ -421,6 +424,7 @@ void setMaps(std::vector<std::vector<Line>>& maps, Sprite object[]){
         // solo hay que poner los sprites y las curvas (y la meta)
         Line line;
         line.z = i * segL;
+        line.curve = 0;
 
         if(i == goalPosIni){
           line.isGoal = true;
