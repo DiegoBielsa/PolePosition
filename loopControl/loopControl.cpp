@@ -283,7 +283,7 @@ void updateVars(RenderWindow& app, int &pos, int &startPos, int &camH, std::vect
     pos += 2;
   }
 
-  app.clear(Color(105, 205, 4));
+  app.clear(Color(0, 0, 0));
   app.draw(sBackground);
   startPos = pos / segL;
   if(car.car_dir == 0 && lines[(startPos+20)%N].curve != 0){
