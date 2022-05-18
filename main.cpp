@@ -416,7 +416,8 @@ int main() {
 
             IA_control(lines, linePos, XPos, car_arr, numCars, iaMode, threads);
             while (app.isOpen() && !terminar) {
-                std::cout << playerX << std::endl;
+                std::cout << "X" << playerX << std::endl;
+                std::cout << "curve " << lines[startPos].curve << std::endl;
                 if (!pausa) {
                     Event e;
                     while (app.pollEvent(e)) {
