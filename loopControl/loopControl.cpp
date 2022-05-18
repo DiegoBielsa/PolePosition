@@ -19,7 +19,7 @@ void drawQuad(RenderWindow &w, Color c, int x1, int y1, int w1, int x2, int y2,
   w.draw(shape);
 }
 
-void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<Line>& lines,  int &startPos,  std::vector<Sound>& sounds){
+void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<Line>& lines,  int &startPos,  std::vector<Sound>& sounds, int volume){
   static int n = 0;
   static int contadorDerrape = 0;
   static int dirDerrape = 0; // 0 derecha, 1 izquierda
@@ -84,7 +84,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
           float centripetal_force = ((float(speed)/float(maxSpeed))) * floatAbs(lines[startPos].curve);
           float actual_draft_power = draft_power * centripetal_force;
           if (actual_draft_power > 0.012){
-            sounds[6].play();
+            if(!volume){sounds[6].play();}
             derrape = true;
             dirDerrape = 0;
             playerX += 1.5 * turn_power * ((float(speed)/maxSpeed));
@@ -122,7 +122,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
           float centripetal_force = ((float(speed)/float(maxSpeed))) * floatAbs(lines[startPos].curve);
           float actual_draft_power = draft_power * centripetal_force;
           if (actual_draft_power > 0.012){
-            sounds[6].play();
+            if(!volume){sounds[6].play();}
             derrape = true;
             dirDerrape = 1;
             playerX -= 1.5 * turn_power * ((float(speed)/maxSpeed));
@@ -394,7 +394,7 @@ void drawRoad(RenderWindow& app, int& startPos, float& playerX, std::vector<Line
 
 }
 
-void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car, std::vector<Sound>& sounds){
+void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int &N, carSprite &car, std::vector<Sound>& sounds, int volume){
   ////////draw objects//////// hay que hacer 2 bucles para que dibuje los coches siempre encima
   // primero miramos si dibujar algo delante de nosotros sabiendo que nuestro coche está en startPos +16
   int frontCarPos = startPos + 16;
@@ -447,7 +447,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
     perderControl = true;
     sf::SoundSource::Status status = sounds[1].getStatus();
     if(status != sf::Music::Playing){
-      sounds[1].play();
+      if(!volume){sounds[1].play();}
     }
 
   }else if(colisiona){ // si colisiona con objeto getionamos
@@ -458,7 +458,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
       perderControl = true;
       sf::SoundSource::Status status = sounds[1].getStatus();
       if(status != sf::Music::Playing){
-        sounds[1].play();
+        if(!volume){sounds[1].play();}
       }
       
 
@@ -470,7 +470,7 @@ void drawObjects(RenderWindow& app, int &startPos, std::vector<Line>& lines, int
       charco = true;
       sf::SoundSource::Status status = sounds[12].getStatus();
       if(status != sf::Music::Playing){
-        sounds[12].play();
+        if(!volume){sounds[12].play();}
       }
       app.draw(car.sprite);
     }

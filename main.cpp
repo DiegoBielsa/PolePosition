@@ -398,10 +398,10 @@ int main() {
             playerX = 0;
             esPrimeravez = true;
             noClasifica = false;
-            sounds[9].play();
+            if(!posicionMenuvolumen){sounds[9].play();}
             sounds[5].setPitch(1.0f);
             sounds[5].setLoop(true);
-            sounds[5].play();
+            if(!posicionMenuvolumen){sounds[5].play();}
             terminar = false;
             tiempoparafin.restart();
             pausa = false;
@@ -474,7 +474,7 @@ int main() {
                     else if (semaforo < 50)
                     {
                         updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
-                        if (semaforo == 0) { sounds[11].play(); }
+                        if (semaforo == 0) { if(!posicionMenuvolumen){sounds[11].play();} }
                         semaforo++;
                         if (semaforo < 25) {
                             app.draw(object[17]);
@@ -485,7 +485,7 @@ int main() {
                     }
                     else {
                         go = true;
-                        manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                        manageKeys(playerX, speed, H, car, lines, startPos, sounds, posicionMenuvolumen);
                         updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                     }
 
@@ -510,7 +510,7 @@ int main() {
 
 
                     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-                    drawObjects(app, startPos, lines, N, car, sounds);
+                    drawObjects(app, startPos, lines, N, car, sounds, posicionMenuvolumen);
                     drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver, tiempoFinal, noClasifica, esPrimeravez);
 
                     //std::cout<<startPos<<std::endl;
@@ -619,6 +619,7 @@ int main() {
                         estado = 6;
                         speed = 0;
                         updateSound(speed, sounds);
+                        prepare = true;
                     }
 
                     clock.restart();
@@ -637,7 +638,7 @@ int main() {
             semaforo = 0;
             sounds[5].setPitch(1.0f);
             sounds[5].setLoop(true);
-            sounds[5].play();
+            if(!posicionMenuvolumen){sounds[5].play();}
             //inicializamos todo
             int lap;
             lap = 0;
@@ -740,13 +741,13 @@ int main() {
                     updateSound(speed, sounds);
                     //updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                     if (semaforo < 250) {
-                        if (semaforo == 0) { sounds[10].play(); }
+                        if (semaforo == 0) { if(!posicionMenuvolumen){sounds[10].play();} }
                         updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                         drawSemaphore(app, object, semaforo);
                     }
                     else {
                         go = true;
-                        manageKeys(playerX, speed, H, car, lines, startPos, sounds);
+                        manageKeys(playerX, speed, H, car, lines, startPos, sounds, posicionMenuvolumen);
                         updateVars(app, pos, startPos, camH, lines, playerX, maxy, x, dx, speed, N, H, sBackground, car);
                     }
 
@@ -774,7 +775,7 @@ int main() {
 
 
                     drawRoad(app, startPos, playerX, lines, N, x, dx, maxy, camH);
-                    drawObjects(app, startPos, lines, N, car, sounds);
+                    drawObjects(app, startPos, lines, N, car, sounds, posicionMenuvolumen);
                     drawLetters(app, puntuaciones, speed, score, elapsed, lim, gameOver, tiempoFinal, noClasifica, esPrimeravez);
                     //std::cout<<startPos<<std::endl;
 
@@ -855,6 +856,7 @@ int main() {
                         estado = 6;
                         speed = 0;
                         updateSound(speed, sounds);
+                        prepare = true;
 
                     }
 
@@ -923,7 +925,7 @@ int main() {
             }
             break;
         case 3: //pantalla inicio
-            sounds[8].play();
+            if(!posicionMenuvolumen){sounds[8].play();}
             terminar = false;
             tiempoparafin.restart();
             color = 0; //color de los sprites
@@ -954,7 +956,7 @@ int main() {
             }
             break;
         case 4: //pantalla eleccioncircuito
-            sounds[7].play();
+            if(!posicionMenuvolumen){sounds[7].play();}
             terminar = false;
             atras = false;
             tiempoparafin.restart();
@@ -1001,7 +1003,7 @@ int main() {
 
             break;
         case 5: //pantalla eleccion ia
-            sounds[7].play();
+            if(!posicionMenuvolumen){sounds[7].play();}
             terminar = false;
             atras = false;
             actualizar.restart();
@@ -1049,7 +1051,7 @@ int main() {
             }
             break;
         case 6: //menu
-            sounds[7].play();
+            if(!posicionMenuvolumen){sounds[7].play();}
             terminar = false;
             atras = false;
             actualizar.restart();
@@ -1100,7 +1102,7 @@ int main() {
 
 
         case 7: //menu opciones
-            sounds[7].play();
+            if(!posicionMenuvolumen){sounds[7].play();}
             terminar = false;
             atras = false;
             actualizar.restart();
@@ -1154,7 +1156,7 @@ int main() {
             break;
 
         case 8: //elegir teclas
-            sounds[7].play();
+            if(!posicionMenuvolumen){sounds[7].play();}
             terminar = false;
             atras = true;
             actualizar.restart();
@@ -1200,7 +1202,7 @@ int main() {
 
             break;
         case 9: //elegir nano
-            sounds[7].play();
+            if(!posicionMenuvolumen){sounds[7].play();}
             terminar = false;
             atras = false;
             actualizar.restart();
@@ -1290,7 +1292,7 @@ int main() {
 
             break;
         case 10: //elegir volumen
-            sounds[7].play();
+            if(!posicionMenuvolumen){sounds[7].play();}
             terminar = false;
             atras = false;
             actualizar.restart();

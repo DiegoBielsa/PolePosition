@@ -1545,9 +1545,9 @@ void  drawMenuteclas(RenderWindow& app, int& color, int posicionMenu, bool atras
     texto1.setString("RIGHT -> RIGHTARROW");
     texto2.setString("LEFT -> LEFTARROW");
     texto3.setString("GAS  -> UPARROW");
-    texto4.setString("BRAKR -> DOWNARROW");
+    texto4.setString("BRAKE -> DOWNARROW");
     texto5.setString("GEAR -> CONTROL");
-    texto6.setString("PAUSE -> ALT-IZQ");
+    texto6.setString("PAUSE -> ESC");
 
 
     texto1.setFillColor(sf::Color::Black);
