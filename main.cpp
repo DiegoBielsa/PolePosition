@@ -494,8 +494,8 @@ int main() {
             terminar = false;
             tiempoparafin.restart();
             pausa = false;
-            antesdepausa = clock.getElapsedTime();
             clock.restart();
+            antesdepausa = clock.getElapsedTime();
             posicionPuntuacion = 0;
             color = 0;
             startPos = 0;
