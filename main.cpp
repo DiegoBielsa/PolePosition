@@ -115,7 +115,7 @@ void updateSoundIA(vector<Sound>& sounds, int linePos[], int miPos) {
         int distancia = abs(miPos - linePos[i]);
         if (distancia < 30) {//coche i esta cerca
             //cout<<"coche "<<i<<" cerca, a "<<distancia<<endl;
-            sounds[13+i].setVolume(80 - distancia);
+            sounds[13+i].setVolume(60 - distancia);
             //sounds[13+i].play();
         }else{
             //sounds[13+i].pause();
@@ -391,13 +391,23 @@ int main() {
     }
     sound21.setBuffer(buffer21);
     sounds.push_back(sound21);
-    for (int i=0; i<8; i++) {
-        sounds[13+i].play();
-        sounds[13+i].setLoop(true);
-        sounds[13+i].setPitch(0.7f);
-        sounds[13+i].setVolume(0.0f);
-        
+
+    SoundBuffer buffer22;
+    Sound sound22;
+    if (!buffer22.loadFromFile("audio/trasquali.wav")) {
+        std::cout << "error en audio" << std::endl;
     }
+    sound22.setBuffer(buffer22);
+    sounds.push_back(sound22);
+
+    SoundBuffer buffer23;
+    Sound sound23;
+    if (!buffer23.loadFromFile("audio/results.wav")) {
+        std::cout << "error en audio" << std::endl;
+    }
+    sound23.setBuffer(buffer23);
+    sounds.push_back(sound23);
+    
     
 
 
@@ -472,6 +482,13 @@ int main() {
         switch (estado)
         {
         case 0://clasificacion
+            for (int i=0; i<8; i++) {
+                if(!posicionMenuvolumen){sounds[13+i].play();}
+                sounds[13+i].setLoop(true);
+                sounds[13+i].setPitch(0.7f);
+                sounds[13+i].setVolume(0.0f);
+                
+            }
             
 
             metacruz = false;
@@ -635,7 +652,7 @@ int main() {
 
                     if (gameOver == true && restart == false) {
                         for (int i=0; i<8; i++) {
-                            sounds[13+i].setVolume(0.0f);
+                            sounds[13+i].pause();
                         }
                         tiempoparafin.restart();
                         //escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion,iaMode);
@@ -648,6 +665,9 @@ int main() {
                         restart = true;
                     }
                     else if (gameOver == true && restart == true) {
+                        for (int i=0; i<8; i++) {
+                            sounds[13+i].pause();
+                        }
                         if (carPosition > 7) {
                             estado = 2;
                         }
@@ -733,7 +753,11 @@ int main() {
             //setMaps(maps, object);
             //lines = maps[mapa];
             for (int i=0; i<8; i++) {
+                if(!posicionMenuvolumen)sounds[13+i].play();
+                sounds[13+i].setLoop(true);
+                sounds[13+i].setPitch(0.7f);
                 sounds[13+i].setVolume(0.0f);
+                
             }
             go = false;
             semaforo = 0;
@@ -911,6 +935,9 @@ int main() {
                     if (gameOver == true && restart == false) {
                         tiempoparafin.restart();
                         //score = 21;
+                        for (int i=0; i<8; i++) {
+                            sounds[13+i].pause();
+                        }
                         escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion, iaMode);
                         cout << "posicionPuntuacion " << posicionPuntuacion << endl;
                         restart = true;
@@ -985,6 +1012,7 @@ int main() {
 
             terminar = false;
             sounds[5].pause();
+            if(!posicionMenuvolumen){sounds[22].play();}
             tiempoparafin.restart();
             letra = 0;
             color = 0;
@@ -1032,6 +1060,7 @@ int main() {
                     terminar = true;
                     escribirNombres(nombres, mapa, iaMode);
                     estado = 6;
+                    sounds[22].stop();
                 }
                 app.display();
             }
