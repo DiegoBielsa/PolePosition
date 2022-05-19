@@ -199,7 +199,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
               speed+=1;
           }
 
-        }else if(speed >= 250 && speed < 320){
+        }else if(speed >= 250 && speed < 280){
           if(marchaBaja){
             if(n%5 == 0){
               speed+=1;
@@ -210,7 +210,7 @@ void manageKeys(float &playerX, int &speed, int &H, carSprite &car, std::vector<
             }
           }
 
-        }else if(speed >= 320 && speed < 430){
+        }else if(speed >= 280 && speed < 430){
           if(marchaBaja){
             speed-=3;
           }else{
