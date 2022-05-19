@@ -1136,7 +1136,7 @@ int main() {
                 drawCircuito(app, color, mapa, atras);
                 if (terminar == true) {
                     if (atras == true) {
-                        estado = 3;
+                        estado = 6;
                     }
                     else {
                         estado = 5;
