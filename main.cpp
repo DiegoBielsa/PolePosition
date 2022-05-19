@@ -502,6 +502,7 @@ int main() {
             startPos = 0;
             semaforo = 0;
             playerX = 0;
+            car.colision = false;
             esPrimeravez = true;
             noClasifica = false;
             if(!posicionMenuvolumen){sounds[9].play();}
@@ -768,6 +769,7 @@ int main() {
             int lap;
             lap = 0;
             gameOver = false;
+            car.colision = false;
             restart = false;
             clock.restart();
             pausa = false;
