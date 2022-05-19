@@ -81,7 +81,7 @@ void setConfig(){
       }else if(var == "carPosition"){
         carPosition = value; 
       }else{
-        std::cout << "No existe la variable de configuracion " << var << std::endl;
+        //std::cout << "No existe la variable de configuracion " << var << std::endl;
       }
     }
     

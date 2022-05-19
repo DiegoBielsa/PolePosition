@@ -544,7 +544,7 @@ int main() {
                                 //textureCaptura.create(app.getSize().x, app.getSize().y);
                                 textureCaptura.update(app, app.getSize().x, app.getSize().y);
                                 captura.setTexture(textureCaptura);
-                                cout << "set color" << endl;
+                                //cout << "set color" << endl;
 
                                 captura.setColor(sf::Color::Blue);
 
@@ -845,7 +845,7 @@ int main() {
                                 //textureCaptura.create(app.getSize().x, app.getSize().y);
                                 textureCaptura.update(app, app.getSize().x, app.getSize().y);
                                 captura.setTexture(textureCaptura);
-                                cout << "set color" << endl;
+                                //cout << "set color" << endl;
 
                                 captura.setColor(sf::Color::Blue);
 
@@ -945,7 +945,7 @@ int main() {
                             sounds[13+i].pause();
                         }
                         escribirPuntuaciones(puntuaciones, score, mapa, posicionPuntuacion, iaMode);
-                        cout << "posicionPuntuacion " << posicionPuntuacion << endl;
+                        //cout << "posicionPuntuacion " << posicionPuntuacion << endl;
                         restart = true;
                     }
 
@@ -1484,7 +1484,7 @@ int main() {
 
 
         }
-        cout << endl;
+        //cout << endl;
     }
 
 
