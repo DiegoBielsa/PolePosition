@@ -19,6 +19,7 @@
 #include "score/score.hpp"
 #include "globals/globals.hpp"
 #include "pantallas/Pantallaranking.hpp"
+#include <Windows.h>
 
 
 
@@ -126,6 +127,7 @@ void updateSoundIA(vector<Sound>& sounds, int linePos[], int miPos) {
 
 int main() {
     //INICIALIZANDO EL JUEGO
+    ::ShowWindow(::GetConsoleWindow(), SW_HIDE);
     setConfig();
     RenderWindow app(VideoMode(width, height), "Pole Position");
     app.setKeyRepeatEnabled(false);
