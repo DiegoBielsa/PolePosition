@@ -26,7 +26,7 @@ using namespace sf;
 using namespace std;
 
 #define spriteColision 1
-int estado = 6;
+int estado = 3;
 bool terminar = false; //para salir de los bucles de estados
 
 int width = 1024;
