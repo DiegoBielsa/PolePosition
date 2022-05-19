@@ -953,7 +953,7 @@ int main() {
 
                     else if (gameOver == true && restart == true) {
                         estado = 2;
-
+                        noClasifica = false;
                         if (tiempoparafin.getElapsedTime().asSeconds() > 5) {//esperamos 10 segundos para terminar
                             terminar = true;
                         }
@@ -1022,6 +1022,7 @@ int main() {
             tiempoparafin.restart();
             letra = 0;
             color = 0;
+            iterador = 0;
             actualizar.restart();
             while (app.isOpen() && !terminar) {
 
